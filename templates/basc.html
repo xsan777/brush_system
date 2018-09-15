@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    {#    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">#}
+    {% block head %}
+
+    {% endblock %}
+</head>
+<body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: #3d3d3d;
+    }
+
+    #left_nav {
+        float: left;
+        background-color: #3d3d3d;
+        width: 12%;
+        height: 100%;
+    }
+
+    #content {
+        float: left;
+        width: 88%;
+        height: 100%;
+        background-color: white;
+    }
+
+    #cont {
+        width: 1400px;
+        height: 800px;
+        margin: 20px 100px;
+    {#background-color: #1b6d85;#}
+    }
+
+    #nav {
+        background-color: #212121;
+        height: 50px;
+    }
+
+    #logo {
+        padding-top: 10px;
+        margin-left: 20px;
+        font-size: 1.5em;
+        color: #ffffff;
+    }
+
+    .menu {
+        padding-top: 15px;
+        text-align: left;
+
+        font-size: 1.3em;
+        color: white;
+    }
+
+    .menus {
+        padding-bottom: 5px;
+        text-align: center;
+        font-size: 1.3em;
+        color: white;
+        background-color: #2e3636;
+    }
+
+    .menus:hover {
+        background-color: #3c3d22;
+    }
+
+    a:hover {
+        text-decoration: none
+    }
+
+    hr#nav_hr {
+        width: 90%;
+        height: 1px;
+        background-color: #585858;
+        margin-bottom: -5px;
+        border: none;
+    }
+
+    hr {
+        width: 90%;
+        height: 1px;
+        background-color: #585858;
+        border: none;
+    }
+</style>
+<div id="nav">
+    <div id="logo">宝儿喝酒数据管理系统 <span class="col-lg-offset-8" style="font-size: 1.8rem">欢迎，{{ user }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=" /" style="font-size:small ">退出</a></span></div>
+
+</div>
+{#左侧导航#}
+<div id="left_nav">
+    <a href="javascript:void(0);" onclick="menu1()">
+        <div class="menu">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;账户管理
+        </div>
+        <hr id="nav_hr">
+    </a>
+    <div class="menuss">
+        <a href="/shopmanagement/">
+            <div class="menus">店铺管理</div>
+
+        </a>
+        <a href="/usermanagement/">
+            <div class="menus">用户管理</div>
+        </a>
+        <a href="/brankmanagement/">
+            <div class="menus">银行账户管理</div>
+        </a>
+    </div>
+    <a href="javascript:void(0);" onclick="menu2()">
+        <div class="menu">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;账单核对
+        </div>
+        <hr id="nav_hr">
+    </a>
+    <div class="menuss2">
+        <a href="/countmanagement/">
+            <div class="menus">账户核对情况</div>
+        </a>
+        <a href="/shop_bill/">
+            <div class="menus">店铺账单</div>
+        </a>
+        <a href="/account_bill/">
+            <div class="menus">账户账单</div>
+        </a>
+    </div>
+    {#    <a href="/countmanagement/">#}
+    {#        <div class="menu">账户记录管理</div>#}
+
+    {#    </a>#}
+    {#    <a href="/brushmanagement/">#}
+    {#        <div class="menu">喝酒数据管理</div>#}
+    {#        <hr>#}
+    {#    </a>#}
+    {#    <a href="/check_account/">#}
+    {#        <div class="menu">账户核对</div>#}
+
+    {#    </a>#}
+</div>
+<div id="content">
+    <div id="cont">
+        {#右侧内容区#}
+        {% block content %}
+
+        {% endblock %}
+    </div>
+
+</div>
+{#<script>#}
+{#    $('.menuss').hide();#}
+{#    $('.menuss2').hide();#}
+{#</script>#}
+{#<script>#}
+{#    function menu1() {#}
+{#        $('.menuss').toggle();#}
+{#    }#}
+{##}
+{#    function menu2() {#}
+{#        $('.menuss2').toggle();#}
+{#    }#}
+{#</script>#}
+{% block js %}
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,68 @@
+{% extends 'basc.html' %}
+{% block head %}
+    <link rel="stylesheet" href="/static/css/check_account.css">
+{% endblock %}
+{% block content %}
+    <form class="form-inline" id="check_data" method="post">
+        <div class="form-group">
+            <label for="exampleInputName2">日期:</label>
+            <input type="date" class="form-control" value="{{ now_time }}" name="check_data">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputName2">店铺名:</label>
+            <select name="shop_name" id="shop_name" class="form-control">
+                {% for acc in account %}
+                    <option value="{{ acc.shopname }}">{{ acc.shopname }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <input type="submit" value="查询" class="btn btn-default">
+        {% csrf_token %}
+    </form>
+    <br>
+    <hr>
+    <div id="tabless">
+        <table class="table table-striped">
+            <tr>
+                <th>序号</th>
+                <th>店铺</th>
+                <th>旺旺号</th>
+                <th>线上订单号</th>
+                <th>成交日期</th>
+                <th>付款类型</th>
+                <th>付款金额</th>
+                <th>付款账户</th>
+                <th>备注</th>
+                <th>创建(修改)时间</th>
+                <th>操作人</th>
+            </tr>
+            {% for table in tables %}
+                <tr id="{{ forloop.counter }}">
+                    <td id="num">{{ forloop.counter }}</td>
+                    <td>{{ table.shopname }}</td>
+                    <td>{{ table.wang_wang_number }}</td>
+                    <td>{{ table.online_order_number }}</td>
+                    <td>{{ table.transaction_data }}</td>
+                    <td>{{ table.payment_type }}</td>
+                    <td>{{ table.payment_amount }}</td>
+                    <td>{{ table.payment_account }}</td>
+                    <td>{{ table.remarks }}</td>
+                    <td>{{ table.add_time }}</td>
+                    <td>{{ table.operator }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <h3 class="col-lg-offset-10">店铺花销：<span id="pay">{{ pay_money }}</span>
+    </h3>
+{% endblock %}
+{% block js %}
+    <script>
+        $("#shop_name").find("option").each(function () {
+            var ff = '{{ shop_name }}';
+            if ($(this).val() == ff) {
+                $(this).attr("selected", "selected");
+            }
+        });
+    </script>
+{% endblock %}

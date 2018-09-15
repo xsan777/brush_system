@@ -1,0 +1,11 @@
+#tabless {
+    width: 1400px;
+    height: 600px;
+    margin: 10px 0px;
+    overflow-y: auto;
+}
+
+#smar_img {
+    height: 32px;
+    width: 102px;
+}
