@@ -106,7 +106,7 @@ def adduser(request):
                 for user_shop in shops_clean:
                     shops += str(user_shop)
                     shops += '、'
-                operators = user
+                operators = Userinfo.objects.get(username=user, deletes=False)
                 operation_types = '创建新用户'
                 after_operations = '{id：%d，用户名：%s，密码：%s，角色：%s，职位描述：%s，所管店铺：%s}' % (last_date.id, usernames, passwds, rouse, descriptions, shops)
                 Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
@@ -202,7 +202,7 @@ def edit_user(request):
                 for user_shop in shops_clean:
                     shops += str(user_shop)
                     shops += '、'
-                operators = user
+                operators = Userinfo.objects.get(username=user, deletes=False)
                 operation_types = '修改用户信息'
                 before_operations = '{id：%d，用户名：%s，密码：%s，角色：%s，职位描述：%s，所管店铺：%s}' % (
                     user_id.id, user_id.username, user_id.passwd, user_id.rouse, user_id.description, shops)
@@ -229,7 +229,7 @@ def deletes_user(request):
     ids = request.GET.get('id')
     Userinfo.objects.filter(id=ids).update(deletes='True')
     last_data = Userinfo.objects.get(id=ids)
-    operators = user
+    operators = Userinfo.objects.get(username=user, deletes=False)
     operation_types = '删除用户'
     after_operations = '删除了{id：%s，用户名：%s}' % (ids, last_data.username)
     Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
@@ -261,14 +261,15 @@ def shopmanagement(request):
         last_date = Shops.objects.last()
         operation_types = '添加店铺'
         after_operations = '{id：%d，店铺名：%s}' % (last_date.id, shop_name)
-        Log.objects.create(operator=user, operation_type=operation_types, after_operation=after_operations)
+        Log.objects.create(operator=Userinfo.objects.get(username=user, deletes=False), operation_type=operation_types,
+                           after_operation=after_operations)
     shop_info = []
     for shop in shop_all:
         tables = {}
         tables['shop_name'] = shop.shopname
         tables['id'] = shop.id
         owners = ''
-        for owner in shop.userinfo_set.all():
+        for owner in shop.userinfo_set.filter(deletes=False).all():
             owners += str(owner.username)
             owners += '、'
         tables['shop_owners'] = owners
@@ -332,7 +333,7 @@ def edit_shop(request):
         shop_names = request.POST.get('shop_name')
         before_shopname = Shops.objects.filter(id=ids).values('shopname').get()
         Shops.objects.filter(id=ids).update(shopname=shop_names, deletes=False)
-        operators = user
+        operators = Userinfo.objects.get(username=user, deletes=False)
         operation_types = '修改店铺名'
         before_operations = '{id：%s，店铺名：%s}' % (ids, before_shopname['shopname'])
         after_operations = '{id：%s，店铺名：%s}' % (ids, shop_names)
@@ -355,7 +356,7 @@ def delete_shop(request):
     delete_shops = Shops.objects.filter(id=ids).values('shopname').get()
     delete_shop_name = delete_shops['shopname']
     Shops.objects.filter(id=ids).update(deletes=True)
-    operators = user
+    operators = Userinfo.objects.get(username=user, deletes=False)
     operation_types = '删除店铺'
     after_operations = '删除了{id：%s，店铺名：%s}' % (ids, delete_shop_name)
     Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
@@ -400,7 +401,8 @@ def brankmanagement(request):
             operation_types = '创建银行账户'
             after_operations = '{id：%d，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，银行卡操作人：%s}' % (
                 brank_card_id.id, account_names, brank_names, brank_numbers, brank_card_numbers, brank_operator_lists)
-            Log.objects.create(operator=user, operation_type=operation_types, after_operation=after_operations)
+            Log.objects.create(operator=Userinfo.objects.get(username=user, deletes=False), operation_type=operation_types,
+                               after_operation=after_operations)
         else:
             msg = '必须选择银行卡使用人'
     table_list = []
@@ -505,12 +507,14 @@ def edit_brank(request):
                 brank_operator_lists += str(user_brank.username)
                 brank_operator_lists += '、'
             operation_types = '修改银行账户'
+            operators = Userinfo.objects.get(username=user, deletes=False)
             before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，银行卡操作人：%s}' % (
                 ids, brank_card_id.account_name, brank_card_id.brank_name, brank_card_id.brank_number, brank_card_id.brank_card_number,
                 before_operation_lists)
             after_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，银行卡操作人：%s}' % (
                 ids, account_names, brank_names, brank_numbers, brank_card_numbers, brank_operator_lists)
-            Log.objects.create(operator=user, operation_type=operation_types, after_operation=after_operations, before_operation=before_operations)
+            Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations,
+                               before_operation=before_operations)
         else:
             msgss = '必须选择银行卡使用人'
 
@@ -535,7 +539,7 @@ def deletes_brank(request):
     for before_operations in brank_card_id.brank_operator.all():
         before_operation_lists += str(before_operations.username)
         before_operation_lists += '、'
-    operators = user
+    operators = Userinfo.objects.get(username=user, deletes=False)
     operation_types = '删除银行账户'
     before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，银行卡操作人：%s}' % (
         ids, brank_card_id.account_name, brank_card_id.brank_name, brank_card_id.brank_number, brank_card_id.brank_card_number,
@@ -553,7 +557,6 @@ def countmanagement(request):
         return redirect(to=login)
     title = '账户记录管理'
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    dates = get_nday_list2(2, now_time)
     add_times = datetime.datetime.now()
     account = Brank_account.objects.filter(brank_operator__username=user, deletes=False).all()
     if rouse == '财务':
@@ -621,7 +624,6 @@ def edit_count(request):
     if user == None:
         return redirect(to=login)
     ids = request.GET.get('id')
-    now_time = datetime.datetime.now()
     if request.method == 'POST':
         errs = ''
         ids = request.POST.get('id')
@@ -739,7 +741,7 @@ def brushmanagement(request):
         except ValueError:
             errs = '付款金额必须为数字'
         onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers, transaction_data=transaction_datas,
-                                                  payment_type=payment_types).all()
+                                                  payment_type=payment_types, deletes=False).all()
         if onlys:
             errs = '该订单记录已存在'
         if len(online_order_numbers) != 18:
@@ -1047,6 +1049,7 @@ def account_bill(request):
         return redirect(to=login)
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     account = Brank_account.objects.filter(deletes=False).first()
+    count_stats = ''
     if account:
         account_names = account.account_name
         accounts = Brank_account.objects.filter(deletes=False).all()
@@ -1066,6 +1069,10 @@ def account_bill(request):
                 actual_cost = float(account_data.start_money) - float(account_data.end_money)
             else:
                 actual_cost = '该账户没有上传截图'
+            if account_data.makes == False:
+                count_stats = '该账户已确认'
+            else:
+                count_stats = '该账户未确认'
         else:
             actual_cost = '没有当天的账户信息'
     else:
@@ -1076,7 +1083,7 @@ def account_bill(request):
         tables = Brush_single_entry.objects.all()
     return render(request, 'account_bill.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money,
-                   'actual_cost': actual_cost, 'user': user, 'account_name': account_names})
+                   'actual_cost': actual_cost, 'user': user, 'account_name': account_names, 'count_stats': count_stats})
 
 
 # 店铺账单

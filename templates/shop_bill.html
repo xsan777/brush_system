@@ -45,10 +45,10 @@
                     <td>{{ table.transaction_data }}</td>
                     <td>{{ table.payment_type }}</td>
                     <td>{{ table.payment_amount }}</td>
-                    <td>{{ table.payment_account }}</td>
+                    <td>{{ table.payment_account.account_name }}</td>
                     <td>{{ table.remarks }}</td>
                     <td>{{ table.add_time }}</td>
-                    <td>{{ table.operator }}</td>
+                    <td>{{ table.operator.username }}</td>
                 </tr>
             {% endfor %}
         </table>

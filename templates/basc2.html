@@ -100,19 +100,27 @@
         color: red;
     }
 
-    #red_lights {
-        color: red;
+
+
+    #lights {
+        width: 25px;
+        height: 25px;
     }
 
-    #gre_lights {
-        color: green;
+    .left_nav {
+        float: left;
+    }
+
+    .right_nav {
+        float: right;
+        margin-right: 40px;
     }
 </style>
 <div id="nav">
-    <div id="logo">宝儿喝酒数据管理系统 <span class="col-lg-offset-8" style="font-size: 1.8rem">欢迎，{{ user }}&nbsp;&nbsp;
+    <div id="logo"><span class="left_nav">宝儿喝酒数据管理系统</span> <span class="right_nav" style="font-size: 1.8rem">欢迎，{{ user }}&nbsp;&nbsp;
 <span id="light"></span>
-        
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<a
                 href=" /" style="font-size:small ">退出</a></span></div>
 </div>
 {#左侧导航#}
@@ -126,7 +134,6 @@
     <div class="menuss">
         <a href="/brushmanagement/">
             <div class="menus">每日喝酒数据录入</div>
-
         </a>
         <a href="/countmanagement/">
             <div class="menus">每日转账数据录入</div>
@@ -186,21 +193,19 @@
 {#</script>#}
 <script>
     var i = 1;
-    console.log('{{ unmakes }}')
-
-        while (i <= '{{ unmakes }}') {
-            var red_light = '<i class="fa fa-circle" id="red_lights"></i> ';
-            $('#light').append(red_light)
-            i = i + 1
-        }
+    while (i <= '{{ unmakes }}') {
+        {#var red_light = '<i class="fa fa-circle" id="red_lights"></i> ';#}
+        var red_light = '<img src="/static/unmakesure.gif" alt="" id="lights">';
+        $('#light').append(red_light)
+        i = i + 1
+    }
 
     var j = 1;
-        console.log('{{ makes }}')
-        while (j <= '{{ makes }}') {
-            var grend_light = '<i class="fa fa-circle" id="gre_lights"></i> ';
-            $('#light').append(grend_light);
-            j = j + 1
-        }
+    while (j <= '{{ makes }}') {
+        var grend_light = '<img src="/static/complete.gif" alt="" id="lights"> ';
+        $('#light').append(grend_light);
+        j = j + 1
+    }
 
 
 </script>
