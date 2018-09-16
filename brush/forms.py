@@ -22,7 +22,7 @@ class Add_user(forms.Form):
 # 修改用户信息
 class Edit_user(forms.Form):
     username = forms.CharField(label='用户名', widget=forms.TextInput(
-        attrs={'placeholder': '用户名', 'class': 'form-control', 'id': 'eidt_username', 'onchange': 'edit_verification_username()'}))
+        attrs={'placeholder': '用户名', 'class': 'form-control', 'id': 'eidt_username', 'onchange': 'edit_verification_username()', 'disabled': 'True'}))
     passwd = forms.CharField(label='密码', widget=forms.PasswordInput(attrs={'placeholder': '密码', 'class': 'form-control', 'id': 'eidt_passwd', }))
     passwd2 = forms.CharField(label='确认密码',
                               widget=forms.PasswordInput(attrs={'placeholder': '确认密码', 'class': 'form-control', 'id': 'eidt_passwd2', }))
@@ -34,10 +34,14 @@ class Edit_user(forms.Form):
 class Add_shop_form(forms.Form):
     shop_name = forms.CharField(label='店铺名', widget=forms.TextInput(
         attrs={'placeholder': '店铺名', 'class': 'form-control', 'id': 'shop_name', 'onchange': 'verification_shopname()'}))
+
+
 # 查找店铺
 class Search_shop(forms.Form):
     search_shop_name = forms.CharField(label='店铺名', widget=forms.TextInput(
-        attrs={'placeholder': '店铺名', 'class': 'form-control', 'id': 'shop_name',}))
+        attrs={'placeholder': '店铺名', 'class': 'form-control', 'id': 'shop_name', }))
+
+
 # 修改店铺名
 class Edit_shop_form(forms.Form):
     shop_name = forms.CharField(label='店铺名', widget=forms.TextInput(
@@ -86,7 +90,7 @@ class Edit_forms(forms.Form):
 # 创建喝酒数据
 class Add_brush_data(forms.Form):
     qq_or_weixin = forms.CharField(label='QQ或微信',
-                                       widget=forms.TextInput(attrs={'placeholder': 'QQ或微信', 'class': 'form-control', 'id': 'qq_or_weixin'}))
+                                   widget=forms.TextInput(attrs={'placeholder': 'QQ或微信', 'class': 'form-control', 'id': 'qq_or_weixin'}))
     wang_wang_number = forms.CharField(label='旺旺号',
                                        widget=forms.TextInput(attrs={'placeholder': '旺旺号', 'class': 'form-control', 'id': 'wang_wang_number'}))
     online_order_number = forms.CharField(label='线上订单号', widget=forms.TextInput(
@@ -99,6 +103,8 @@ class Add_brush_data(forms.Form):
 class Edit_brush_data(forms.Form):
     wang_wang_number = forms.CharField(label='旺旺号',
                                        widget=forms.TextInput(attrs={'placeholder': '旺旺号', 'class': 'form-control', 'id': 'update_wang_wang_number'}))
+    qq_or_weixin = forms.CharField(label='QQ或微信',
+                                   widget=forms.TextInput(attrs={'placeholder': 'QQ或微信', 'class': 'form-control', 'id': 'update_qq_or_weixin'}))
     online_order_number = forms.CharField(label='线上订单号', widget=forms.TextInput(
         attrs={'placeholder': '线上订单号', 'class': 'form-control', 'id': 'update_online_order_number'}))
     payment_amount = forms.CharField(label='付款金额（收入为负）', widget=forms.TextInput(

@@ -89,6 +89,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-3 control-label">QQ或微信</label>
+                            <div class="col-sm-9">
+                                {{ edit_brush_form.qq_or_weixin }}
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="inputEmail3" class="col-sm-3 control-label">旺旺号</label>
                             <div class="col-sm-9">
                                 {{ edit_brush_form.wang_wang_number }}
@@ -181,6 +187,15 @@
             }
 
         }
+        if ('{{ unmakes }}' == 0) {
+            console.log('{{ unmakes }}')
+            $('#make').attr("value", "已确认");
+            $('#make').prop("disabled", true);
+        }
+        else {
+            $('#make').attr("value", "核对确认");
+            $('#make').prop("disabled", false);
+        }
     </script>
     <script>
         $("#payment_account").find("option").each(function () {
@@ -199,9 +214,9 @@
                 data: $('#check_data').serialize(),
                 async: true,
                 success: function (arg) {
-                    alert(arg);
                     $('#make').attr("value", "已确认");
                     $('#make').prop("disabled", true);
+                    window.location.replace('/check_account/');
                 }
             })
         }
@@ -222,6 +237,7 @@
                             $(this).attr("selected", "selected");
                         }
                     });
+                    $('#update_qq_or_weixin').attr('value', arg['qq_or_weixin']);
                     $('#update_wang_wang_number').attr('value', arg['wang_wang_number']);
                     $('#update_online_order_number').attr('value', arg['online_order_number']);
                     $('#update_transaction_data').attr('value', arg['transaction_data']);
@@ -252,7 +268,10 @@
                 type: "POST",
                 dataType: 'json',
                 data: $('#update_form').serialize(),
-                async: true,
+                async: false,
+                success: function () {
+                    window.location.replace('/check_account/');
+                }
             })
         }
     </script>

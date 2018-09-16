@@ -133,9 +133,16 @@ def adduser(request):
     shopss = Shops.objects.filter(deletes=False).all()
     add_form = Add_user()
     edit_form = Edit_user()
+
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    if all_account_makes:
+        admin_flog = 1
+    else:
+        admin_flog = 0
     return render(request, 'user.html',
                   {'title': title, 'tables': table_list, 'shops': shopss, 'add_form': add_form, 'edit_user': edit_form, 'err_msg': err_msg,
-                   'msgs': msgs, 'user': user})
+                   'msgs': msgs, 'user': user, 'admin_flog': admin_flog})
 
 
 # 用户名验证
@@ -172,7 +179,7 @@ def edit_user(request):
     err_msg = ''
     if request.method == 'POST':
         ids = request.POST.get('id')
-        usernames = request.POST.get('username')
+
         passwds = request.POST.get('passwd')
         passwd2s = request.POST.get('passwd2')
         rouses = request.POST.get('rose')
@@ -186,6 +193,7 @@ def edit_user(request):
         if passwd2s == passwds:
             if len(shop_list) != 0:
                 user_id = Userinfo.objects.get(id=ids)
+                usernames = user_id.username
                 Userinfo.objects.filter(id=ids).update(username=usernames, passwd=passwds, rouse=rouses, description=descriptions, deletes=False)
                 user_id.shop.clear()
                 # 将店铺与用户绑定
@@ -256,7 +264,7 @@ def shopmanagement(request):
         # 财务账号自动绑定新开店铺
         user_need = Userinfo.objects.filter(rouse='财务', deletes=False).all()
         for user_add in user_need:
-            user_add.shop.add(Shops.objects.get(shopname=shop_name))
+            user_add.shop.add(Shops.objects.get(shopname=shop_name, deletes=False))
 
         last_date = Shops.objects.last()
         operation_types = '添加店铺'
@@ -276,8 +284,16 @@ def shopmanagement(request):
         shop_info.append(tables)
     add_shop_form = Add_shop_form()
     edit_shop_form = Edit_shop_form()
+    # 财务账户提示账户未确认
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    if all_account_makes:
+        admin_flog = 1
+    else:
+        admin_flog = 0
     return render(request, 'shops.html',
-                  {'title': title, 'tables': shop_info, 'add_shop_form': add_shop_form, 'edit_shop_form': edit_shop_form, 'user': user})
+                  {'title': title, 'tables': shop_info, 'add_shop_form': add_shop_form, 'edit_shop_form': edit_shop_form, 'user': user,
+                   'admin_flog': admin_flog})
 
 
 # 查找店铺
@@ -419,9 +435,16 @@ def brankmanagement(request):
             brankers += '、'
         tables['brank_owner'] = brankers
         table_list.append(tables)
+    # 财务账户提示账户未确认
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    if all_account_makes:
+        admin_flog = 1
+    else:
+        admin_flog = 0
     return render(request, 'brankmanagement.html',
                   {'title': title, 'tables': table_list, 'add_brank_account_form': add_brank_account_form, 'user_list': user_list, 'msg': msg,
-                   'edit_brank_account_form': edit_brank_account_form, 'user': user})
+                   'edit_brank_account_form': edit_brank_account_form, 'user': user, 'admin_flog': admin_flog})
 
 
 # 搜索银行账户
@@ -560,9 +583,10 @@ def countmanagement(request):
     add_times = datetime.datetime.now()
     account = Brank_account.objects.filter(brank_operator__username=user, deletes=False).all()
     if rouse == '财务':
-        count = Account_record.objects.filter(datess__gte=now_time, deletes=False).all()
+        count = Account_record.objects.filter(datess__date=now_time, deletes=False).all()
     else:
-        count = Account_record.objects.filter(datess__gte=now_time, operator__username=user, deletes=False).all()
+        count = Account_record.objects.filter(datess__date=now_time, operator__username=user, deletes=False).all()
+        print(count)
     forms = Forms()
     edit_form = Edit_forms()
     errs = ''
@@ -596,7 +620,7 @@ def countmanagement(request):
                     Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
         else:
             errs = '该账户今日已创建记录'
-    # 名下账户确认核对查询
+    # 运营名下账户确认核对查询
     reminds = ''
     unmakes = 0
     makes = 0
@@ -609,13 +633,20 @@ def countmanagement(request):
                 unmakes += 1
             if check_countss.makes == 'True':
                 makes += 1
+    # 财务账户提示账户未确认
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    if all_account_makes:
+        admin_flog = 1
+    else:
+        admin_flog = 0
     if rouse == '运营':
         return render(request, 'countmanagement2.html',
                       {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'formm': forms, 'edit_form': edit_form, 'errs': errs,
                        'user': user, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes})
     else:
         return render(request, 'countmanagement.html',
-                      {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'user': user})
+                      {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'user': user, 'admin_flog': admin_flog})
 
 
 # 修改账户记录数据
@@ -796,6 +827,7 @@ def edit(request):
         ids = request.POST.get('id')
         shopnames = request.POST.get('shopname')
         qq_or_weixins = request.POST.get('qq_or_weixin')
+
         qq_or_weixins = str(qq_or_weixins).strip()
         wang_wang_numbers = request.POST.get('wang_wang_number')
         wang_wang_numbers = str(wang_wang_numbers).strip()
@@ -845,10 +877,11 @@ def edit(request):
                           {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables,
                            'add_brush_form': add_brush_form, 'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs})
     current_data = Brush_single_entry.objects.filter(id=ids).get()
-    msg = json.dumps({'ids': current_data.id, 'shopname': current_data.shopname, 'wang_wang_number': current_data.wang_wang_number,
-                      'online_order_number': current_data.online_order_number, 'transaction_data': current_data.transaction_data,
-                      'payment_type': current_data.payment_type, 'payment_amount': current_data.payment_amount,
-                      'payment_account': current_data.payment_account.account_name, 'remarks': current_data.remarks, })
+    msg = json.dumps({'ids': current_data.id, 'shopname': current_data.shopname, 'qq_or_weixin': current_data.qq_or_weixin,
+                      'wang_wang_number': current_data.wang_wang_number, 'online_order_number': current_data.online_order_number,
+                      'transaction_data': current_data.transaction_data, 'payment_type': current_data.payment_type,
+                      'payment_amount': current_data.payment_amount, 'payment_account': current_data.payment_account.account_name,
+                      'remarks': current_data.remarks, })
     return HttpResponse(msg)
 
 
@@ -917,6 +950,13 @@ def more_date(request):
                 unmakes += 1
             if check_countss.makes == 'True':
                 makes += 1
+    # 财务账户提示账户未确认
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    if all_account_makes:
+        admin_flog = 1
+    else:
+        admin_flog = 0
     if rouse == '运营':
         return render(request, 'more_data2.html',
                       {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
@@ -925,7 +965,7 @@ def more_date(request):
     else:
         return render(request, 'more_data.html',
                       {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
-                       'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user})
+                       'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'admin_flog': admin_flog})
 
 
 # 更多页面加载店铺名
@@ -968,7 +1008,7 @@ def check_account(request):
         tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_account=account, deletes='False').all()
     else:
         tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes='False').all()
-    pay_money = 0
+    pay_money = 0.0
     for table in tables:
         pay_money += float(table.payment_amount)
     account_data = Account_record.objects.filter(account_name=account, datess__date=now_time, deletes=False)
@@ -983,6 +1023,7 @@ def check_account(request):
     else:
         actual_cost = '没有当天的账户信息，无法核账'
     accountss = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
+    # 提示运营有账户未确认
     reminds = ''
     unmakes = 0
     makes = 0
@@ -1009,7 +1050,7 @@ def make_account(request):
     account = request.GET.get('payment_account')
     now_time = request.GET.get('check_data')
     Account_record.objects.filter(datess__date=now_time, account_name__account_name=account).update(makes=True)
-    operators = user
+    operators = Userinfo.objects.get(username=user, deletes=False)
     operation_types = '账户核对成功'
     after_operations = '{日期：%s，账户名：%s}' % (now_time, account)
     Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
@@ -1033,12 +1074,19 @@ def search_count(request):
     else:
         search_date = now_time
         count = Account_record.objects.filter(datess__date=now_time, deletes=False).all()
+    # 财务账户提示账户未确认
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    if all_account_makes:
+        admin_flog = 1
+    else:
+        admin_flog = 0
     if rouse == '财务':
         return render(request, 'countmanagement.html', {'title': title, 'account': account, 'count': count, 'nowss': search_date, 'user': user})
     else:
         return render(request, 'countmanagement2.html',
                       {'title': title, 'account': account, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
-                       'user': user})
+                       'user': user, 'admin_flog': admin_flog})
 
 
 # 账户账单
@@ -1081,9 +1129,16 @@ def account_bill(request):
         pay_money = 0
         actual_cost = '没有银行账户'
         tables = Brush_single_entry.objects.all()
+    # 财务账户提示账户未确认
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    if all_account_makes:
+        admin_flog = 1
+    else:
+        admin_flog = 0
     return render(request, 'account_bill.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money,
-                   'actual_cost': actual_cost, 'user': user, 'account_name': account_names, 'count_stats': count_stats})
+                   'actual_cost': actual_cost, 'user': user, 'account_name': account_names, 'count_stats': count_stats, 'admin_flog': admin_flog})
 
 
 # 店铺账单
@@ -1106,7 +1161,13 @@ def shop_bill(request):
     pay_money = 0
     for table in tables:
         pay_money += float(table.payment_amount)
-
+    # 财务账户提示账户未确认
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    if all_account_makes:
+        admin_flog = 1
+    else:
+        admin_flog = 0
     return render(request, 'shop_bill.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money, 'user': user,
-                   'shop_name': shop_name})
+                   'shop_name': shop_name, 'admin_flog': admin_flog})
