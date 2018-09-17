@@ -66,5 +66,5 @@ class Log(models.Model):
     # operator = models.CharField(verbose_name='操作员', max_length=16)
     operator = models.ForeignKey(Userinfo,on_delete=models.DO_NOTHING)
     operation_type = models.CharField(verbose_name='操作类型', max_length=32)
-    before_operation = models.CharField(verbose_name='操作前', max_length=200)
-    after_operation = models.CharField(verbose_name='操作后', max_length=200)
+    before_operation = models.CharField(verbose_name='操作前', max_length=500)
+    after_operation = models.CharField(verbose_name='操作后', max_length=500)

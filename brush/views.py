@@ -136,7 +136,7 @@ def adduser(request):
 
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
-    if all_account_makes:
+    if len(all_account_makes) == 0:
         admin_flog = 1
     else:
         admin_flog = 0
@@ -287,7 +287,7 @@ def shopmanagement(request):
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
-    if all_account_makes:
+    if len(all_account_makes) == 0:
         admin_flog = 1
     else:
         admin_flog = 0
@@ -438,7 +438,7 @@ def brankmanagement(request):
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
-    if all_account_makes:
+    if len(all_account_makes) == 0:
         admin_flog = 1
     else:
         admin_flog = 0
@@ -586,40 +586,42 @@ def countmanagement(request):
         count = Account_record.objects.filter(datess__date=now_time, deletes=False).all()
     else:
         count = Account_record.objects.filter(datess__date=now_time, operator__username=user, deletes=False).all()
-        print(count)
     forms = Forms()
     edit_form = Edit_forms()
     errs = ''
     if request.method == 'POST':
         account_names = request.POST.get('account_name')
-        exits = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=account_names, deletes=False).all()
-
-        if len(exits) == 0:
-            operators = Userinfo.objects.get(username=user, deletes=False)
-            form_data = Forms(request.POST)
-            if form_data.is_valid():
-                data = form_data.clean()
-                start_moneys = data['start_money']
-                end_moneys = data['end_money']
-                try:
-                    float(start_moneys)
-                    float(end_moneys)
-                    errs = ''
-                except ValueError:
-                    errs = '初始资金和结余资金必须为数字'
-                if errs == '':
-                    account_names = Brank_account.objects.get(account_name=account_names, deletes=False)
-                    Account_record.objects.create(datess=add_times, account_name=account_names, start_money=start_moneys, end_money=end_moneys,
-                                                  operator=operators, makes='False', start_money_img=request.FILES.get('start_money_img'),
-                                                  end_money_img=request.FILES.get('end_money_img'), deletes=False)
-                    last_date = Account_record.objects.last()
-
-                    operation_types = '创建账户记录'
-                    after_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，操作员：%s，运营确认：False，初始资金截图：%s，结余资金截图：%s}' % (
-                        last_date.id, account_names.account_name, start_moneys, end_moneys, user, last_date.start_money_img, last_date.end_money_img)
-                    Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
+        print(account_names)
+        if account_names  == None:
+            errs = '账户名不能为空'
         else:
-            errs = '该账户今日已创建记录'
+            exits = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=account_names, deletes=False).all()
+            if len(exits) == 0:
+                operators = Userinfo.objects.get(username=user, deletes=False)
+                form_data = Forms(request.POST)
+                if form_data.is_valid():
+                    data = form_data.clean()
+                    start_moneys = data['start_money']
+                    end_moneys = data['end_money']
+                    try:
+                        float(start_moneys)
+                        float(end_moneys)
+                        errs = ''
+                    except ValueError:
+                        errs = '初始资金和结余资金必须为数字'
+                    if errs == '':
+                        account_names = Brank_account.objects.get(account_name=account_names, deletes=False)
+                        Account_record.objects.create(datess=add_times, account_name=account_names, start_money=start_moneys, end_money=end_moneys,
+                                                      operator=operators, makes='False', start_money_img=request.FILES.get('start_money_img'),
+                                                      end_money_img=request.FILES.get('end_money_img'), deletes=False)
+                        last_date = Account_record.objects.last()
+
+                        operation_types = '创建账户记录'
+                        after_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，操作员：%s，运营确认：False，初始资金截图：%s，结余资金截图：%s}' % (
+                            last_date.id, account_names.account_name, start_moneys, end_moneys, user, last_date.start_money_img, last_date.end_money_img)
+                        Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
+            else:
+                errs = '该账户今日已创建记录'
     # 运营名下账户确认核对查询
     reminds = ''
     unmakes = 0
@@ -636,7 +638,7 @@ def countmanagement(request):
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
-    if all_account_makes:
+    if len(all_account_makes) == 0:
         admin_flog = 1
     else:
         admin_flog = 0
@@ -766,17 +768,20 @@ def brushmanagement(request):
         payment_accounts = request.POST.get('payment_account')
         operators = Userinfo.objects.get(username=user, deletes=False)
         remarkss = request.POST.get('remarks')
-        # 验证付款金额是否为float类型
-        try:
-            float(payment_amounts)
-        except ValueError:
-            errs = '付款金额必须为数字'
-        onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers, transaction_data=transaction_datas,
-                                                  payment_type=payment_types, deletes=False).all()
-        if onlys:
-            errs = '该订单记录已存在'
-        if len(online_order_numbers) != 18:
-            errs = '线上订单号格式错误'
+        if payment_accounts == None:
+            errs = '账户名不能为空'
+        else:
+            # 验证付款金额是否为float类型
+            try:
+                float(payment_amounts)
+            except ValueError:
+                errs = '付款金额必须为数字'
+            onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers, transaction_data=transaction_datas,
+                                                      payment_type=payment_types, deletes=False).all()
+            if onlys:
+                errs = '该订单记录已存在'
+            if len(online_order_numbers) != 18:
+                errs = '线上订单号格式错误'
         if errs == '':
             Brush_single_entry.objects.create(shopname=shopnames, qq_or_weixin=qq_or_weixins, wang_wang_number=wang_wang_numbers,
                                               online_order_number=online_order_numbers, transaction_data=transaction_datas,
@@ -827,7 +832,6 @@ def edit(request):
         ids = request.POST.get('id')
         shopnames = request.POST.get('shopname')
         qq_or_weixins = request.POST.get('qq_or_weixin')
-
         qq_or_weixins = str(qq_or_weixins).strip()
         wang_wang_numbers = request.POST.get('wang_wang_number')
         wang_wang_numbers = str(wang_wang_numbers).strip()
@@ -953,7 +957,7 @@ def more_date(request):
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
-    if all_account_makes:
+    if len(all_account_makes) == 0:
         admin_flog = 1
     else:
         admin_flog = 0
@@ -991,19 +995,24 @@ def check_account(request):
     if user == None:
         return redirect(to=login)
     title = '核对喝酒数据'
+    errs = ''
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     accounts = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     edit_brush_form = Edit_brush_data()
     shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
-    account = ''
+    account = Brank_account.objects.filter(brank_operator__username=user,deletes=False).first()
     for i in accounts:
         account = i.id
         break
-    actual_cost = ''
+
     if request.method == 'POST':
         now_time = request.POST.get('check_data')
         account = request.POST.get('payment_account')
-        account = Brank_account.objects.get(account_name=account, deletes=False)
+        if account == None:
+            errs = '请选择查询账户名'
+            account = Brank_account.objects.filter(brank_operator__username=user, deletes=False).first()
+        else:
+            account = Brank_account.objects.get(account_name=account, deletes=False)
     if account:
         tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_account=account, deletes='False').all()
     else:
@@ -1011,7 +1020,7 @@ def check_account(request):
     pay_money = 0.0
     for table in tables:
         pay_money += float(table.payment_amount)
-    account_data = Account_record.objects.filter(account_name=account, datess__date=now_time, deletes=False)
+    account_data = Account_record.objects.filter(account_name=account, datess__date=now_time, deletes=False).all()
     if account_data:
         account_data = account_data.get()
         star_money_img = account_data.start_money_img
@@ -1039,7 +1048,7 @@ def check_account(request):
     return render(request, 'check_account2.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money,
                    'actual_cost': actual_cost, 'user': user, 'edit_brush_form': edit_brush_form, 'shops': shops, 'user': user,
-                   'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes})
+                   'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,'errs':errs})
 
 
 # 确认核对
@@ -1077,7 +1086,7 @@ def search_count(request):
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
-    if all_account_makes:
+    if len(all_account_makes) == 0:
         admin_flog = 1
     else:
         admin_flog = 0
@@ -1132,7 +1141,7 @@ def account_bill(request):
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
-    if all_account_makes:
+    if len(all_account_makes) == 0:
         admin_flog = 1
     else:
         admin_flog = 0
@@ -1164,7 +1173,7 @@ def shop_bill(request):
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
-    if all_account_makes:
+    if len(all_account_makes) == 0:
         admin_flog = 1
     else:
         admin_flog = 0

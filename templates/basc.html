@@ -98,6 +98,10 @@
         width: 25px;
         height: 25px;
     }
+    #admin_alert{
+        {#font-size: 1.5rem;#}
+        font-family: 微软雅黑;
+    }
 </style>
 <div id="nav">
     <div id="logo">宝儿喝酒数据管理系统 <span class="col-lg-offset-8" style="font-size: 1.8rem">欢迎，{{ user }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
@@ -155,7 +159,7 @@
     {#    </a>#}
 </div>
 <div id="content">
-    <div class="alert alert-danger" role="alert" id="remind">今日有账户未确认</div>
+    <div class="alert alert-danger" role="alert" id="remind" style="font-family: 微软雅黑"><span id="admin_alert"><h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;今&nbsp;&nbsp;日&nbsp;&nbsp;有&nbsp;&nbsp;账&nbsp;&nbsp;户&nbsp;&nbsp;未&nbsp;&nbsp;确&nbsp;&nbsp;认</h4></span></div>
     <div id="cont">
         {#右侧内容区#}
         {% block content %}
@@ -184,7 +188,7 @@
         {#$('#remind').append('<img src="/static/unmakesure.gif" alt="" id="lights">');#}
         {#$('#nav_remind').append('<img src="/static/unmakesure.gif" alt="" id="lights">');#}
         $('div#remind').hide();
-        console.log('122')
+
     }
     else {
         {#$('#remarks').append('<img src="/static/complete.gif" alt="" id="lights">');#}

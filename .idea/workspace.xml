@@ -3,14 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="406d6af2-ec06-4ccb-b031-9531d5d81333" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/brush/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/brush/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brush/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/brush/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/brush/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/brush/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brush_system/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/brush_system/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/basc.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/basc.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/brush2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/brush2.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/check_account2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/check_account2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/more_data.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/more_data.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/more_data2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/more_data2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/shop_bill.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/shop_bill.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/countmanagement2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/countmanagement2.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,53 +22,59 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/brush/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1422">
-              <caret line="879" column="94" selection-start-line="879" selection-start-column="82" selection-end-line="879" selection-end-column="94" />
+            <state relative-caret-position="184">
+              <caret line="1006" lean-forward="true" selection-start-line="1006" selection-end-line="1006" />
               <folding>
                 <element signature="e#0#59#0" expanded="true" />
                 <element signature="e#234#709#0" />
                 <element signature="e#760#1031#0" />
                 <element signature="e#1063#1848#0" />
                 <element signature="e#1882#1950#0" />
-                <element signature="e#5048#5291#0" />
-                <element signature="e#5334#5712#0" />
-                <element signature="e#5752#8495#0" />
-                <element signature="e#8536#9212#0" />
-                <element signature="e#11061#12030#0" />
-                <element signature="e#17470#18745#0" />
-                <element signature="e#18794#19310#0" />
-                <element signature="e#19353#22318#0" />
-                <element signature="e#22362#23514#0" />
-                <element signature="e#27158#32096#0" />
-                <element signature="e#32142#32992#0" />
+                <element signature="e#5326#5569#0" />
+                <element signature="e#5612#5990#0" />
+                <element signature="e#6030#8770#0" />
+                <element signature="e#8811#9487#0" />
+                <element signature="e#11665#12634#0" />
+                <element signature="e#12685#12925#0" />
+                <element signature="e#12964#14135#0" />
+                <element signature="e#14175#14929#0" />
+                <element signature="e#18369#19644#0" />
+                <element signature="e#19693#20209#0" />
+                <element signature="e#20252#23217#0" />
+                <element signature="e#23261#24413#0" />
+                <element signature="e#33361#34211#0" />
+                <element signature="e#34486#39530#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/brush_system/urls.py">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/brush/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="236">
-              <caret line="45" column="23" selection-start-line="45" selection-start-column="10" selection-end-line="45" selection-end-column="23" />
-              <folding>
-                <element signature="e#647#679#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="1497">
+              <caret line="70" lean-forward="true" selection-start-line="70" selection-end-line="70" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/brush/forms.py">
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/brush_system/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="290">
-              <caret line="106" column="140" selection-start-line="106" selection-start-column="121" selection-end-line="106" selection-end-column="140" />
-              <folding>
-                <element signature="e#0#24#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="316">
+              <caret line="86" selection-start-line="86" selection-end-line="93" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="brankmanagement.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/brankmanagement.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="8820">
+              <caret line="294" column="13" selection-start-line="294" selection-start-column="13" selection-end-line="294" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -78,8 +82,8 @@
       <file leaf-file-name="basc2.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/basc2.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4">
-              <caret line="99" column="19" lean-forward="true" selection-start-line="99" selection-start-column="19" selection-end-line="99" selection-end-column="19" />
+            <state relative-caret-position="30">
+              <caret line="100" column="5" selection-start-line="100" selection-start-column="5" selection-end-line="100" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -87,38 +91,8 @@
       <file leaf-file-name="brush2.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/brush2.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="137" column="48" lean-forward="true" selection-start-line="137" selection-start-column="48" selection-end-line="137" selection-end-column="48" />
-              <folding>
-                <element signature="e#10101#15271#0#HTML" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="more_data.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/more_data.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="61" column="61" selection-start-line="61" selection-start-column="61" selection-end-line="61" selection-end-column="61" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="more_data2.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/templates/more_data2.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="65" column="54" selection-start-line="65" selection-start-column="54" selection-end-line="65" selection-end-column="54" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="shop_bill.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/shop_bill.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1050">
-              <caret line="35" column="29" lean-forward="true" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
+            <state relative-caret-position="-2580">
+              <caret line="137" column="48" selection-start-line="137" selection-start-column="48" selection-end-line="137" selection-end-column="48" />
             </state>
           </provider>
         </entry>
@@ -126,8 +100,31 @@
       <file leaf-file-name="check_account2.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/check_account2.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="41">
-              <caret line="90" selection-start-line="90" selection-end-line="95" selection-end-column="30" />
+            <state relative-caret-position="215">
+              <caret line="178" column="18" selection-start-line="178" selection-start-column="18" selection-end-line="178" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="more_data2.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/more_data2.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-5070">
+              <caret line="65" column="54" selection-start-line="65" selection-start-column="54" selection-end-line="65" selection-end-column="54" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="countmanagement2.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/countmanagement2.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="191">
+              <caret line="172" column="32" selection-start-line="172" selection-start-column="32" selection-end-line="172" selection-end-column="32" />
+              <folding>
+                <element signature="e#8102#8642#0#HTML" />
+                <element signature="e#8704#9490#0#HTML" />
+                <element signature="e#9522#9949#0#HTML" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -135,8 +132,8 @@
       <file leaf-file-name="basc.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/basc.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="558">
-              <caret line="188" column="10" lean-forward="true" selection-start-line="188" selection-start-column="10" selection-end-line="188" selection-end-column="10" />
+            <state relative-caret-position="371">
+              <caret line="190" selection-start-line="190" selection-end-line="190" />
             </state>
           </provider>
         </entry>
@@ -156,6 +153,9 @@
       <find>ale</find>
       <find>console</find>
       <find>核对</find>
+      <find>店铺管理</find>
+      <find>用户管</find>
+      <find>账户记录</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -178,21 +178,21 @@
         <option value="$PROJECT_DIR$/static/css/shop_bill.css" />
         <option value="$PROJECT_DIR$/static/css/countmanagement.css" />
         <option value="$PROJECT_DIR$/static/css/check_account.css" />
-        <option value="$PROJECT_DIR$/templates/countmanagement2.html" />
-        <option value="$PROJECT_DIR$/brush/models.py" />
-        <option value="$PROJECT_DIR$/brush_system/settings.py" />
         <option value="$PROJECT_DIR$/templates/account_bill.html" />
         <option value="$PROJECT_DIR$/templates/countmanagement.html" />
         <option value="$PROJECT_DIR$/templates/user.html" />
-        <option value="$PROJECT_DIR$/templates/basc2.html" />
         <option value="$PROJECT_DIR$/templates/shop_bill.html" />
-        <option value="$PROJECT_DIR$/templates/basc.html" />
         <option value="$PROJECT_DIR$/brush/forms.py" />
-        <option value="$PROJECT_DIR$/brush/views.py" />
-        <option value="$PROJECT_DIR$/templates/check_account2.html" />
         <option value="$PROJECT_DIR$/templates/brush2.html" />
         <option value="$PROJECT_DIR$/templates/more_data.html" />
         <option value="$PROJECT_DIR$/templates/more_data2.html" />
+        <option value="$PROJECT_DIR$/templates/basc2.html" />
+        <option value="$PROJECT_DIR$/templates/basc.html" />
+        <option value="$PROJECT_DIR$/brush_system/settings.py" />
+        <option value="$PROJECT_DIR$/brush/models.py" />
+        <option value="$PROJECT_DIR$/templates/countmanagement2.html" />
+        <option value="$PROJECT_DIR$/templates/check_account2.html" />
+        <option value="$PROJECT_DIR$/brush/views.py" />
       </list>
     </option>
   </component>
@@ -205,9 +205,9 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="309" />
-    <option name="y" value="31" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="187" />
+    <option name="y" value="160" />
     <option name="width" value="1476" />
     <option name="height" value="928" />
   </component>
@@ -311,45 +311,54 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-169" y="498" width="1476" height="928" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.47546348" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3293348" />
       <window_info anchor="bottom" id="Python Console" order="7" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.4765526" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.24100327" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15351813" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20550847" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15351813" />
-      <window_info anchor="right" id="SciView" order="3" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.3293348" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.2955289" />
-      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.24100327" />
-      <window_info anchor="bottom" id="Python Console" order="7" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15511727" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.3293348" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.2955289" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" id="Database" order="4" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.24100327" />
+      <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -380,17 +389,20 @@
             <element signature="e#760#1031#0" />
             <element signature="e#1063#1848#0" />
             <element signature="e#1882#1950#0" />
-            <element signature="e#5048#5291#0" />
-            <element signature="e#5334#5712#0" />
-            <element signature="e#5752#8495#0" />
-            <element signature="e#8536#9212#0" />
-            <element signature="e#11061#12030#0" />
-            <element signature="e#17470#18745#0" />
-            <element signature="e#18794#19310#0" />
-            <element signature="e#19353#22318#0" />
-            <element signature="e#22362#23514#0" />
-            <element signature="e#27158#32096#0" />
-            <element signature="e#32142#32992#0" />
+            <element signature="e#5326#5569#0" />
+            <element signature="e#5612#5990#0" />
+            <element signature="e#6030#8770#0" />
+            <element signature="e#8811#9487#0" />
+            <element signature="e#11665#12634#0" />
+            <element signature="e#12685#12925#0" />
+            <element signature="e#12964#14135#0" />
+            <element signature="e#14175#14929#0" />
+            <element signature="e#18369#19644#0" />
+            <element signature="e#19693#20209#0" />
+            <element signature="e#20252#23217#0" />
+            <element signature="e#23261#24413#0" />
+            <element signature="e#33361#34211#0" />
+            <element signature="e#34486#39530#0" />
           </folding>
         </state>
       </provider>
@@ -457,17 +469,20 @@
             <element signature="e#760#1031#0" />
             <element signature="e#1063#1848#0" />
             <element signature="e#1882#1950#0" />
-            <element signature="e#5048#5291#0" />
-            <element signature="e#5334#5712#0" />
-            <element signature="e#5752#8495#0" />
-            <element signature="e#8536#9212#0" />
-            <element signature="e#11061#12030#0" />
-            <element signature="e#17470#18745#0" />
-            <element signature="e#18794#19310#0" />
-            <element signature="e#19353#22318#0" />
-            <element signature="e#22362#23514#0" />
-            <element signature="e#27158#32096#0" />
-            <element signature="e#32142#32992#0" />
+            <element signature="e#5326#5569#0" />
+            <element signature="e#5612#5990#0" />
+            <element signature="e#6030#8770#0" />
+            <element signature="e#8811#9487#0" />
+            <element signature="e#11665#12634#0" />
+            <element signature="e#12685#12925#0" />
+            <element signature="e#12964#14135#0" />
+            <element signature="e#14175#14929#0" />
+            <element signature="e#18369#19644#0" />
+            <element signature="e#19693#20209#0" />
+            <element signature="e#20252#23217#0" />
+            <element signature="e#23261#24413#0" />
+            <element signature="e#33361#34211#0" />
+            <element signature="e#34486#39530#0" />
           </folding>
         </state>
       </provider>
@@ -558,17 +573,20 @@
             <element signature="e#760#1031#0" />
             <element signature="e#1063#1848#0" />
             <element signature="e#1882#1950#0" />
-            <element signature="e#5048#5291#0" />
-            <element signature="e#5334#5712#0" />
-            <element signature="e#5752#8495#0" />
-            <element signature="e#8536#9212#0" />
-            <element signature="e#11061#12030#0" />
-            <element signature="e#17470#18745#0" />
-            <element signature="e#18794#19310#0" />
-            <element signature="e#19353#22318#0" />
-            <element signature="e#22362#23514#0" />
-            <element signature="e#27158#32096#0" />
-            <element signature="e#32142#32992#0" />
+            <element signature="e#5326#5569#0" />
+            <element signature="e#5612#5990#0" />
+            <element signature="e#6030#8770#0" />
+            <element signature="e#8811#9487#0" />
+            <element signature="e#11665#12634#0" />
+            <element signature="e#12685#12925#0" />
+            <element signature="e#12964#14135#0" />
+            <element signature="e#14175#14929#0" />
+            <element signature="e#18369#19644#0" />
+            <element signature="e#19693#20209#0" />
+            <element signature="e#20252#23217#0" />
+            <element signature="e#23261#24413#0" />
+            <element signature="e#33361#34211#0" />
+            <element signature="e#34486#39530#0" />
           </folding>
         </state>
       </provider>
@@ -608,13 +626,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/brankmanagement.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8820">
-          <caret line="294" column="13" selection-start-line="294" selection-start-column="13" selection-end-line="294" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/shops.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2396">
@@ -651,20 +662,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/brush/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1290">
-          <caret line="43" column="44" selection-start-line="43" selection-start-column="44" selection-end-line="43" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/brush_system/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="78" selection-start-line="78" selection-end-line="85" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/static/css/countmanagement.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -693,16 +690,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/countmanagement2.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="117" column="103" selection-start-line="117" selection-start-column="95" selection-end-line="117" selection-end-column="103" />
-          <folding>
-            <element signature="e#5462#5480#0#HTML" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/user.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
@@ -717,20 +704,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/basc2.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4">
-          <caret line="99" column="19" lean-forward="true" selection-start-line="99" selection-start-column="19" selection-end-line="99" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/basc.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="558">
-          <caret line="188" column="10" lean-forward="true" selection-start-line="188" selection-start-column="10" selection-end-line="188" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/brush_system/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="236">
@@ -741,34 +714,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/brush/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1422">
-          <caret line="879" column="94" selection-start-line="879" selection-start-column="82" selection-end-line="879" selection-end-column="94" />
-          <folding>
-            <element signature="e#0#59#0" expanded="true" />
-            <element signature="e#234#709#0" />
-            <element signature="e#760#1031#0" />
-            <element signature="e#1063#1848#0" />
-            <element signature="e#1882#1950#0" />
-            <element signature="e#5048#5291#0" />
-            <element signature="e#5334#5712#0" />
-            <element signature="e#5752#8495#0" />
-            <element signature="e#8536#9212#0" />
-            <element signature="e#11061#12030#0" />
-            <element signature="e#17470#18745#0" />
-            <element signature="e#18794#19310#0" />
-            <element signature="e#19353#22318#0" />
-            <element signature="e#22362#23514#0" />
-            <element signature="e#27158#32096#0" />
-            <element signature="e#32142#32992#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/brush/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
+        <state relative-caret-position="3120">
           <caret line="106" column="140" selection-start-line="106" selection-start-column="121" selection-end-line="106" selection-end-column="140" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
@@ -776,34 +724,106 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/check_account2.html">
+    <entry file="file://$PROJECT_DIR$/templates/more_data.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="41">
-          <caret line="90" selection-start-line="90" selection-end-line="95" selection-end-column="30" />
+        <state relative-caret-position="1830">
+          <caret line="61" column="61" selection-start-line="61" selection-start-column="61" selection-end-line="61" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/brankmanagement.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8820">
+          <caret line="294" column="13" selection-start-line="294" selection-start-column="13" selection-end-line="294" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/basc2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="100" column="5" selection-start-line="100" selection-start-column="5" selection-end-line="100" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/basc.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="371">
+          <caret line="190" selection-start-line="190" selection-end-line="190" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/brush2.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="137" column="48" lean-forward="true" selection-start-line="137" selection-start-column="48" selection-end-line="137" selection-end-column="48" />
-          <folding>
-            <element signature="e#10101#15271#0#HTML" />
-          </folding>
+        <state relative-caret-position="-2580">
+          <caret line="137" column="48" selection-start-line="137" selection-start-column="48" selection-end-line="137" selection-end-column="48" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/more_data.html">
+    <entry file="file://$PROJECT_DIR$/brush/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="61" column="61" selection-start-line="61" selection-start-column="61" selection-end-line="61" selection-end-column="61" />
+        <state relative-caret-position="1497">
+          <caret line="70" lean-forward="true" selection-start-line="70" selection-end-line="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/brush_system/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="86" selection-start-line="86" selection-end-line="93" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/countmanagement2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="172" column="32" selection-start-line="172" selection-start-column="32" selection-end-line="172" selection-end-column="32" />
+          <folding>
+            <element signature="e#8102#8642#0#HTML" />
+            <element signature="e#8704#9490#0#HTML" />
+            <element signature="e#9522#9949#0#HTML" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/more_data2.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
+        <state relative-caret-position="-5070">
           <caret line="65" column="54" selection-start-line="65" selection-start-column="54" selection-end-line="65" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/check_account2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="178" column="18" selection-start-line="178" selection-start-column="18" selection-end-line="178" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/brush/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="1006" lean-forward="true" selection-start-line="1006" selection-end-line="1006" />
+          <folding>
+            <element signature="e#0#59#0" expanded="true" />
+            <element signature="e#234#709#0" />
+            <element signature="e#760#1031#0" />
+            <element signature="e#1063#1848#0" />
+            <element signature="e#1882#1950#0" />
+            <element signature="e#5326#5569#0" />
+            <element signature="e#5612#5990#0" />
+            <element signature="e#6030#8770#0" />
+            <element signature="e#8811#9487#0" />
+            <element signature="e#11665#12634#0" />
+            <element signature="e#12685#12925#0" />
+            <element signature="e#12964#14135#0" />
+            <element signature="e#14175#14929#0" />
+            <element signature="e#18369#19644#0" />
+            <element signature="e#19693#20209#0" />
+            <element signature="e#20252#23217#0" />
+            <element signature="e#23261#24413#0" />
+            <element signature="e#33361#34211#0" />
+            <element signature="e#34486#39530#0" />
+          </folding>
         </state>
       </provider>
     </entry>
