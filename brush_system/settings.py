@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'brush.apps.BrushConfig',
+    'erp.apps.ErpConfig',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +84,14 @@ DATABASES = {
         'PASSWORD': 'panjin456',
         'HOST': '59.110.241.144',
         'PORT': 3306,
+    },
+    'erp_database': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'baoersqlerp',
+        'USER': 'panjin',
+        'PASSWORD': 'panjin456',
+        'HOST': '59.110.241.144',
+        'PORT': 3306,
     }
     # 'default': {
     #     'ENGINE': 'django.db.backends.mysql',
@@ -93,7 +102,14 @@ DATABASES = {
     #     'PORT': 3306,
     # }
 }
-
+DATABASE_ROUTERS = ['django_test.database_router.DatabaseAppsRouter']
+DATABASE_APPS_MAPPING = {
+    # example:
+    # 'app_name':'database_name',
+    # 'app01': 'test',
+    'brush': 'default',
+    'erp': 'erp_database',
+}
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
