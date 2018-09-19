@@ -14,11 +14,16 @@ class Shops(models.Model):
 
 class Userinfo(models.Model):
     passwd = models.CharField(verbose_name='密码', max_length=16)
-    username = models.CharField(verbose_name='用户名', max_length=32,)
+    username = models.CharField(verbose_name='用户名', max_length=32, )
     rouse = models.CharField(verbose_name='角色', max_length=8)
     description = models.CharField(u'职位描述', max_length=64)
     shop = models.ManyToManyField("Shops")
     deletes = models.CharField(max_length=5)
+
+
+class Total_brank_account(models.Model):
+    total_account_name = models.CharField(verbose_name='总账户名', max_length=64)
+    own_shop = models.ForeignKey("Shops",on_delete=models.DO_NOTHING)
 
 
 class Brank_account(models.Model):
@@ -27,6 +32,7 @@ class Brank_account(models.Model):
     brank_number = models.CharField(verbose_name='开户行号', max_length=32)
     brank_card_number = models.CharField(verbose_name='银行卡号', max_length=32)
     brank_operator = models.ManyToManyField("Userinfo")
+    total_account_name = models.ForeignKey(Total_brank_account,on_delete=models.DO_NOTHING)
     deletes = models.CharField(max_length=5)
 
 
@@ -36,11 +42,13 @@ class Account_record(models.Model):
     account_name = models.ForeignKey(Brank_account,on_delete=models.DO_NOTHING)
     start_money = models.IntegerField(verbose_name='初始资金')
     end_money = models.IntegerField(verbose_name='结余资金')
+    weixin_withdraw_money = models.IntegerField(verbose_name='微信提现手续费')
     # operator = models.CharField(verbose_name='操作员', max_length=16)
     operator = models.ForeignKey(Userinfo,on_delete=models.DO_NOTHING)
     makes = models.CharField(max_length=5, verbose_name='运营确认')
-    start_money_img = models.ImageField(upload_to='img')
-    end_money_img = models.ImageField(upload_to='img')
+    start_money_img = models.ImageField(upload_to='start_img')
+    end_money_img = models.ImageField(upload_to='end_img')
+    weixin_img = models.ImageField(upload_to='weixin_img')
     deletes = models.CharField(max_length=5)
 
 
@@ -53,18 +61,18 @@ class Brush_single_entry(models.Model):
     payment_type = models.CharField(verbose_name='付款类型', max_length=16)
     payment_amount = models.CharField(verbose_name='付款金额', max_length=10)
     # payment_account = models.CharField(verbose_name='付款账户', max_length=32)
-    payment_account = models.ForeignKey(Brank_account,on_delete=models.DO_NOTHING)
+    payment_account = models.ForeignKey(Brank_account, on_delete=models.DO_NOTHING)
     # operator = models.CharField(verbose_name='操作员', max_length=16)
-    operator = models.ForeignKey(Userinfo,on_delete=models.DO_NOTHING)
+    operator = models.ForeignKey(Userinfo, on_delete=models.DO_NOTHING)
     remarks = models.CharField(verbose_name='备注', max_length=64)
-    add_time = models.DateTimeField(verbose_name='创建日期', auto_now=True,)
+    add_time = models.DateTimeField(verbose_name='创建日期', auto_now=True, )
     deletes = models.CharField(max_length=5)
 
 
 class Log(models.Model):
     add_time = models.DateTimeField(verbose_name='操作日期', auto_now=True, )
     # operator = models.CharField(verbose_name='操作员', max_length=16)
-    operator = models.ForeignKey(Userinfo,on_delete=models.DO_NOTHING)
+    operator = models.ForeignKey(Userinfo, on_delete=models.DO_NOTHING)
     operation_type = models.CharField(verbose_name='操作类型', max_length=32)
     before_operation = models.CharField(verbose_name='操作前', max_length=500)
     after_operation = models.CharField(verbose_name='操作后', max_length=500)
