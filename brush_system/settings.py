@@ -77,12 +77,20 @@ WSGI_APPLICATION = 'brush_system.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'brush_wine',
+    #     'USER': 'panjin',
+    #     'PASSWORD': 'panjin456',
+    #     'HOST': '59.110.241.144',
+    #     'PORT': 3306,
+    # },
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'brush_wine',
-        'USER': 'panjin',
-        'PASSWORD': 'panjin456',
-        'HOST': '59.110.241.144',
+        'NAME': 'brush_system',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': '127.0.0.1',
         'PORT': 3306,
     },
     'erp_database': {
@@ -93,16 +101,9 @@ DATABASES = {
         'HOST': '59.110.241.144',
         'PORT': 3306,
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'brush_system',
-    #     'USER': 'root',
-    #     'PASSWORD': '123456',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': 3306,
-    # }
+
 }
-DATABASE_ROUTERS = ['django_test.database_router.DatabaseAppsRouter']
+DATABASE_ROUTERS = ['brush_system.database_router.DatabaseAppsRouter']
 DATABASE_APPS_MAPPING = {
     # example:
     # 'app_name':'database_name',

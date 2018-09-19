@@ -3,7 +3,7 @@
     <h2>创建喝酒数据</h2>
     <hr>
     {#添加数据#}
-    <form class="form-inline" id="add_data" method="post">
+    <form class="form-inline " id="add_data" method="post">
         <div class="form-group">
             <select name="shopname" id="" class="form-control">
                 {% for shopss in shops %}
@@ -75,7 +75,7 @@
             <td id="add_time"></td>
             <td id="shopname"></td>
             <td id="qq_or_weixin"></td>
-            <td id="wang_wang_number"></td>
+            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang"></span></td>
             <td id="online_order_number"></td>
             <td id="transaction_data"></td>
             <td id="payment_type"></td>
@@ -92,14 +92,14 @@
                 <td>{{ table.add_time }}</td>
                 <td>{{ table.shopname }}</td>
                 <td>{{ table.qq_or_weixin }}</td>
-                <td>{{ table.wang_wang_number }}</td>
+                <td> <span data-container="body" data-toggle="popover" data-placement="right" data-content="123"
+                           id="search_wangwang" data-html="true">{{ table.wang_wang_number }}</span></td>
                 <td>{{ table.online_order_number }}</td>
                 <td>{{ table.transaction_data }}</td>
                 <td>{{ table.payment_type }}</td>
                 <td>{{ table.payment_amount }}</td>
                 <td>{{ table.payment_account.account_name }}</td>
                 <td>{{ table.remarks }}</td>
-
                 <td><a class="glyphicon glyphicon-pencil" href="javascript:void(0);" onclick="edit_data({{ table.id }},this)" title="编辑" id="bsd"></a>
                     <a class="glyphicon glyphicon-remove" href="javascript:void(0);" onclick="delete_data({{ table.id }},this)" title="删除"
                        id="dele"></a>
@@ -129,7 +129,7 @@
                                 </select>
                             </div>
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label for="inputEmail3" class="col-sm-3 control-label">QQ或微信</label>
                             <div class="col-sm-9">
                                 {{ edit_brush_form.qq_or_weixin }}
@@ -213,6 +213,55 @@
         $('tr#15').nextAll().hide();
         $('#update_ids').hide();
     </script>
+    {#查询该旺旺号近期喝酒时间#}
+
+    <script>
+        {#表格里的旺旺号查询#}
+
+        $('span#search_wangwang').hover(function () {
+                var wangwang_num = $(this).text();
+                console.log(wangwang_num);
+                $.ajax({
+                    url: "/erp/search_by_wangwang_num/",
+                    type: "GET",
+                    dataType: 'json',
+                    data: {'wangwang_num': wangwang_num},
+                    async: false,
+                    success: function (msg) {
+                        var add_data = '最近喝酒时间：' + msg['pay_date']+'<br/>'+'喝酒店铺：'+msg['shop_name'];
+                        $('span#search_wangwang').attr('data-content', add_data);
+                    },
+                    error: function () {
+                        $('span#search_wangwang').attr('data-content', '该旺旺号之前没有喝酒');
+                    }
+                });
+                $(this).popover('show');
+            }, function () {
+                $(this).popover('hide');
+                $('span#search_wangwang').attr('data-content', '');
+            }
+        );
+
+
+        function search_wangwang_num_input() {
+            var wangwang_num = $('input#wang_wang_number').val();
+            $.ajax({
+                url: "/erp/search_by_wangwang_num/",
+                type: "GET",
+                dataType: 'json',
+                data: {'wangwang_num': wangwang_num},
+                async: false,
+                success: function (msg) {
+                    var add_data = '最近喝酒时间：' + msg + "<br/>" + "最近喝酒时间"+msg;
+                    $('#wang_wang_number').attr('data-content', add_data);
+                    $('#wang_wang_number').popover('show');
+                },
+                error: function () {
+                    $('#wang_wang_number').popover('hide');
+                }
+            });
+        }
+    </script>
     {#创建数据#}
     <script>
         function addFunction() {
@@ -237,7 +286,7 @@
                         $('tr#0').children('td#num').html(1);
                         $('tr#0').children('td#qq_or_weixin').html(arg['qq_or_weixin']);
                         $('tr#0').children('td#shopname').html(arg['shopname']);
-                        $('tr#0').children('td#wang_wang_number').html(arg['wang_wang_number']);
+                        $('tr#0').children('td#wang_wang_number').children('span#search_wangwang').html(arg['wang_wang_number']);
                         $('tr#0').children('td#online_order_number').html(arg['online_order_number']);
                         $('tr#0').children('td#transaction_data').html(arg['transaction_data']);
                         $('tr#0').children('td#payment_type').html(arg['payment_type']);
@@ -368,7 +417,7 @@
                 success: function () {
                     window.location.replace('/brushmanagement/');
                 }
-            })
+            });
             window.location.replace('/brushmanagement/');
         }
     </script>

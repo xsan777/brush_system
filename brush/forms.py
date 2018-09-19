@@ -91,8 +91,11 @@ class Edit_forms(forms.Form):
 class Add_brush_data(forms.Form):
     qq_or_weixin = forms.CharField(label='QQ或微信',
                                    widget=forms.TextInput(attrs={'placeholder': 'QQ或微信', 'class': 'form-control', 'id': 'qq_or_weixin'}))
-    wang_wang_number = forms.CharField(label='旺旺号',
-                                       widget=forms.TextInput(attrs={'placeholder': '旺旺号', 'class': 'form-control', 'id': 'wang_wang_number'}))
+    # wang_wang_number = forms.CharField(label='旺旺号',
+    #                                    widget=forms.TextInput(attrs={'placeholder': '旺旺号', 'class': 'form-control', 'id': 'wang_wang_number','onchange':'search_wangwang_num_input()','data-container':'body','data-toggle':'popover','data-placement':'bottom'}))
+    wang_wang_number = forms.CharField(label='旺旺号', widget=forms.TextInput(
+        attrs={'placeholder': '旺旺号', 'class': 'form-control', 'id': 'wang_wang_number', 'data-container': 'body', 'data-toggle': 'popover',
+               'data-placement': 'bottom'}))
     online_order_number = forms.CharField(label='线上订单号', widget=forms.TextInput(
         attrs={'placeholder': '线上订单号', 'class': 'form-control', 'id': 'online_order_number'}))
     payment_amount = forms.CharField(label='付款金额（收入为负）', widget=forms.TextInput(

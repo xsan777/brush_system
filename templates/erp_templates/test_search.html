@@ -1,0 +1,42 @@
+{% extends 'basc2.html' %}
+{% block content %}
+    {#<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="Tooltip on left">Tooltip on left</button>#}
+    <button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
+sagittis lacus vel augue laoreet rutrum faucibus.">
+        Popover on 底部
+    </button>
+    <div class="input-group">
+        <span class="input-group-addon" id="basic-addon1">线上订单号：</span>
+        <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" id="search_order_num"
+               onchange="search_oreder_num_input()" data-container="body" data-toggle="popover" data-placement="bottom" >
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        function search_oreder_num_input() {
+            var order_num = $('input#search_order_num').val();
+            console.log(order_num);
+            $.ajax({
+                url: "/erp/search_by_order_num/",
+                type: "GET",
+                dataType: 'json',
+                data: {'oreder_num': order_num},
+                async: false,
+                success: function (msg) {
+                    var add_data = '最近喝酒时间'+msg;
+                    $('#search_order_num').attr('data-content',add_data);
+                    $('#search_order_num').popover('show');
+                },
+                error: function () {
+                    $('#search_order_num').popover('hide');
+
+                }
+            });
+        }
+        $('button').hover(function () {
+            $('button').popover('show');
+        }, function () {
+            $('button').popover('hide');
+        })
+    </script>
+{% endblock %}
