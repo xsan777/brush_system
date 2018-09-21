@@ -27,7 +27,7 @@ def t(times):
     return end_time
 
 
-# 获取前2天的日期
+# 获取前n天的日期
 def get_nday_list2(n, now_time):
     dd = datetime.datetime.strptime(now_time, '%Y-%m-%d')
     before_n_days2 = []
@@ -88,28 +88,44 @@ def adduser(request):
         rouses = request.POST.get('rose')
         descriptions = request.POST.get('description')
         shop_list = request.POST.getlist('checkitem')
+        total_accounts_list = request.POST.getlist('total_accounts')
+        # 财务角色自动绑定所有店铺和所有总账户
         if rouses == '财务':
             shop_all = Shops.objects.filter(deletes=False).all()
             shop_list = []
             for j in shop_all:
                 shop_list.append(j.shopname)
+            total_account_all = Total_brank_account.objects.filter(deletes=False).all()
+            total_accounts_list = []
+            for m in total_account_all:
+                total_accounts_list.append(m.total_account_name)
         if passwd2s == passwds:
             if len(shop_list) != 0:
-                Userinfo.objects.create(username=usernames, passwd=passwds, rouse=rouses, description=descriptions, deletes=False)
-                user_ids = Userinfo.objects.filter(username=usernames, deletes=False).get()
-                # 将店铺与用户绑定
-                for shop in shop_list:
-                    user_ids.shop.add(Shops.objects.get(shopname=shop))
-                last_date = Userinfo.objects.last()
-                shops_clean = last_date.shop.all()
-                shops = ''
-                for user_shop in shops_clean:
-                    shops += str(user_shop)
-                    shops += '、'
-                operators = Userinfo.objects.get(username=user, deletes=False)
-                operation_types = '创建新用户'
-                after_operations = '{id：%d，用户名：%s，密码：%s，角色：%s，职位描述：%s，所管店铺：%s}' % (last_date.id, usernames, passwds, rouse, descriptions, shops)
-                Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
+                if len(total_accounts_list) != 0:
+                    Userinfo.objects.create(username=usernames, passwd=passwds, rouse=rouses, description=descriptions, deletes=False)
+                    user_ids = Userinfo.objects.filter(username=usernames, deletes=False).get()
+                    # 将店铺与用户绑定
+                    for shop in shop_list:
+                        user_ids.shop.add(Shops.objects.get(shopname=shop, deletes=False))
+                    # 将总账户与用户绑定
+                    for accounts in total_accounts_list:
+                        user_ids.total_brank_account.add(Total_brank_account.objects.get(total_account_name=accounts, deletes=False))
+                    last_date = Userinfo.objects.last()
+                    shops_clean = last_date.shop.all()
+                    shops = ''
+                    for user_shop in shops_clean:
+                        shops += str(user_shop)
+                        shops += '、'
+                    total_account_names = ''
+                    for total in total_accounts_list:
+                        total_account_names += total
+                        total_account_names += '、'
+                    operators = Userinfo.objects.get(username=user, deletes=False)
+                    operation_types = '创建新用户'
+                    after_operations = '{id：%d，用户名：%s，密码：%s，角色：%s，职位描述：%s，所管店铺：%s，使用总账户：%s}' % (last_date.id, usernames, passwds, rouse, descriptions, shops,total_account_names)
+                    Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
+                else:
+                    msgs = '必须选择总账户'
             else:
                 msgs = '必须选择店铺'
         else:
@@ -129,8 +145,17 @@ def adduser(request):
                 shops += str(user_shop)
                 shops += '、'
         tables['shop'] = shops
+        total_accounts = ''
+        if i.rouse == '财务':
+            total_accounts = '所有总账户'
+        else:
+            for user_total_accounts in i.total_brank_account.filter(deletes=False).all():
+                total_accounts += str(user_total_accounts.total_account_name)
+                total_accounts += '、'
+        tables['total_accounts'] = total_accounts
         table_list.append(tables)
     shopss = Shops.objects.filter(deletes=False).all()
+    total_account = Total_brank_account.objects.filter(deletes=False).all()
     add_form = Add_user()
     edit_form = Edit_user()
 
@@ -142,7 +167,7 @@ def adduser(request):
         admin_flog = 0
     return render(request, 'user.html',
                   {'title': title, 'tables': table_list, 'shops': shopss, 'add_form': add_form, 'edit_user': edit_form, 'err_msg': err_msg,
-                   'msgs': msgs, 'user': user, 'admin_flog': admin_flog})
+                   'msgs': msgs, 'user': user, 'admin_flog': admin_flog, 'total_account': total_account})
 
 
 # 用户名验证
@@ -179,50 +204,74 @@ def edit_user(request):
     err_msg = ''
     if request.method == 'POST':
         ids = request.POST.get('id')
-
         passwds = request.POST.get('passwd')
         passwd2s = request.POST.get('passwd2')
         rouses = request.POST.get('rose')
         descriptions = request.POST.get('description')
         shop_list = request.POST.getlist('checkitem')
+        total_brank_account_list = request.POST.getlist('edit_total_brank_accounts')
         if rouses == '财务':
             shop_all = Shops.objects.filter(deletes=False).all()
             shop_list = []
             for j in shop_all:
                 shop_list.append(j.shopname)
+            total_accounts = Total_brank_account.objects.filter(deletes=False).all()
+            total_brank_account_list = []
+            for m in total_accounts:
+                total_brank_account_list.append(m.total_account_name)
         if passwd2s == passwds:
             if len(shop_list) != 0:
-                user_id = Userinfo.objects.get(id=ids)
-                usernames = user_id.username
-                Userinfo.objects.filter(id=ids).update(username=usernames, passwd=passwds, rouse=rouses, description=descriptions, deletes=False)
-                user_id.shop.clear()
-                # 将店铺与用户绑定
-                for shop in shop_list:
-                    user_id.shop.add(Shops.objects.get(shopname=shop))
-                shops_clean = user_id.shop.all()
-                shops = ''
-                for user_shop in shops_clean:
-                    shops += str(user_shop)
-                    shops += '、'
-                update_date = Userinfo.objects.get(id=ids)
-                shops_clean = update_date.shop.all()
-                shops = ''
-                for user_shop in shops_clean:
-                    shops += str(user_shop)
-                    shops += '、'
-                operators = Userinfo.objects.get(username=user, deletes=False)
-                operation_types = '修改用户信息'
-                before_operations = '{id：%d，用户名：%s，密码：%s，角色：%s，职位描述：%s，所管店铺：%s}' % (
-                    user_id.id, user_id.username, user_id.passwd, user_id.rouse, user_id.description, shops)
-                after_operations = '{id：%s，用户名：%s，密码：%s，角色：%s，职位描述：%s，所管店铺：%s}' % (ids, usernames, passwds, rouse, descriptions, shops)
-                Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations,
-                                   before_operation=before_operations)
+                if len(total_brank_account_list) != 0:
+                    user_id = Userinfo.objects.get(id=ids)
+                    usernames = user_id.username
+                    shops_clean = user_id.shop.filter(deletes=False).all()
+                    before_shops = ''
+                    for user_shop in shops_clean:
+                        before_shops += str(user_shop)
+                        before_shops += '、'
+                    before_total_account = user_id.total_brank_account.filter(deletes=False).all()
+                    before_total_accounts = ''
+                    for total_account in before_total_account:
+                        before_total_accounts += str(total_account.total_account_name)
+                        before_total_accounts += '、'
+                    Userinfo.objects.filter(id=ids).update(username=usernames, passwd=passwds, rouse=rouses, description=descriptions, deletes=False)
+                    # 将用户与店铺绑定
+                    user_id.shop.clear()
+                    for shop in shop_list:
+                        user_id.shop.add(Shops.objects.get(shopname=shop, deletes=False))
+                    # 将用户与总账户绑定
+                    user_id.total_brank_account.clear()
+                    for total_brank_account in total_brank_account_list:
+                        user_id.total_brank_account.add(Total_brank_account.objects.get(total_account_name=total_brank_account, deletes=False))
+
+                    update_date = Userinfo.objects.get(id=ids)
+                    shops_clean = update_date.shop.filter(deletes=False).all()
+                    shops = ''
+                    for user_shop in shops_clean:
+                        shops += str(user_shop)
+                        shops += '、'
+
+                    after_total_account = update_date.total_brank_account.filter(deletes=False).all()
+                    after_total_accounts = ''
+                    for total_account in after_total_account:
+                        after_total_accounts += str(total_account.total_account_name)
+                        after_total_accounts += '、'
+                    operators = Userinfo.objects.get(username=user, deletes=False)
+                    operation_types = '修改用户信息'
+                    before_operations = '{id：%d，用户名：%s，密码：%s，角色：%s，职位描述：%s，所管店铺：%s，使用的总账户：%s}' % (
+                        user_id.id, user_id.username, user_id.passwd, user_id.rouse, user_id.description, before_shops, before_total_accounts)
+                    after_operations = '{id：%s，用户名：%s，密码：%s，角色：%s，职位描述：%s，所管店铺：%s，使用的总账户：%s}' % (
+                        ids, usernames, passwds, rouse, descriptions, shops, after_total_accounts)
+                    Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations,
+                                       before_operation=before_operations)
+                else:
+                    err_msg = '必须选择总账户'
             else:
                 err_msg = '必须选择店铺'
     current_data = Userinfo.objects.filter(id=ids).get()
     msg = json.dumps(
         {'rose': current_data.rouse, 'username': current_data.username, 'passwd': current_data.passwd, 'description': current_data.description,
-         'ids': current_data.id, 'err': err_msg})
+         'ids': current_data.id, 'err': err_msg, })
     return HttpResponse(msg)
 
 
@@ -258,9 +307,12 @@ def shopmanagement(request):
         shop_all = Shops.objects.filter(shopname=shop_name, deletes=False).all()
     else:
         shop_all = Shops.objects.filter(deletes=False).all()
+    total_brank_all = Total_brank_account.objects.filter(deletes=False).all()
     if request.method == 'POST':
         shop_name = request.POST.get('shop_name')
-        Shops.objects.create(shopname=shop_name, deletes=False)
+        total_brank_accounts = request.POST.get('total_brank_account')
+        Shops.objects.create(shopname=shop_name, deletes=False,
+                             own_total_brank=Total_brank_account.objects.get(total_account_name=total_brank_accounts, deletes=False))
         # 财务账号自动绑定新开店铺
         user_need = Userinfo.objects.filter(rouse='财务', deletes=False).all()
         for user_add in user_need:
@@ -268,7 +320,7 @@ def shopmanagement(request):
 
         last_date = Shops.objects.last()
         operation_types = '添加店铺'
-        after_operations = '{id：%d，店铺名：%s}' % (last_date.id, shop_name)
+        after_operations = '{id：%d，店铺名：%s，店铺总账户：%s}' % (last_date.id, shop_name,total_brank_accounts)
         Log.objects.create(operator=Userinfo.objects.get(username=user, deletes=False), operation_type=operation_types,
                            after_operation=after_operations)
     shop_info = []
@@ -281,6 +333,7 @@ def shopmanagement(request):
             owners += str(owner.username)
             owners += '、'
         tables['shop_owners'] = owners
+        tables['own_total_brank'] = shop.own_total_brank.total_account_name
         shop_info.append(tables)
     add_shop_form = Add_shop_form()
     edit_shop_form = Edit_shop_form()
@@ -293,7 +346,7 @@ def shopmanagement(request):
         admin_flog = 0
     return render(request, 'shops.html',
                   {'title': title, 'tables': shop_info, 'add_shop_form': add_shop_form, 'edit_shop_form': edit_shop_form, 'user': user,
-                   'admin_flog': admin_flog})
+                   'admin_flog': admin_flog, 'total_brank_all': total_brank_all})
 
 
 # 查找店铺
@@ -346,17 +399,17 @@ def edit_shop(request):
     ids = request.GET.get('id')
     if request.method == 'POST':
         ids = request.POST.get('id')
-        shop_names = request.POST.get('shop_name')
-        before_shopname = Shops.objects.filter(id=ids).values('shopname').get()
-        Shops.objects.filter(id=ids).update(shopname=shop_names, deletes=False)
+        total_account_names = request.POST.get('edit_total_account_name')
+        before_shop = Shops.objects.get(id=ids)
+        Shops.objects.filter(id=ids).update(own_total_brank=Total_brank_account.objects.get(total_account_name=total_account_names, deletes=False))
         operators = Userinfo.objects.get(username=user, deletes=False)
-        operation_types = '修改店铺名'
-        before_operations = '{id：%s，店铺名：%s}' % (ids, before_shopname['shopname'])
-        after_operations = '{id：%s，店铺名：%s}' % (ids, shop_names)
+        operation_types = '修改店铺信息'
+        before_operations = '{id：%s，店铺名：%s，总账户名：%s}' % (ids, before_shop.shopname, before_shop.own_total_brank.total_account_name)
+        after_operations = '{id：%s，店铺名：%s，总账户名：%s}' % (ids, before_shop.shopname, total_account_names)
         Log.objects.create(operator=operators, operation_type=operation_types, before_operation=before_operations, after_operation=after_operations)
         return redirect(to=shopmanagement)
-    before_shopname = Shops.objects.filter(id=ids).values('shopname').get()
-    msg = json.dumps({'ids': ids, 'shopname': before_shopname['shopname']})
+    before_shop = Shops.objects.get(id=ids)
+    msg = json.dumps({'ids': ids, 'shopname': before_shop.shopname})
     return HttpResponse(msg)
 
 
@@ -379,7 +432,151 @@ def delete_shop(request):
     return redirect(to=shopmanagement)
 
 
-# 银行账户管理
+# 总账户管理
+def total_brank_management(request):
+    user = request.session.get('username')
+    rouse = request.session.get('rouse')
+    if user == None:
+        return redirect(to=login)
+    if rouse == '运营':
+        return render(request, 'login.html', {'err_msg': '当前账户权限不足，请使用其他账号'})
+    title = '总账户管理'
+    account_names = request.GET.get('account_name')
+    if account_names:
+        tables = Total_brank_account.objects.filter(total_account_name=account_names, deletes=False).all()
+    else:
+        tables = Total_brank_account.objects.filter(deletes=False).all()
+    table_list = []
+    for i in tables:
+        tables = {}
+        tables['id'] = i.id
+        tables['account_name'] = i.total_account_name
+        tables['brank_name'] = i.total_brank_name
+        tables['brank_card_number'] = i.total_brank_card_number
+        tables['brank_number'] = i.total_brank_number
+        own_shops = ''
+        for own_shop in i.shops_set.filter(deletes=False).all():
+            own_shops += str(own_shop.shopname)
+            own_shops += '、'
+        tables['shop_owner'] = own_shops
+        owers = ''
+        for ower in i.userinfo_set.filter(deletes=False).all():
+            owers += str(ower.username)
+            owers += '、'
+        tables['owers'] = owers
+        table_list.append(tables)
+    add_total_brank_form = Total_brank_account_form()
+    edit_total_brank_form = Edit_total_brank_account_form()
+    msg = ''
+    if request.method == 'POST':
+        now_time = time.strftime('%Y-%m-%d', time.localtime())
+        total_account_names = request.POST.get('total_brank_account_name')
+        total_brank_names = request.POST.get('brank_name')
+        total_brank_numbers = request.POST.get('brank_number')
+        total_brank_card_numbers = request.POST.get('brank_card_number')
+        total_brank_account_name_exit = Total_brank_account.objects.filter(total_account_name=total_account_names, deletes=False).all()
+        total_brank_card_number_exit = Total_brank_account.objects.filter(total_brank_card_number=total_brank_card_numbers, deletes=False).all()
+        if len(total_brank_account_name_exit) == 0:
+            if len(total_brank_card_number_exit) == 0:
+                Total_brank_account.objects.create(datess=now_time, total_brank_card_number=total_brank_card_numbers,
+                                                   total_brank_name=total_brank_names, total_brank_number=total_brank_numbers,
+                                                   total_account_name=total_account_names, deletes=False)
+                # 财务账号自动绑定添加的总账户
+                user_need = Userinfo.objects.filter(rouse='财务', deletes=False).all()
+                for user_add in user_need:
+                    user_add.total_brank_account.add(Total_brank_account.objects.get(total_account_name=total_account_names, deletes=False))
+                last_total_account = Total_brank_account.objects.filter(deletes=False).last()
+                operation_types = '创建总账户'
+                after_operations = '{id：%d，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，}' % (
+                    last_total_account.id, account_names, total_brank_names, total_brank_numbers, total_brank_card_numbers,)
+                Log.objects.create(operator=Userinfo.objects.get(username=user, deletes=False), operation_type=operation_types,
+                                   after_operation=after_operations)
+            else:
+                msg = '该总账户卡号已存在'
+        else:
+            msg = '该总账户名已存在'
+
+    return render(request, 'total_brankmanagement.html',
+                  {'title': title, 'tables': table_list, 'add_total_brank_form': add_total_brank_form, 'msg': msg,
+                   'edit_total_brank_form': edit_total_brank_form, 'user': user, })
+
+
+# 验证总账户名
+def verification_total_account(request):
+    total_account_names = request.GET.get('total_account_name')
+    total_brank_card_nums = request.GET.get('total_brank_card_num')
+    exit_total_account = Total_brank_account.objects.filter(total_account_name=total_account_names, deletes=False).all()
+    # exit_total_brank_card_nums = Total_brank_account.objects.filter(total_brank_card_number=total_brank_card_nums, deletes=False).all()
+    if len(exit_total_account) == 0:
+        msg = ''
+    else:
+        msg = '该总账户名存在'
+    return HttpResponse(json.dumps(msg))
+
+
+# 修改总账户
+def edit_total_brank(request):
+    user = request.session.get('username')
+    rouse = request.session.get('rouse')
+    if user == None:
+        return redirect(to=login)
+    if rouse == '运营':
+        return render(request, 'login.html', {'err_msg': '当前账户权限不足，请使用其他账号'})
+    ids = request.GET.get('id')
+    if request.method == 'POST':
+        total_account_names = request.POST.get('total_brank_account_name')
+        total_brank_names = request.POST.get('brank_name')
+        total_brank_numbers = request.POST.get('brank_number')
+        total_brank_card_numbers = request.POST.get('brank_card_number')
+        ids = request.POST.get('id')
+        last_data = Total_brank_account.objects.get(id=ids)
+        before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，}' % (
+            ids, last_data.total_account_name, last_data.total_brank_name, last_data.total_brank_number, last_data.total_brank_card_number,)
+        Total_brank_account.objects.filter(id=ids).update(total_brank_name=total_brank_names, total_brank_number=total_brank_numbers,
+                                                          total_brank_card_number=total_brank_card_numbers)
+        operation_types = '修改总账户'
+        operators = Userinfo.objects.get(username=user, deletes=False)
+        after_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s}' % (
+            ids, total_account_names, total_brank_names, total_brank_numbers, total_brank_card_numbers,)
+        Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations,
+                           before_operation=before_operations)
+        return redirect(to=total_brank_management)
+    current_data = Total_brank_account.objects.get(id=ids)
+    msg = {'total_brank_name': current_data.total_brank_name, 'total_account_name': current_data.total_account_name,
+           'total_brank_num': current_data.total_brank_number, 'total_brank_card_num': current_data.total_brank_card_number, 'ids': ids}
+    return HttpResponse(json.dumps(msg))
+
+
+# 删除总账户
+def del_total_brank(request):
+    user = request.session.get('username')
+    rouse = request.session.get('rouse')
+    if user == None:
+        return redirect(to=login)
+    if rouse == '运营':
+        return render(request, 'login.html', {'err_msg': '当前账户权限不足，请使用其他账号'})
+    ids = request.GET.get('id')
+    Total_brank_account.objects.filter(id=ids).update(deletes='True')
+    total_brank_card_id = Total_brank_account.objects.filter(id=ids).get()
+    before_operation_lists = ''
+    for before_operations in total_brank_card_id.userinfo_set.filter(deletes=False).all():
+        before_operation_lists += str(before_operations.username)
+        before_operation_lists += '、'
+    before_shop_list = ''
+    for before_shops in total_brank_card_id.shops_set.filter(deletes=False).all():
+        before_shop_list += str(before_shops.shopname)
+        before_shop_list += '、'
+    operators = Userinfo.objects.get(username=user, deletes=False)
+    operation_types = '删除总账户'
+    before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，总账户使用人：%s，绑定店铺：%s}' % (
+        ids, total_brank_card_id.total_account_name, total_brank_card_id.total_brank_name, total_brank_card_id.total_brank_number,
+        total_brank_card_id.total_brank_card_number, before_operation_lists, before_shop_list)
+    after_operations = '删除了总账户{id：%s，账户名：%s}' % (ids, total_brank_card_id.total_account_name)
+    Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations, before_operation=before_operations)
+    return HttpResponse('ok')
+
+
+# 子银行账户管理
 def brankmanagement(request):
     user = request.session.get('username')
     rouse = request.session.get('rouse')
@@ -393,7 +590,8 @@ def brankmanagement(request):
         tables = Brank_account.objects.filter(account_name=account_names, deletes=False).all()
     else:
         tables = Brank_account.objects.filter(deletes=False).all()
-    user_list = Userinfo.objects.filter(deletes=False).all()
+    user_list = Userinfo.objects.filter(rouse='运营', deletes=False).all()
+    total_accounts = Total_brank_account.objects.filter(deletes=False).all()
     add_brank_account_form = Add_brank_account()
     edit_brank_account_form = Edit_brank_account()
     msg = ''
@@ -402,25 +600,30 @@ def brankmanagement(request):
         brank_names = request.POST.get('brank_name')
         brank_numbers = request.POST.get('brank_number')
         brank_card_numbers = request.POST.get('brank_card_number')
+        total_account_of = request.POST.get('total_account')
         brank_operator_list = request.POST.getlist('checkitem')
-        if len(brank_operator_list) != 0:
-            Brank_account.objects.create(account_name=account_names, brank_name=brank_names, brank_number=brank_numbers,
-                                         brank_card_number=brank_card_numbers, deletes=False)
-            brank_card_id = Brank_account.objects.filter(account_name=account_names, deletes=False).get()
-            for users in brank_operator_list:
-                brank_card_id.brank_operator.add(Userinfo.objects.get(username=users, deletes=False))
-            user_clean = brank_card_id.brank_operator.all()
-            brank_operator_lists = ''
-            for user_brank in user_clean:
-                brank_operator_lists += str(user_brank.username)
-                brank_operator_lists += '、'
-            operation_types = '创建银行账户'
-            after_operations = '{id：%d，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，银行卡操作人：%s}' % (
-                brank_card_id.id, account_names, brank_names, brank_numbers, brank_card_numbers, brank_operator_lists)
-            Log.objects.create(operator=Userinfo.objects.get(username=user, deletes=False), operation_type=operation_types,
-                               after_operation=after_operations)
+        if total_account_of != None:
+            if len(brank_operator_list) != 0:
+                Brank_account.objects.create(account_name=account_names, brank_name=brank_names, brank_number=brank_numbers,
+                                             brank_card_number=brank_card_numbers, deletes=False,
+                                             total_account_name=Total_brank_account.objects.get(total_account_name=total_account_of, deletes=False))
+                brank_card_id = Brank_account.objects.filter(account_name=account_names, deletes=False).get()
+                for users in brank_operator_list:
+                    brank_card_id.brank_operator.add(Userinfo.objects.get(username=users, deletes=False))
+                user_clean = brank_card_id.brank_operator.all()
+                brank_operator_lists = ''
+                for user_brank in user_clean:
+                    brank_operator_lists += str(user_brank.username)
+                    brank_operator_lists += '、'
+                operation_types = '创建银行账户'
+                after_operations = '{id：%d，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，所属总账户：%s，银行卡操作人：%s}' % (
+                    brank_card_id.id, account_names, brank_names, brank_numbers, brank_card_numbers, total_account_of, brank_operator_lists)
+                Log.objects.create(operator=Userinfo.objects.get(username=user, deletes=False), operation_type=operation_types,
+                                   after_operation=after_operations)
+            else:
+                msg = '必须选择银行卡使用人'
         else:
-            msg = '必须选择银行卡使用人'
+            msg = '必须选择所属总账户'
     table_list = []
     for i in tables:
         tables = {}
@@ -434,6 +637,7 @@ def brankmanagement(request):
             brankers += str(user_brank.username)
             brankers += '、'
         tables['brank_owner'] = brankers
+        tables['total_account_name'] = i.total_account_name.total_account_name
         table_list.append(tables)
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
@@ -444,7 +648,7 @@ def brankmanagement(request):
         admin_flog = 0
     return render(request, 'brankmanagement.html',
                   {'title': title, 'tables': table_list, 'add_brank_account_form': add_brank_account_form, 'user_list': user_list, 'msg': msg,
-                   'edit_brank_account_form': edit_brank_account_form, 'user': user, 'admin_flog': admin_flog})
+                   'edit_brank_account_form': edit_brank_account_form, 'user': user, 'admin_flog': admin_flog, 'total_accounts': total_accounts})
 
 
 # 搜索银行账户
@@ -511,36 +715,41 @@ def edit_brank(request):
         brank_names = request.POST.get('brank_name')
         brank_numbers = request.POST.get('brank_number')
         brank_card_numbers = request.POST.get('brank_card_number')
+        total_account_names = request.POST.get('edit_total_account_name')
         brank_operator_list = request.POST.getlist('checkitem')
         if len(brank_operator_list) != 0:
-            brank_card_id = Brank_account.objects.get(id=ids)
-            Brank_account.objects.filter(id=ids).update(account_name=account_names, brank_name=brank_names, brank_number=brank_numbers,
-                                                        brank_card_number=brank_card_numbers, deletes=False)
-            brank_card_id2 = Brank_account.objects.filter(account_name=account_names, deletes=False).get()
-            brank_card_id2.brank_operator.clear()
-            for users in brank_operator_list:
-                brank_card_id2.brank_operator.add(Userinfo.objects.get(username=users, deletes=False))
-            user_clean = brank_card_id2.brank_operator.all()
-            before_operation_lists = ''
-            for before_operations in brank_card_id.brank_operator.all():
-                before_operation_lists += str(before_operations.username)
-                before_operation_lists += '、'
-            brank_operator_lists = ''
-            for user_brank in user_clean:
-                brank_operator_lists += str(user_brank.username)
-                brank_operator_lists += '、'
-            operation_types = '修改银行账户'
-            operators = Userinfo.objects.get(username=user, deletes=False)
-            before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，银行卡操作人：%s}' % (
-                ids, brank_card_id.account_name, brank_card_id.brank_name, brank_card_id.brank_number, brank_card_id.brank_card_number,
-                before_operation_lists)
-            after_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，银行卡操作人：%s}' % (
-                ids, account_names, brank_names, brank_numbers, brank_card_numbers, brank_operator_lists)
-            Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations,
-                               before_operation=before_operations)
+            if len(total_account_names) != 0:
+                brank_card_id = Brank_account.objects.get(id=ids)
+                before_operation_lists = ''
+                for before_operations in brank_card_id.brank_operator.all():
+                    before_operation_lists += str(before_operations.username)
+                    before_operation_lists += '、'
+                before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，所属账户：%s，银行卡操作人：%s}' % (
+                    ids, brank_card_id.account_name, brank_card_id.brank_name, brank_card_id.brank_number, brank_card_id.brank_card_number,
+                    brank_card_id.total_account_name.total_account_name, before_operation_lists)
+                Brank_account.objects.filter(id=ids).update(account_name=account_names, brank_name=brank_names, brank_number=brank_numbers,
+                                                            brank_card_number=brank_card_numbers, deletes=False,
+                                                            total_account_name=Total_brank_account.objects.get(total_account_name=total_account_names,
+                                                                                                               deletes=False))
+                brank_card_id2 = Brank_account.objects.filter(account_name=account_names, deletes=False).get()
+                brank_card_id2.brank_operator.clear()
+                for users in brank_operator_list:
+                    brank_card_id2.brank_operator.add(Userinfo.objects.get(username=users, deletes=False))
+                user_clean = brank_card_id2.brank_operator.all()
+                brank_operator_lists = ''
+                for user_brank in user_clean:
+                    brank_operator_lists += str(user_brank.username)
+                    brank_operator_lists += '、'
+                operation_types = '修改银行账户'
+                operators = Userinfo.objects.get(username=user, deletes=False)
+                after_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，所属账户：%s，银行卡操作人：%s}' % (
+                    ids, account_names, brank_names, brank_numbers, brank_card_numbers, total_account_names, brank_operator_lists)
+                Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations,
+                                   before_operation=before_operations)
+            else:
+                msgss = '必须选择所属总账户'
         else:
             msgss = '必须选择银行卡使用人'
-
     current_data = Brank_account.objects.filter(id=ids, deletes=False).get()
     msg = json.dumps({'account_name': current_data.account_name, 'brank_name': current_data.brank_name, 'brank_number': current_data.brank_number,
                       'brank_card_number': current_data.brank_card_number, 'ids': current_data.id, 'err': msgss, 'ids': ids})
@@ -564,9 +773,9 @@ def deletes_brank(request):
         before_operation_lists += '、'
     operators = Userinfo.objects.get(username=user, deletes=False)
     operation_types = '删除银行账户'
-    before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，银行卡操作人：%s}' % (
+    before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，所属总账户：%s，银行卡操作人：%s}' % (
         ids, brank_card_id.account_name, brank_card_id.brank_name, brank_card_id.brank_number, brank_card_id.brank_card_number,
-        before_operation_lists)
+        brank_card_id.total_account_name, before_operation_lists)
     after_operations = '删除了id=%s的银行账户' % (ids)
     Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations, before_operation=before_operations)
     return HttpResponse('ok')
@@ -592,7 +801,7 @@ def countmanagement(request):
     if request.method == 'POST':
         account_names = request.POST.get('account_name')
         print(account_names)
-        if account_names  == None:
+        if account_names == None:
             errs = '账户名不能为空'
         else:
             exits = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=account_names, deletes=False).all()
@@ -618,7 +827,8 @@ def countmanagement(request):
 
                         operation_types = '创建账户记录'
                         after_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，操作员：%s，运营确认：False，初始资金截图：%s，结余资金截图：%s}' % (
-                            last_date.id, account_names.account_name, start_moneys, end_moneys, user, last_date.start_money_img, last_date.end_money_img)
+                            last_date.id, account_names.account_name, start_moneys, end_moneys, user, last_date.start_money_img,
+                            last_date.end_money_img)
                         Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
             else:
                 errs = '该账户今日已创建记录'
@@ -1000,11 +1210,10 @@ def check_account(request):
     accounts = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     edit_brush_form = Edit_brush_data()
     shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
-    account = Brank_account.objects.filter(brank_operator__username=user,deletes=False).first()
+    account = Brank_account.objects.filter(brank_operator__username=user, deletes=False).first()
     for i in accounts:
         account = i.id
         break
-
     if request.method == 'POST':
         now_time = request.POST.get('check_data')
         account = request.POST.get('payment_account')
@@ -1048,7 +1257,7 @@ def check_account(request):
     return render(request, 'check_account2.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money,
                    'actual_cost': actual_cost, 'user': user, 'edit_brush_form': edit_brush_form, 'shops': shops, 'user': user,
-                   'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,'errs':errs})
+                   'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'errs': errs})
 
 
 # 确认核对

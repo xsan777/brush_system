@@ -3,6 +3,32 @@ from brush.models import *
 from django.core.exceptions import ValidationError
 
 
+# 创建总账户
+class Total_brank_account_form(forms.Form):
+    total_brank_account_name = forms.CharField(label='总账户名', widget=forms.TextInput(
+        attrs={'placeholder': '总账户名', 'class': 'form-control', 'id': 'total_brank_account_name',
+               'onchange': 'verification_total_brank_account()'}))
+    brank_name = forms.CharField(label='银行名', widget=forms.TextInput(
+        attrs={'placeholder': '银行名', 'class': 'form-control', 'id': 'brank_name'}))
+    brank_number = forms.CharField(label='开户行号', widget=forms.TextInput(
+        attrs={'placeholder': '开户行号', 'class': 'form-control', 'id': 'brank_number', }))
+    brank_card_number = forms.CharField(label='银行卡号',
+                                        widget=forms.TextInput(attrs={'placeholder': '银行卡号', 'class': 'form-control', 'id': 'brank_card_number'}))
+
+
+# 修改总账户
+class Edit_total_brank_account_form(forms.Form):
+    total_brank_account_name = forms.CharField(label='总账户名', widget=forms.TextInput(
+        attrs={'placeholder': '总账户名', 'class': 'form-control', 'id': 'edit_total_brank_account_name', 'disabled': 'True'}))
+    brank_name = forms.CharField(label='银行名', widget=forms.TextInput(
+        attrs={'placeholder': '银行名', 'class': 'form-control', 'id': 'edit_brank_name'}))
+    brank_number = forms.CharField(label='开户行号', widget=forms.TextInput(
+        attrs={'placeholder': '开户行号', 'class': 'form-control', 'id': 'edit_brank_number', }))
+    brank_card_number = forms.CharField(label='银行卡号',
+                                        widget=forms.TextInput(
+                                            attrs={'placeholder': '银行卡号', 'class': 'form-control', 'id': 'edit_brank_card_number'}))
+
+
 # 添加用户
 class Add_user(forms.Form):
     username = forms.CharField(label='用户名', widget=forms.TextInput(
@@ -45,7 +71,7 @@ class Search_shop(forms.Form):
 # 修改店铺名
 class Edit_shop_form(forms.Form):
     shop_name = forms.CharField(label='店铺名', widget=forms.TextInput(
-        attrs={'placeholder': '店铺名', 'class': 'form-control', 'id': 'edit_shop_name', 'onchange': 'edit_verification_shopname()'}))
+        attrs={'placeholder': '店铺名', 'class': 'form-control', 'id': 'edit_shop_name', 'disabled': 'True'}))
 
 
 # 添加银行账户
@@ -64,7 +90,7 @@ class Add_brank_account(forms.Form):
 # 修改银行账户
 class Edit_brank_account(forms.Form):
     account_name = forms.CharField(label='账户名',
-                                   widget=forms.TextInput(attrs={'placeholder': '账户名', 'class': 'form-control', 'id': 'update_account_name', }))
+                                   widget=forms.TextInput(attrs={'placeholder': '账户名', 'class': 'form-control', 'id': 'update_account_name','disabled': 'True' }))
     brank_name = forms.CharField(label='银行名',
                                  widget=forms.TextInput(attrs={'placeholder': '银行名', 'class': 'form-control', 'id': 'update_brank_name', }))
     brank_number = forms.CharField(label='开户行号',

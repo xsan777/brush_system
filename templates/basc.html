@@ -98,8 +98,15 @@
         width: 25px;
         height: 25px;
     }
-    #admin_alert{
-        {#font-size: 1.5rem;#}
+
+    #remind {
+        padding-top: 5px;
+        height: 30px;
+    }
+
+    #admin_alert {
+        margin-top: 0;
+        font-size: 1.5rem;
         font-family: 微软雅黑;
     }
 </style>
@@ -117,6 +124,9 @@
         <hr id="nav_hr">
     </a>
     <div class="menuss">
+        <a href="/total_brankmanagement/">
+            <div class="menus">总账户管理</div>
+        </a>
         <a href="/shopmanagement/">
             <div class="menus">店铺管理</div>
 
@@ -159,7 +169,8 @@
     {#    </a>#}
 </div>
 <div id="content">
-    <div class="alert alert-danger" role="alert" id="remind" style="font-family: 微软雅黑"><span id="admin_alert"><h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;今&nbsp;&nbsp;日&nbsp;&nbsp;有&nbsp;&nbsp;账&nbsp;&nbsp;户&nbsp;&nbsp;未&nbsp;&nbsp;确&nbsp;&nbsp;认</h4></span></div>
+    <div class="alert alert-danger" role="alert" id="remind" style="font-family: 微软雅黑"><span id="admin_alert"><h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;今&nbsp;&nbsp;日&nbsp;&nbsp;有&nbsp;&nbsp;账&nbsp;&nbsp;户&nbsp;&nbsp;未&nbsp;&nbsp;确&nbsp;&nbsp;认</h4></span>
+    </div>
     <div id="cont">
         {#右侧内容区#}
         {% block content %}
