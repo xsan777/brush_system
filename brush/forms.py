@@ -90,7 +90,8 @@ class Add_brank_account(forms.Form):
 # 修改银行账户
 class Edit_brank_account(forms.Form):
     account_name = forms.CharField(label='账户名',
-                                   widget=forms.TextInput(attrs={'placeholder': '账户名', 'class': 'form-control', 'id': 'update_account_name','disabled': 'True' }))
+                                   widget=forms.TextInput(
+                                       attrs={'placeholder': '账户名', 'class': 'form-control', 'id': 'update_account_name', 'disabled': 'True'}))
     brank_name = forms.CharField(label='银行名',
                                  widget=forms.TextInput(attrs={'placeholder': '银行名', 'class': 'form-control', 'id': 'update_brank_name', }))
     brank_number = forms.CharField(label='开户行号',
@@ -104,6 +105,7 @@ class Edit_brank_account(forms.Form):
 class Forms(forms.Form):
     start_money = forms.CharField(label='初始资金', widget=forms.TextInput(attrs={'placeholder': '初始资金', 'class': 'form-control'}))
     end_money = forms.CharField(label='结余资金', widget=forms.TextInput(attrs={'placeholder': '结余资金', 'class': 'form-control'}))
+    weixin_withdraw_money = forms.CharField(label='微信提现费用', widget=forms.TextInput(attrs={'placeholder': '微信提现费用', 'class': 'form-control'}))
 
 
 # 修改账户记录
@@ -111,6 +113,8 @@ class Edit_forms(forms.Form):
     start_money = forms.CharField(label='初始资金',
                                   widget=forms.TextInput(attrs={'placeholder': '初始资金', 'class': 'form-control', 'id': 'eidt_start_money'}))
     end_money = forms.CharField(label='结余资金', widget=forms.TextInput(attrs={'placeholder': '结余资金', 'class': 'form-control', 'id': 'eidt_end_money'}))
+    weixin_withdraw_money = forms.IntegerField(label='微信提现费用', widget=forms.TextInput(
+        attrs={'placeholder': '微信提现费用', 'class': 'form-control', 'id': 'eidt_weixin_withdraw_money'}))
 
 
 # 创建喝酒数据

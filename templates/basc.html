@@ -145,8 +145,11 @@
         <hr id="nav_hr">
     </a>
     <div class="menuss2">
+        <a href="/search_total_count/">
+            <div class="menus">总账户核对情况<span id="nav_remind"></span></div>
+        </a>
         <a href="/countmanagement/">
-            <div class="menus">账户核对情况<span id="nav_remind"></span></div>
+            <div class="menus">子账户核对情况<span id="nav_remind"></span></div>
         </a>
         <a href="/shop_bill/">
             <div class="menus">店铺账单</div>
@@ -169,7 +172,7 @@
     {#    </a>#}
 </div>
 <div id="content">
-    <div class="alert alert-danger" role="alert" id="remind" style="font-family: 微软雅黑"><span id="admin_alert"><h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;今&nbsp;&nbsp;日&nbsp;&nbsp;有&nbsp;&nbsp;账&nbsp;&nbsp;户&nbsp;&nbsp;未&nbsp;&nbsp;确&nbsp;&nbsp;认</h4></span>
+    <div class="alert alert-danger" role="alert" id="remind" style="font-family: 微软雅黑"><span id="admin_alert"><h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;昨&nbsp;&nbsp;日&nbsp;&nbsp;有&nbsp;&nbsp;总&nbsp;&nbsp;账&nbsp;&nbsp;户&nbsp;&nbsp;未&nbsp;&nbsp;确&nbsp;&nbsp;认</h4></span>
     </div>
     <div id="cont">
         {#右侧内容区#}
@@ -199,7 +202,6 @@
         {#$('#remind').append('<img src="/static/unmakesure.gif" alt="" id="lights">');#}
         {#$('#nav_remind').append('<img src="/static/unmakesure.gif" alt="" id="lights">');#}
         $('div#remind').hide();
-
     }
     else {
         {#$('#remarks').append('<img src="/static/complete.gif" alt="" id="lights">');#}

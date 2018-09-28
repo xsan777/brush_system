@@ -7,33 +7,33 @@
     <hr>
     <form class="form-inline" action="/adduser/" method="post">
         <div class="form-group">
-            <label for="inputEmail3"><span style="color: red">*</span>用户名</label>&nbsp;&nbsp;
+            <label for="inputEmail3"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;用户名</label>&nbsp;&nbsp;
             {{ add_form.username }}
             <span style="color: red" id="err"></span>
         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="form-group">
-            <label for="inputPassword3"><span style="color: red">*</span>密码</label>&nbsp;&nbsp;
+            <label for="inputPassword3"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;密码</label>&nbsp;&nbsp;
             {{ add_form.passwd }}
         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="form-group">
-            <label for="inputPassword3"><span style="color: red">*</span>确认密码</label>&nbsp;&nbsp;
+            <label for="inputPassword3"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;确认密码</label>&nbsp;&nbsp;
             {{ add_form.passwd2 }}<span style="color: red">{{ err_msg }}</span>
         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="form-group">
-            <label for="inputPassword3"><span style="color: red">*</span>角色</label>&nbsp;&nbsp;
+            <label for="inputPassword3"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;角色</label>&nbsp;&nbsp;
             <select name="rose" id="rose" class="form-control" onchange="cheage_rouse()">
                 <option value="运营">运营</option>
                 <option value="财务">财务</option>
             </select>
         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="form-group">
-            <label for="inputEmail3"><span style="color: red">*</span>职位描述</label>&nbsp;&nbsp;
+            <label for="inputEmail3"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;职位描述</label>&nbsp;&nbsp;
             {{ add_form.description }}
         </div>
         <br>
         <br>
         <div class="form-group">
-            <label for="inputPassword3"><span style="color: red">*</span>店铺选择</label>
+            <label for="inputPassword3"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;店铺选择</label>
             <div class="checkbox col-sm-12 ">
                 <label class="checkbox-inline">
                     <input type="checkbox" id="inlineCheckbox1" class="allAndNotAll" value="all">全选
@@ -48,7 +48,7 @@
         <br>
         <br>
         <div class="form-group">
-            <label for="inputPassword3"><span style="color: red">*</span>总账户选择</label>
+            <label for="inputPassword3"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;总账户选择</label>
             <div class="checkbox col-sm-12 ">
                 <label class="checkbox-inline">
                     <input type="checkbox" id="inlineCheckbox3" class="allAndNotAll3" value="all">全选
@@ -123,26 +123,26 @@
                 <div class="modal-body">
                     <form class="form-horizontal" id="update_form" method="post" action="/edit_user/">
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>用户名</label>
+                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;用户名</label>
                             <div class="col-sm-9">
                                 {{ edit_user.username }}
                                 <span style="color: red" id="err2"></span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>密码</label>
+                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;密码</label>
                             <div class="col-sm-9">
                                 {{ edit_user.passwd }}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>确认密码</label>
+                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;确认密码</label>
                             <div class="col-sm-9">
                                 {{ edit_user.passwd2 }}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>角色</label>
+                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;角色</label>
                             <div class="col-sm-9">
                                 <select name="rose" id="edit_rose" class="form-control" onchange="edit_cheage_rouse()">
                                     <option value="运营">运营</option>
@@ -152,13 +152,13 @@
                             <input type="text" id="update_ids" value="" name="id">
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>职位描述</label>
+                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;职位描述</label>
                             <div class="col-sm-9">
                                 {{ edit_user.description }}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>店铺</label>
+                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;店铺</label>
                             <div class="col-sm-9">
                                 <div class=" checkbox">
                                     <label class="checkbox-inline">
@@ -173,7 +173,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-3 control-label"><span style="color: red">*</span>总账户选择</label>
+                                <label for="inputPassword3" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;总账户选择</label>
                                 <div class="col-sm-9">
                                     <div class="checkbox ">
                                         <label class="checkbox-inline">

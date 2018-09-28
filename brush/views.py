@@ -54,7 +54,7 @@ def login(request):
                 if user['rouse'] == '运营':
                     return redirect('brushmanagement/')
                 else:
-                    return redirect(to=countmanagement)
+                    return redirect(to=search_total_count)
         msg = '用户名或密码错误'
     return render(request, 'login.html', {'err_msg': msg})
 
@@ -122,7 +122,8 @@ def adduser(request):
                         total_account_names += '、'
                     operators = Userinfo.objects.get(username=user, deletes=False)
                     operation_types = '创建新用户'
-                    after_operations = '{id：%d，用户名：%s，密码：%s，角色：%s，职位描述：%s，所管店铺：%s，使用总账户：%s}' % (last_date.id, usernames, passwds, rouse, descriptions, shops,total_account_names)
+                    after_operations = '{id：%d，用户名：%s，密码：%s，角色：%s，职位描述：%s，所管店铺：%s，使用总账户：%s}' % (
+                        last_date.id, usernames, passwds, rouse, descriptions, shops, total_account_names)
                     Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
                 else:
                     msgs = '必须选择总账户'
@@ -160,7 +161,8 @@ def adduser(request):
     edit_form = Edit_user()
 
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    now_time = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
     if len(all_account_makes) == 0:
         admin_flog = 1
     else:
@@ -320,7 +322,7 @@ def shopmanagement(request):
 
         last_date = Shops.objects.last()
         operation_types = '添加店铺'
-        after_operations = '{id：%d，店铺名：%s，店铺总账户：%s}' % (last_date.id, shop_name,total_brank_accounts)
+        after_operations = '{id：%d，店铺名：%s，店铺总账户：%s}' % (last_date.id, shop_name, total_brank_accounts)
         Log.objects.create(operator=Userinfo.objects.get(username=user, deletes=False), operation_type=operation_types,
                            after_operation=after_operations)
     shop_info = []
@@ -339,7 +341,8 @@ def shopmanagement(request):
     edit_shop_form = Edit_shop_form()
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    now_time = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
     if len(all_account_makes) == 0:
         admin_flog = 1
     else:
@@ -495,10 +498,17 @@ def total_brank_management(request):
                 msg = '该总账户卡号已存在'
         else:
             msg = '该总账户名已存在'
-
+    # 财务账户提示账户未确认
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    now_time = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
+    if len(all_account_makes) == 0:
+        admin_flog = 1
+    else:
+        admin_flog = 0
     return render(request, 'total_brankmanagement.html',
                   {'title': title, 'tables': table_list, 'add_total_brank_form': add_total_brank_form, 'msg': msg,
-                   'edit_total_brank_form': edit_total_brank_form, 'user': user, })
+                   'edit_total_brank_form': edit_total_brank_form, 'user': user, 'admin_flog': admin_flog})
 
 
 # 验证总账户名
@@ -641,7 +651,8 @@ def brankmanagement(request):
         table_list.append(tables)
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    now_time = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
     if len(all_account_makes) == 0:
         admin_flog = 1
     else:
@@ -711,7 +722,7 @@ def edit_brank(request):
     msgss = ''
     if request.method == 'POST':
         ids = request.POST.get('id')
-        account_names = request.POST.get('account_name')
+
         brank_names = request.POST.get('brank_name')
         brank_numbers = request.POST.get('brank_number')
         brank_card_numbers = request.POST.get('brank_card_number')
@@ -720,6 +731,7 @@ def edit_brank(request):
         if len(brank_operator_list) != 0:
             if len(total_account_names) != 0:
                 brank_card_id = Brank_account.objects.get(id=ids)
+                account_names = brank_card_id.account_name
                 before_operation_lists = ''
                 for before_operations in brank_card_id.brank_operator.all():
                     before_operation_lists += str(before_operations.username)
@@ -727,11 +739,11 @@ def edit_brank(request):
                 before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，所属账户：%s，银行卡操作人：%s}' % (
                     ids, brank_card_id.account_name, brank_card_id.brank_name, brank_card_id.brank_number, brank_card_id.brank_card_number,
                     brank_card_id.total_account_name.total_account_name, before_operation_lists)
-                Brank_account.objects.filter(id=ids).update(account_name=account_names, brank_name=brank_names, brank_number=brank_numbers,
+                Brank_account.objects.filter(id=ids).update(brank_name=brank_names, brank_number=brank_numbers,
                                                             brank_card_number=brank_card_numbers, deletes=False,
                                                             total_account_name=Total_brank_account.objects.get(total_account_name=total_account_names,
                                                                                                                deletes=False))
-                brank_card_id2 = Brank_account.objects.filter(account_name=account_names, deletes=False).get()
+                brank_card_id2 = Brank_account.objects.filter(account_name=brank_card_id.account_name, deletes=False).get()
                 brank_card_id2.brank_operator.clear()
                 for users in brank_operator_list:
                     brank_card_id2.brank_operator.add(Userinfo.objects.get(username=users, deletes=False))
@@ -781,88 +793,98 @@ def deletes_brank(request):
     return HttpResponse('ok')
 
 
-# 账户记录管理
-def countmanagement(request):
+# 总账户记录管理
+def total_countmanagement(request):
     user = request.session.get('username')
     rouse = request.session.get('rouse')
     if user == None:
         return redirect(to=login)
-    title = '账户记录管理'
+    title = '总账户记录管理'
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     add_times = datetime.datetime.now()
-    account = Brank_account.objects.filter(brank_operator__username=user, deletes=False).all()
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account = user_total_account.total_brank_account.filter(deletes=False).all()
     if rouse == '财务':
-        count = Account_record.objects.filter(datess__date=now_time, deletes=False).all()
+        count = Total_account_record.objects.filter(datess__date=now_time, deletes=False).all()
     else:
-        count = Account_record.objects.filter(datess__date=now_time, operator__username=user, deletes=False).all()
+        count = Total_account_record.objects.filter(datess__date=now_time, operator__username=user, deletes=False).all()
     forms = Forms()
     edit_form = Edit_forms()
     errs = ''
     if request.method == 'POST':
-        account_names = request.POST.get('account_name')
-        print(account_names)
-        if account_names == None:
-            errs = '账户名不能为空'
+        account_names = request.POST.get('total_account_name')
+        if account_names == '':
+            errs = '总账户名不能为空'
         else:
-            exits = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=account_names, deletes=False).all()
+            exits = Total_account_record.objects.filter(datess__gte=now_time, account_name__total_account_name=account_names, deletes=False).all()
             if len(exits) == 0:
                 operators = Userinfo.objects.get(username=user, deletes=False)
-                form_data = Forms(request.POST)
-                if form_data.is_valid():
-                    data = form_data.clean()
-                    start_moneys = data['start_money']
-                    end_moneys = data['end_money']
-                    try:
-                        float(start_moneys)
-                        float(end_moneys)
-                        errs = ''
-                    except ValueError:
-                        errs = '初始资金和结余资金必须为数字'
-                    if errs == '':
-                        account_names = Brank_account.objects.get(account_name=account_names, deletes=False)
-                        Account_record.objects.create(datess=add_times, account_name=account_names, start_money=start_moneys, end_money=end_moneys,
-                                                      operator=operators, makes='False', start_money_img=request.FILES.get('start_money_img'),
-                                                      end_money_img=request.FILES.get('end_money_img'), deletes=False)
-                        last_date = Account_record.objects.last()
-
-                        operation_types = '创建账户记录'
-                        after_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，操作员：%s，运营确认：False，初始资金截图：%s，结余资金截图：%s}' % (
-                            last_date.id, account_names.account_name, start_moneys, end_moneys, user, last_date.start_money_img,
-                            last_date.end_money_img)
-                        Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
+                start_moneys = request.POST.get('start_money')
+                end_moneys = request.POST.get('end_money')
+                try:
+                    float(start_moneys)
+                    float(end_moneys)
+                    errs = ''
+                except ValueError:
+                    errs = '初始资金和结余资金必须为数字'
+                if errs == '':
+                    account_names = Total_brank_account.objects.get(total_account_name=account_names, deletes=False)
+                    Total_account_record.objects.create(datess=add_times, account_name=account_names, start_money=start_moneys,
+                                                        end_money=end_moneys, operator=operators, makes='False',
+                                                        start_money_img=request.FILES.get('start_money_img'),
+                                                        end_money_img=request.FILES.get('end_money_img'), deletes=False)
+                    last_date = Total_account_record.objects.last()
+                    operation_types = '创建总账户记录'
+                    after_operations = '{id：%s，总账户名：%s，初始资金：%s，结余资金：%s，操作员：%s，运营确认：False，初始资金截图：%s，结余资金截图：%s}' % (
+                        last_date.id, account_names.total_account_name, start_moneys, end_moneys, user, last_date.start_money_img,
+                        last_date.end_money_img)
+                    Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
             else:
                 errs = '该账户今日已创建记录'
     # 运营名下账户确认核对查询
     reminds = ''
     unmakes = 0
     makes = 0
-    for i in account:
-        check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).all()
+    account_unmakes = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
+    for i in account_unmakes:
+        check_countss = Account_record.objects.filter(datess__gte=now_time,account_name__total_account_name=i.total_account_name, deletes=False).all()
         if check_countss:
-            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).get()
+            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__total_account_name=i.total_account_name, deletes=False).get()
             if check_countss.makes == 'False':
                 reminds = '(有账户未确认)'
                 unmakes += 1
             if check_countss.makes == 'True':
                 makes += 1
+    # 总账户未确认提示运营
+    total_reminds = ''
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    for m in account__:
+        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        for i in account2:
+            if i.makes == 'False':
+                total_reminds = '(总账户未确认)'
+
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    now_time = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
     if len(all_account_makes) == 0:
         admin_flog = 1
     else:
         admin_flog = 0
     if rouse == '运营':
-        return render(request, 'countmanagement2.html',
+        return render(request, 'total_countmanagement2.html',
                       {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'formm': forms, 'edit_form': edit_form, 'errs': errs,
-                       'user': user, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes})
+                       'user': user, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'total_reminds': total_reminds})
     else:
         return render(request, 'countmanagement.html',
                       {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'user': user, 'admin_flog': admin_flog})
 
 
-# 修改账户记录数据
-def edit_count(request):
+# 修改总账户记录数据
+def edit_total_count(request):
     user = request.session.get('username')
     if user == None:
         return redirect(to=login)
@@ -879,38 +901,273 @@ def edit_count(request):
             errs = '初始资金和结余资金必须为数字'
         if errs == '':
             operators = Userinfo.objects.get(username=user, deletes=False)
+            last_date = Total_account_record.objects.filter(id=ids).get()
+            account_names = last_date.account_name
+            before_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，操作员：%s，运营确认：%s，初始资金截图：%s，结余资金截图：%s}' % (
+                ids, last_date.account_name.total_account_name, last_date.start_money, last_date.end_money, last_date.operator.username,
+                last_date.makes,
+                last_date.start_money_img,
+                last_date.end_money_img,)
+            Total_account_record.objects.filter(id=ids).delete()
+            if request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') == None:
+                Total_account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names,
+                                                                   start_money=start_moneys,
+                                                                   end_money=end_moneys, operator=operators, makes='False',
+                                                                   start_money_img=last_date.start_money_img,
+                                                                   end_money_img=last_date.end_money_img, deletes=False)
+            elif request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') != None:
+                Total_account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names,
+                                                                   start_money=start_moneys,
+                                                                   end_money=end_moneys, operator=operators, makes='False',
+                                                                   start_money_img=last_date.start_money_img,
+                                                                   end_money_img=request.FILES.get('end_money_img'), deletes=False)
+            elif request.FILES.get('start_money_img') != None and request.FILES.get('end_money_img') == None:
+                Total_account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names,
+                                                                   start_money=start_moneys,
+                                                                   end_money=end_moneys, operator=operators, makes='False',
+                                                                   start_money_img=request.FILES.get('start_money_img'),
+                                                                   end_money_img=last_date.end_money_img, deletes=False)
+            else:
+                Total_account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names,
+                                                                   start_money=start_moneys,
+                                                                   end_money=end_moneys, operator=operators, makes='False',
+                                                                   start_money_img=request.FILES.get('start_money_img'),
+                                                                   end_money_img=request.FILES.get('end_money_img'), deletes=False)
+            new_date = Total_account_record.objects.filter(id=ids).get()
+            operation_types = '修改总账户记录数据'
+            after_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，操作人：%s，运营确认：False，初始资金截图：%s，结余资金截图：%s}' % (
+                new_date.id, account_names.total_account_name, start_moneys, end_moneys, user, new_date.start_money_img, new_date.end_money_img)
+            Log.objects.create(operator=operators, operation_type=operation_types, before_operation=before_operations,
+                               after_operation=after_operations)
+            return redirect(to=total_countmanagement)
+        else:
+            title = '账户记录管理'
+            now_time = time.strftime('%Y-%m-%d', time.localtime())
+            dates = get_nday_list2(2, now_time)
+            account = Brank_account.objects.filter(brank_operator__username=user, deletes=False).all()
+            count = Account_record.objects.filter(datess__gte=dates, deletes=False).all()
+            forms = Forms()
+            edit_form = Edit_forms()
+            return render(request, 'countmanagement2.html',
+                          {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'formm': forms, 'edit_form': edit_form,
+                           'errs': errs, 'user': user})
+    current_data = Total_account_record.objects.filter(id=ids).get()
+    msg = json.dumps(
+        {'account_name': current_data.account_name.total_account_name, 'start_money': current_data.start_money, 'end_money': current_data.end_money,
+         'ids': current_data.id})
+    return HttpResponse(msg)
+
+
+# 删除总账户记录
+def delete_total_count(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    ids = request.GET.get('id')
+    Total_account_record.objects.filter(id=ids).update(deletes='True')
+    last_date = Total_account_record.objects.get(id=ids)
+    operators = Userinfo.objects.get(username=user, deletes=False)
+    operation_types = '删除账户记录数据'
+    before_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，操作员：%s，运营确认：%s，初始资金截图：%s，结余资金截图：%s}' % (
+        ids, last_date.account_name.total_account_name, last_date.start_money, last_date.end_money, last_date.operator.username, last_date.makes,
+        last_date.start_money_img,
+        last_date.end_money_img,)
+    after_operations = '删除了id=%s账户记录数据' % (ids)
+    Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations, before_operation=before_operations)
+    return redirect(to=total_countmanagement)
+
+
+# 子账户记录管理
+def countmanagement(request):
+    user = request.session.get('username')
+    rouse = request.session.get('rouse')
+    if user == None:
+        return redirect(to=login)
+    title = '账户记录管理'
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    add_times = datetime.datetime.now()
+    account = Brank_account.objects.filter(brank_operator__username=user, deletes=False).all()
+    if rouse == '财务':
+        count = Account_record.objects.filter(datess__date=get_nday_list2(2,now_time), deletes=False).all()
+    else:
+        count = Account_record.objects.filter(datess__date=now_time, operator__username=user, deletes=False).all()
+    forms = Forms()
+    edit_form = Edit_forms()
+    errs = ''
+    if request.method == 'POST':
+        account_names = request.POST.get('account_name')
+        if account_names == None:
+            errs = '账户名不能为空'
+        else:
+            exits = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=account_names, deletes=False).all()
+            if len(exits) == 0:
+                operators = Userinfo.objects.get(username=user, deletes=False)
+                form_data = Forms(request.POST)
+                if form_data.is_valid():
+                    data = form_data.clean()
+                    start_moneys = data['start_money']
+                    end_moneys = data['end_money']
+                    weixin_withdraw_moneys = data['weixin_withdraw_money']
+                    try:
+                        float(start_moneys)
+                        float(end_moneys)
+                        float(weixin_withdraw_moneys)
+                        errs = ''
+                    except ValueError:
+                        errs = '初始资金和结余资金和微信提现费用必须为数字'
+                    if errs == '':
+                        account_names = Brank_account.objects.get(account_name=account_names, deletes=False)
+                        Account_record.objects.create(datess=add_times, account_name=account_names, start_money=start_moneys, end_money=end_moneys,
+                                                      weixin_withdraw_money=weixin_withdraw_moneys, operator=operators, makes='False',
+                                                      start_money_img=request.FILES.get('start_money_img'),
+                                                      end_money_img=request.FILES.get('end_money_img'), weixin_img=request.FILES.get('weixin_img'),
+                                                      deletes=False)
+                        last_date = Account_record.objects.last()
+                        operation_types = '创建子账户记录'
+                        after_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，微信提现费用：%s，操作员：%s，运营确认：False，初始资金截图：%s，结余资金截图：%s，微信提现费用截图：%s}' % (
+                            last_date.id, account_names.account_name, start_moneys, end_moneys, weixin_withdraw_moneys, user,
+                            last_date.start_money_img,
+                            last_date.end_money_img, last_date.weixin_img)
+                        Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
+            else:
+                errs = '该账户今日已创建记录'
+    # 总账户未确认提示运营
+    total_reminds = ''
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    for m in account__:
+        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        for i in account2:
+            if i.makes == 'False':
+                total_reminds = '(总账户未确认)'
+    # 运营名下账户确认核对查询
+    reminds = ''
+    unmakes = 0
+    makes = 0
+    for i in account:
+        check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).all()
+        if check_countss:
+            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).get()
+            if check_countss.makes == 'False':
+                reminds = '(有账户未确认)'
+                unmakes += 1
+            if check_countss.makes == 'True':
+                makes += 1
+    # 财务账户提示账户未确认
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    now_time = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
+    if len(all_account_makes) == 0:
+        admin_flog = 1
+    else:
+        admin_flog = 0
+    if rouse == '运营':
+        return render(request, 'countmanagement2.html',
+                      {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'formm': forms, 'edit_form': edit_form, 'errs': errs,
+                       'user': user, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,'total_reminds':total_reminds})
+    else:
+        return render(request, 'countmanagement.html',
+                      {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'user': user, 'admin_flog': admin_flog})
+
+
+# 修改子账户记录数据
+def edit_count(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    ids = request.GET.get('id')
+    if request.method == 'POST':
+        errs = ''
+        ids = request.POST.get('id')
+        start_moneys = request.POST.get('start_money')
+        end_moneys = request.POST.get('end_money')
+        weixin_withdraw_moneys = request.POST.get('weixin_withdraw_money')
+        try:
+            float(start_moneys)
+            float(end_moneys)
+            float(weixin_withdraw_moneys)
+        except ValueError:
+            errs = '初始资金和结余资金和微信提现费用必须为数字'
+        if errs == '':
+            operators = Userinfo.objects.get(username=user, deletes=False)
             last_date = Account_record.objects.filter(id=ids).get()
             account_names = last_date.account_name
             Account_record.objects.filter(id=ids).delete()
-            if request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') == None:
+            if request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') == None and request.FILES.get(
+                    'weixin_img') == None:
                 Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
                                                              end_money=end_moneys, operator=operators, makes='False',
-                                                             start_money_img=last_date.start_money_img,
+                                                             weixin_withdraw_money=weixin_withdraw_moneys, start_money_img=last_date.start_money_img,
+                                                             weixin_img=last_date.weixin_img, end_money_img=last_date.end_money_img, deletes=False)
+            elif request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') != None and request.FILES.get(
+                    'weixin_img') == None:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys, start_money_img=last_date.start_money_img,
+                                                             weixin_img=last_date.weixin_img, end_money_img=request.FILES.get('end_money_img'),
+                                                             deletes=False)
+            elif request.FILES.get('start_money_img') != None and request.FILES.get('end_money_img') == None and request.FILES.get(
+                    'weixin_img') == None:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
+                                                             start_money_img=request.FILES.get('start_money_img'), weixin_img=last_date.weixin_img,
                                                              end_money_img=last_date.end_money_img, deletes=False)
-            elif request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') != None:
+            elif request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') == None and request.FILES.get(
+                    'weixin_img') != None:
                 Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
                                                              end_money=end_moneys, operator=operators, makes='False',
-                                                             start_money_img=last_date.start_money_img,
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
+                                                             start_money_img=last_date.start_money_img, weixin_img=request.FILES.get('weixin_img'),
+                                                             end_money_img=last_date.end_money_img, deletes=False)
+
+            elif request.FILES.get('start_money_img') != None and request.FILES.get('end_money_img') != None and request.FILES.get(
+                    'weixin_img') == None:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
+                                                             start_money_img=request.FILES.get('start_money_img'), weixin_img=last_date.weixin_img,
                                                              end_money_img=request.FILES.get('end_money_img'), deletes=False)
-            elif request.FILES.get('start_money_img') != None and request.FILES.get('end_money_img') == None:
+            elif request.FILES.get('start_money_img') != None and request.FILES.get('end_money_img') == None and request.FILES.get(
+                    'weixin_img') != None:
                 Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
                                                              end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
                                                              start_money_img=request.FILES.get('start_money_img'),
+                                                             weixin_img=request.FILES.get('weixin_img'),
                                                              end_money_img=last_date.end_money_img, deletes=False)
+            elif request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') != None and request.FILES.get(
+                    'weixin_img') != None:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
+                                                             start_money_img=last_date.start_money_img,
+                                                             weixin_img=request.FILES.get('weixin_img'),
+                                                             end_money_img=request.FILES.get('end_money_img'), deletes=False)
             else:
                 Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
                                                              end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
                                                              start_money_img=request.FILES.get('start_money_img'),
+                                                             weixin_img=request.FILES.get('weixin_img'),
                                                              end_money_img=request.FILES.get('end_money_img'), deletes=False)
+            # 修改总账户的状态
             new_date = Account_record.objects.filter(id=ids).get()
-
+            now_time = time.strftime('%Y-%m-%d', time.localtime())
+            total_brank_names = new_date.account_name.total_account_name.total_account_name
+            total_account_records = Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=total_brank_names,
+                                                                        deletes=False).all()
+            if len(total_account_records) > 0:
+                Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=total_brank_names, deletes=False).update(
+                    makes=False)
             operation_types = '修改账户记录数据'
-            before_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，操作员：%s，运营确认：%s，初始资金截图：%s，结余资金截图：%s}' % (
-                ids, last_date.account_name.account_name, last_date.start_money, last_date.end_money, last_date.operator, last_date.makes,
-                last_date.start_money_img,
-                last_date.end_money_img,)
-            after_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，操作员：%s，运营确认：False，初始资金截图：%s，结余资金截图：%s}' % (
-                new_date.id, account_names.account_name, start_moneys, end_moneys, user, new_date.start_money_img, new_date.end_money_img)
+            before_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，微信提现费用：%s，操作员：%s，运营确认：%s，初始资金截图：%s，结余资金截图：%s，微信提现费用截图：%s}' % (
+                ids, last_date.account_name.account_name, last_date.start_money, last_date.end_money, last_date.weixin_withdraw_money,
+                last_date.operator.username, last_date.makes, last_date.start_money_img, last_date.end_money_img, last_date.weixin_img)
+            after_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，微信提现费用：%s，操作员：%s，运营确认：False，初始资金截图：%s，结余资金截图：%s，微信提现费用截图：%s}}' % (
+                new_date.id, account_names.account_name, start_moneys, end_moneys, weixin_withdraw_moneys, user, new_date.start_money_img,
+                new_date.end_money_img, new_date.weixin_img)
             Log.objects.create(operator=operators, operation_type=operation_types, before_operation=before_operations,
                                after_operation=after_operations)
             return redirect(to=countmanagement)
@@ -928,11 +1185,129 @@ def edit_count(request):
     current_data = Account_record.objects.filter(id=ids).get()
     msg = json.dumps(
         {'account_name': current_data.account_name.account_name, 'start_money': current_data.start_money, 'end_money': current_data.end_money,
-         'ids': current_data.id})
+         'ids': current_data.id, 'weixin_withdraw_money': current_data.weixin_withdraw_money})
     return HttpResponse(msg)
 
 
-# 删除账户记录数据
+# 通过总账户核对页面修改子账户记录数据
+def edit_count_2(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    ids = request.GET.get('id')
+    if request.method == 'POST':
+        errs = ''
+        ids = request.POST.get('id')
+        start_moneys = request.POST.get('start_money')
+        end_moneys = request.POST.get('end_money')
+        weixin_withdraw_moneys = request.POST.get('weixin_withdraw_money')
+        try:
+            float(start_moneys)
+            float(end_moneys)
+            float(weixin_withdraw_moneys)
+        except ValueError:
+            errs = '初始资金和结余资金和微信提现费用必须为数字'
+        if errs == '':
+            operators = Userinfo.objects.get(username=user, deletes=False)
+            last_date = Account_record.objects.filter(id=ids).get()
+            account_names = last_date.account_name
+            Account_record.objects.filter(id=ids).delete()
+            if request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') == None and request.FILES.get(
+                    'weixin_img') == None:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys, start_money_img=last_date.start_money_img,
+                                                             weixin_img=last_date.weixin_img, end_money_img=last_date.end_money_img, deletes=False)
+            elif request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') != None and request.FILES.get(
+                    'weixin_img') == None:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys, start_money_img=last_date.start_money_img,
+                                                             weixin_img=last_date.weixin_img, end_money_img=request.FILES.get('end_money_img'),
+                                                             deletes=False)
+            elif request.FILES.get('start_money_img') != None and request.FILES.get('end_money_img') == None and request.FILES.get(
+                    'weixin_img') == None:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
+                                                             start_money_img=request.FILES.get('start_money_img'), weixin_img=last_date.weixin_img,
+                                                             end_money_img=last_date.end_money_img, deletes=False)
+            elif request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') == None and request.FILES.get(
+                    'weixin_img') != None:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
+                                                             start_money_img=last_date.start_money_img, weixin_img=request.FILES.get('weixin_img'),
+                                                             end_money_img=last_date.end_money_img, deletes=False)
+
+            elif request.FILES.get('start_money_img') != None and request.FILES.get('end_money_img') != None and request.FILES.get(
+                    'weixin_img') == None:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
+                                                             start_money_img=request.FILES.get('start_money_img'), weixin_img=last_date.weixin_img,
+                                                             end_money_img=request.FILES.get('end_money_img'), deletes=False)
+            elif request.FILES.get('start_money_img') != None and request.FILES.get('end_money_img') == None and request.FILES.get(
+                    'weixin_img') != None:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
+                                                             start_money_img=request.FILES.get('start_money_img'),
+                                                             weixin_img=request.FILES.get('weixin_img'),
+                                                             end_money_img=last_date.end_money_img, deletes=False)
+            elif request.FILES.get('start_money_img') == None and request.FILES.get('end_money_img') != None and request.FILES.get(
+                    'weixin_img') != None:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
+                                                             start_money_img=last_date.start_money_img,
+                                                             weixin_img=request.FILES.get('weixin_img'),
+                                                             end_money_img=request.FILES.get('end_money_img'), deletes=False)
+            else:
+                Account_record.objects.filter(id=ids).create(id=ids, datess=last_date.datess, account_name=account_names, start_money=start_moneys,
+                                                             end_money=end_moneys, operator=operators, makes='False',
+                                                             weixin_withdraw_money=weixin_withdraw_moneys,
+                                                             start_money_img=request.FILES.get('start_money_img'),
+                                                             weixin_img=request.FILES.get('weixin_img'),
+                                                             end_money_img=request.FILES.get('end_money_img'), deletes=False)
+            # 修改总账户的状态
+            new_date = Account_record.objects.filter(id=ids).get()
+            now_time = time.strftime('%Y-%m-%d', time.localtime())
+            total_brank_names = new_date.account_name.total_account_name.total_account_name
+            total_account_records = Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=total_brank_names,
+                                                                        deletes=False).all()
+            if len(total_account_records) > 0:
+                Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=total_brank_names, deletes=False).update(
+                    makes=False)
+            operation_types = '修改账户记录数据'
+            before_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，微信提现费用：%s，操作员：%s，运营确认：%s，初始资金截图：%s，结余资金截图：%s，微信提现费用截图：%s}' % (
+                ids, last_date.account_name.account_name, last_date.start_money, last_date.end_money, last_date.weixin_withdraw_money,
+                last_date.operator.username, last_date.makes, last_date.start_money_img, last_date.end_money_img, last_date.weixin_img)
+            after_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，微信提现费用：%s，操作员：%s，运营确认：False，初始资金截图：%s，结余资金截图：%s，微信提现费用截图：%s}}' % (
+                new_date.id, account_names.account_name, start_moneys, end_moneys, weixin_withdraw_moneys, user, new_date.start_money_img,
+                new_date.end_money_img, new_date.weixin_img)
+            Log.objects.create(operator=operators, operation_type=operation_types, before_operation=before_operations,
+                               after_operation=after_operations)
+            return redirect(to=check_total_account)
+        else:
+            title = '账户记录管理'
+            now_time = time.strftime('%Y-%m-%d', time.localtime())
+            dates = get_nday_list2(2, now_time)
+            account = Brank_account.objects.filter(brank_operator__username=user, deletes=False).all()
+            count = Account_record.objects.filter(datess__gte=dates, deletes=False).all()
+            forms = Forms()
+            edit_form = Edit_forms()
+            return render(request, 'countmanagement2.html',
+                          {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'formm': forms, 'edit_form': edit_form,
+                           'errs': errs, 'user': user})
+    current_data = Account_record.objects.filter(id=ids).get()
+    msg = json.dumps(
+        {'account_name': current_data.account_name.account_name, 'start_money': current_data.start_money, 'end_money': current_data.end_money,
+         'ids': current_data.id, 'weixin_withdraw_money': current_data.weixin_withdraw_money})
+    return HttpResponse(msg)
+
+
+# 删除子账户记录数据
 def deletes_count(request):
     user = request.session.get('username')
     if user == None:
@@ -940,11 +1315,20 @@ def deletes_count(request):
     ids = request.GET.get('id')
     Account_record.objects.filter(id=ids).update(deletes='True')
     last_date = Account_record.objects.get(id=ids)
+    # 修改总账户的状态
+    new_date = Account_record.objects.filter(id=ids).get()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    total_brank_names = new_date.account_name.total_account_name.total_account_name
+    total_account_records = Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=total_brank_names,
+                                                                deletes=False).all()
+    if len(total_account_records) > 0:
+        Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=total_brank_names, deletes=False).update(
+            makes=False)
     operators = Userinfo.objects.get(username=user, deletes=False)
     operation_types = '删除账户记录数据'
-    before_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，操作员：%s，运营确认：%s，初始资金截图：%s，结余资金截图：%s}' % (
-        ids, last_date.account_name, last_date.start_money, last_date.end_money, last_date.operator, last_date.makes, last_date.start_money_img,
-        last_date.end_money_img,)
+    before_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，微信提现费用：%s，操作员：%s，运营确认：%s，初始资金截图：%s，结余资金截图：%s，微信提现费用截图：%s}' % (
+        ids, last_date.account_name.account_name, last_date.start_money, last_date.end_money, last_date.weixin_withdraw_money,
+        last_date.operator.username, last_date.makes, last_date.start_money_img, last_date.end_money_img, last_date.weixin_img)
     after_operations = '删除了id=%s账户记录数据' % (ids)
     Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations, before_operation=before_operations)
     return redirect('/countmanagement/')
@@ -959,7 +1343,6 @@ def brushmanagement(request):
     account = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    # tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator=user, deletes='False')[::-1]
     tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=user, deletes='False')[::-1]
     add_brush_form = Add_brush_data()
     edit_brush_form = Edit_brush_data()
@@ -998,8 +1381,8 @@ def brushmanagement(request):
                                               payment_type=payment_types, payment_amount=payment_amounts,
                                               payment_account=Brank_account.objects.get(account_name=payment_accounts, deletes=False),
                                               operator=operators, remarks=remarkss, deletes=False)
-            if Account_record.objects.filter(datess__date=now_time, account_name__account_name=payment_accounts):
-                Account_record.objects.filter(datess__date=now_time, account_name__account_name=payment_accounts).update(makes=False)
+            if Account_record.objects.filter(datess__date=now_time, account_name__account_name=payment_accounts, deletes=False):
+                Account_record.objects.filter(datess__date=now_time, account_name__account_name=payment_accounts, deletes=False).update(makes=False)
             last_table = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=user).last()
             last_add_time = t(last_table.add_time)
             operation_types = '创建喝酒数据'
@@ -1026,9 +1409,19 @@ def brushmanagement(request):
                 unmakes += 1
             if check_countss.makes == 'True':
                 makes += 1
+    # 总账户未确认提示运营
+    total_reminds = ''
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    for m in account__:
+        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        for i in account2:
+            if i.makes == 'False':
+                total_reminds = '(总账户未确认)'
     return render(request, 'brush2.html',
                   {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'add_brush_form': add_brush_form,
-                   'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes})
+                   'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,'total_reminds':total_reminds})
 
 
 # 修改喝酒数据
@@ -1156,9 +1549,9 @@ def more_date(request):
     unmakes = 0
     makes = 0
     for i in accountss:
-        check_countss = Account_record.objects.filter(datess__gte=now_time, account_name=i.id, deletes=False).all()
+        check_countss = Account_record.objects.filter(datess__date=now_time, account_name=i.id, deletes=False).all()
         if check_countss:
-            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name=i.id, deletes=False).get()
+            check_countss = Account_record.objects.filter(datess__date=now_time, account_name=i.id, deletes=False).get()
             if check_countss.makes == 'False':
                 reminds = '(有账户未确认)'
                 unmakes += 1
@@ -1166,16 +1559,27 @@ def more_date(request):
                 makes += 1
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    now_time = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
     if len(all_account_makes) == 0:
         admin_flog = 1
     else:
         admin_flog = 0
+    # 总账户未确认提示运营
+    total_reminds = ''
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    for m in account__:
+        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        for i in account2:
+            if i.makes == 'False':
+                total_reminds = '(总账户未确认)'
     if rouse == '运营':
         return render(request, 'more_data2.html',
                       {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
                        'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'reminds': reminds, 'makes': makes,
-                       'unmakes': unmakes})
+                       'unmakes': unmakes,'total_reminds':total_reminds})
     else:
         return render(request, 'more_data.html',
                       {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
@@ -1196,7 +1600,7 @@ def chose_shop(request):
     return HttpResponse(msg)
 
 
-# 核对喝酒数据
+# 子账户核对
 def check_account(request):
     user = request.session.get('username')
     if user == None:
@@ -1206,6 +1610,7 @@ def check_account(request):
         return redirect(to=login)
     title = '核对喝酒数据'
     errs = ''
+    actual_err = ''
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     accounts = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     edit_brush_form = Edit_brush_data()
@@ -1236,6 +1641,8 @@ def check_account(request):
         end_money_img = account_data.end_money_img
         if star_money_img and end_money_img:
             actual_cost = float(account_data.start_money) - float(account_data.end_money)
+            if pay_money != actual_cost:
+                actual_err = '账目有问题，请仔细核对'
         else:
             actual_cost = '该账户没有上传截图，无法核账'
     else:
@@ -1246,18 +1653,28 @@ def check_account(request):
     unmakes = 0
     makes = 0
     for i in accountss:
-        check_countss = Account_record.objects.filter(datess__gte=now_time, account_name=i.id, deletes=False).all()
+        check_countss = Account_record.objects.filter(datess__date=now_time, account_name=i.id, deletes=False).all()
         if check_countss:
-            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name=i.id, deletes=False).get()
+            check_countss = Account_record.objects.filter(datess__date=now_time, account_name=i.id, deletes=False).get()
             if check_countss.makes == 'False':
                 reminds = '(有账户未确认)'
                 unmakes += 1
             if check_countss.makes == 'True':
                 makes += 1
+    # 总账户未确认提示运营
+    total_reminds = ''
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    for m in account__:
+        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        for i in account2:
+            if i.makes == 'False':
+                total_reminds = '(总账户未确认)'
     return render(request, 'check_account2.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money,
                    'actual_cost': actual_cost, 'user': user, 'edit_brush_form': edit_brush_form, 'shops': shops, 'user': user,
-                   'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'errs': errs})
+                   'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'errs': errs,'total_reminds':total_reminds,'actual_err':actual_err})
 
 
 # 确认核对
@@ -1275,15 +1692,17 @@ def make_account(request):
     return HttpResponse(json.dumps('确认成功'))
 
 
-# 按日期查询账户记录
+# 按日期查询子账户记录
 def search_count(request):
     search_date = request.GET.get('search_data')
     user = request.session.get('username')
     rouse = request.session.get('rouse')
     if user == None:
         return redirect(to=login)
-    title = '账户记录管理'
+    title = '子账户记录管理'
     account = Brank_account.objects.all()
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account2 = user_total_account.brank_account_set.filter(deletes=False).all()
     forms = Forms()
     edit_form = Edit_forms()
     now_time = time.strftime('%Y-%m-%d', time.localtime())
@@ -1299,12 +1718,22 @@ def search_count(request):
         admin_flog = 1
     else:
         admin_flog = 0
+    # 总账户未确认提示运营
+    total_reminds = ''
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    for m in account__:
+        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        for i in account2:
+            if i.makes == 'False':
+                total_reminds = '(总账户未确认)'
     if rouse == '财务':
         return render(request, 'countmanagement.html', {'title': title, 'account': account, 'count': count, 'nowss': search_date, 'user': user})
     else:
         return render(request, 'countmanagement2.html',
-                      {'title': title, 'account': account, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
-                       'user': user, 'admin_flog': admin_flog})
+                      {'title': title, 'account': account2, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
+                       'user': user, 'admin_flog': admin_flog,'total_reminds':total_reminds})
 
 
 # 账户账单
@@ -1349,7 +1778,8 @@ def account_bill(request):
         tables = Brush_single_entry.objects.all()
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    now_time2 = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time2, makes=False, deletes=False).all()
     if len(all_account_makes) == 0:
         admin_flog = 1
     else:
@@ -1381,7 +1811,8 @@ def shop_bill(request):
         pay_money += float(table.payment_amount)
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    now_time2 = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time2, makes=False, deletes=False).all()
     if len(all_account_makes) == 0:
         admin_flog = 1
     else:
@@ -1389,3 +1820,140 @@ def shop_bill(request):
     return render(request, 'shop_bill.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money, 'user': user,
                    'shop_name': shop_name, 'admin_flog': admin_flog})
+
+
+# 总账户核对
+def check_total_account(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    title = '总账户核对确认'
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    total_account_all = Userinfo.objects.filter(username=user, deletes=False).get().total_brank_account.filter(deletes=False).all()
+    errs = ''
+    account_cost = 0.0
+    total_cost = 0.0
+    if len(total_account_all) != 0:
+        for f in total_account_all:
+            first_total_account = f.total_account_name
+            break
+        if request.method == 'POST':
+            first_total_account = request.POST.get('search_total_account_name')
+            now_time = request.POST.get('check_date')
+        account_all = Brank_account.objects.filter(total_account_name__total_account_name=first_total_account, deletes=False).all()
+        tables = []
+        for account in account_all:
+            tables_queryset = Account_record.objects.filter(datess__date=now_time, account_name=account, deletes=False).all()
+            for table in tables_queryset:
+                tables.append(table)
+                account_cost = account_cost + float(table.start_money) - float(table.end_money)
+                if table.makes == 'False':
+                    errs = '存在未确认的子账户，总账户无法确认'
+        unmake = 0
+        total_account_make = Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=first_total_account,
+                                                                 deletes=False).all()
+        if len(total_account_make) == 0:
+            errs = '没有该总账户当天的信息，无法核账'
+        else:
+            for i in total_account_make:
+                total_cost = float(i.start_money) - float(i.end_money)
+                if i.start_money_img and i.end_money_img:
+                    pass
+                else:
+                    errs = '该总账户记录没有截图，无法核账'
+                if i.makes == 'False':
+                    unmake += 1
+        edit_form = Edit_forms()
+        if total_cost != account_cost:
+            errs = '账目存在问题，请仔细核对'
+    else:
+        errs = '本账号未绑定总账户'
+    # 总账户未确认提示运营
+    total_reminds = ''
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    for m in account__:
+        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        for i in account2:
+            if i.makes == 'False':
+                total_reminds = '(总账户未确认)'
+    # 运营名下账户确认核对查询
+    reminds = ''
+    unmakes = 0
+    makes = 0
+    account_unmakes = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
+    for i in account_unmakes:
+        check_countss = Account_record.objects.filter(datess__gte=now_time,account_name__total_account_name=i.total_account_name, deletes=False).all()
+        if check_countss:
+            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__total_account_name=i.total_account_name, deletes=False).get()
+            if check_countss.makes == 'False':
+                reminds = '(有账户未确认)'
+                unmakes += 1
+            if check_countss.makes == 'True':
+                makes += 1
+    return render(request, 'check_total_account2.html',
+                  {'title': title, 'tables': tables, 'total_account_all': total_account_all, 'user': user, 'now_time': now_time, 'err': errs,
+                   'unmakes': unmake, 'edit_form': edit_form, 'total_cost': total_cost, 'account_cost': account_cost,'total_reminds':total_reminds,'unmakes':unmakes,'makes':makes,'reminds':reminds})
+
+
+# 总账户确认核对
+def make_total_account(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    account = request.GET.get('search_total_account_name')
+    now_time = request.GET.get('check_date')
+    Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=account, deletes=False).update(makes=True)
+    operators = Userinfo.objects.get(username=user, deletes=False)
+    operation_types = '总账户核对成功'
+    after_operations = '{日期：%s，总账户名：%s}' % (now_time, account)
+    Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
+    return HttpResponse(json.dumps('确认成功'))
+
+
+# 按日期查询总账户记录
+def search_total_count(request):
+    search_date = request.GET.get('search_date')
+    user = request.session.get('username')
+    rouse = request.session.get('rouse')
+    if user == None:
+        return redirect(to=login)
+    title = '总账户记录管理'
+    account = Total_brank_account.objects.all()
+    account2 = Userinfo.objects.filter(username=user, deletes=False).get().total_brank_account.filter(deletes=False).all()
+    forms = Forms()
+    edit_form = Edit_forms()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    if search_date:
+        count = Total_account_record.objects.filter(datess__date=search_date, deletes=False).all()
+    else:
+        search_date = now_time
+        if rouse == '财务':
+            search_date = get_nday_list2(2,now_time)
+        count = Total_account_record.objects.filter(datess__date=search_date, deletes=False).all()
+    # 财务账户提示账户未确认
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    now_time = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
+    if len(all_account_makes) == 0:
+        admin_flog = 1
+    else:
+        admin_flog = 0
+    # 总账户未确认提示运营
+    total_reminds = ''
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    for m in account__:
+        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        for i in account2:
+            if i.makes == 'False':
+                total_reminds = '(总账户未确认)'
+    if rouse == '财务':
+        return render(request, 'total_countmanagement.html',
+                      {'title': title, 'account': account, 'count': count, 'nowss': search_date, 'user': user, 'admin_flog': admin_flog})
+    else:
+        return render(request, 'total_countmanagement2.html',
+                      {'title': title, 'account': account2, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
+                       'user': user,'total_reminds':total_reminds })

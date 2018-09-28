@@ -3,6 +3,8 @@
     <link rel="stylesheet" href="/static/css/check_account.css">
 {% endblock %}
 {% block content %}
+    <h2>子账户核对</h2>
+    <hr>
     <form class="form-inline" id="check_data" method="post">
         <div class="form-group">
             <label for="exampleInputName2">日期:</label>
@@ -21,6 +23,7 @@
     </form>
     <br>
     <hr>
+    {#显示数据#}
     <div id="tabless">
         <table class="table table-striped">
             <tr>
@@ -165,8 +168,6 @@
         </div>
     </div>
 
-
-
     <h3 class="col-lg-offset-8">喝酒花销：<span id="pay">{{ pay_money }}</span></h3>
     <h3 class="col-lg-offset-8">账户差额：<span id="actual" style="color: red">{{ actual_cost }}</span>
     <input type="button" onclick="make()" value="核对确认" class="btn btn-info col-lg-offset-8" id="make">
@@ -174,27 +175,19 @@
 {% endblock %}
 {% block js %}
     <script>
-    var errs = '{{ errs }}';
-    if (errs != ''){
-        alert(errs)
-    }
+        var errs = '{{ errs }}';
+        if (errs != '') {
+            alert(errs)
+        }
     </script>
     <script>
         $('#update_ids').hide();
-        $('#make').hide()
-        var pay = $('#pay').text();
-        var actual = $('#actual').text();
-        if (pay == actual) {
-            $('#make').show();
-        }
-        else {
-            if (actual == '') {
-                $('#actual').append('&nbsp;&nbsp;&nbsp;&nbsp;<span id="errsss" >账目有问题，请仔细核对</span>')
-            }
-
+        $('#make').hide();
+        if ('{{ actual_err }}' != '') {
+            var actual_errs = '<h3><span id="errsss" >' + '{{ actual_err }}' + '</span></h3>';
+            $('#actual').append(actual_errs)
         }
         if ('{{ unmakes }}' == 0) {
-            console.log('{{ unmakes }}')
             $('#make').attr("value", "已确认");
             $('#make').prop("disabled", true);
         }

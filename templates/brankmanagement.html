@@ -8,33 +8,33 @@
     <hr>
     <form class="form-horizontal" action="/brankmanagement/" method="post">
         <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label"><span style="color: red">*</span>账户名</label>
+            <label for="inputEmail3" class="col-sm-2 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;账户名</label>
             <div class="col-sm-2 ">
                 {{ add_brank_account_form.account_name }}
                 <span style="color: red" id="err"></span>
             </div>
         </div>
         <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label"><span style="color: red">*</span>银行名</label>
+            <label for="inputPassword3" class="col-sm-2 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;银行名</label>
             <div class="col-sm-2">
                 {{ add_brank_account_form.brank_name }}
             </div>
         </div>
         <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label"><span style="color: red">*</span>开户行号</label>
+            <label for="inputPassword3" class="col-sm-2 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;开户行号</label>
             <div class="col-sm-2">
                 {{ add_brank_account_form.brank_number }}
             </div>
         </div>
         <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label"><span style="color: red">*</span>银行卡号</label>
+            <label for="inputEmail3" class="col-sm-2 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;银行卡号</label>
             <div class="col-sm-2 ">
                 {{ add_brank_account_form.brank_card_number }}
                 <span style="color: red" id="err2"></span>
             </div>
         </div>
         <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label"><span style="color: red">*</span>所属总账户</label>
+            <label for="inputPassword3" class="col-sm-2 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;所属总账户</label>
             <div class="col-sm-2">
                 <select name="total_account" id="rose" class="form-control" onchange="cheage_rouse()">
                     {% for total_account in total_accounts %}
@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label"><span style="color: red">*</span>银行卡使用人</label>
+            <label for="inputPassword3" class="col-sm-2 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;银行卡使用人</label>
             <div class="checkbox col-sm-8">
                 <label class="checkbox-inline">
                     <input type="checkbox" id="inlineCheckbox1" class="allAndNotAll" value="all">全选
@@ -111,7 +111,6 @@
     {#修改数据的模态框#}
     {#    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel" id="edit_model">#}
     <div class="modal fade" tabindex="-1" role="dialog" id="edit_model">
-
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -121,31 +120,31 @@
                 <div class="modal-body">
                     <form class="form-horizontal" id="update_form">
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>账户名：</label>
+                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;账户名：</label>
                             <div class="col-sm-9">
                                 {{ edit_brank_account_form.account_name }}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>银行名：</label>
+                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;银行名：</label>
                             <div class="col-sm-9">
                                 {{ edit_brank_account_form.brank_name }}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>开户行号：</label>
+                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;开户行号：</label>
                             <div class="col-sm-9">
                                 {{ edit_brank_account_form.brank_number }}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>银行卡号：</label>
+                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;银行卡号：</label>
                             <div class="col-sm-9">
                                 {{ edit_brank_account_form.brank_card_number }}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>总账户名</label>
+                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;总账户名：</label>
                             <div class="col-sm-9">
                                 <select name="edit_total_account_name" id="edit_total_account_name" class="form-control">
                                     {% for total_account in total_accounts %}
@@ -155,13 +154,14 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>银行卡使用人：</label>
+                            <label for="inputEmail3" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;银行卡使用人：</label>
                             <div class="col-sm-9">
                                 <label class="checkbox-inline">
                                     <input type="checkbox" id="inlineCheckbox12" class="allAndNotAll2" value="all">全选
                                 </label>
                                 {% for users in user_list %}
                                     <label class="checkbox-inline ">
+
                                         <input type="checkbox" id="inlineCheckbox12" value="{{ users.username }}"
                                                name="checkitem"> {{ users.username }}
                                     </label>

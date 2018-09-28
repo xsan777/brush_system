@@ -133,8 +133,11 @@
         <a href="/brushmanagement/">
             <div class="menus">每日喝酒数据录入</div>
         </a>
+        <a href="/total_countmanagement/">
+            <div class="menus">总账户转账数据录入</div>
+        </a>
         <a href="/countmanagement/">
-            <div class="menus">每日转账数据录入</div>
+            <div class="menus">子账户转账数据录入</div>
         </a>
     </div>
     <a href="javascript:void(0);" onclick="menu2()">
@@ -145,7 +148,10 @@
     </a>
     <div class="menuss2">
         <a href="/check_account/">
-            <div class="menus">账户核对 <span id="remind">{{ reminds }}</span></div>
+            <div class="menus">子账户核对 <span id="remind">{{ reminds }}</span></div>
+        </a>
+        <a href="/check_total_account/">
+            <div class="menus">总账户核对 <span id="remind">{{ total_reminds }}</span></div>
         </a>
         <a href="/more_date/">
             <div class="menus">喝酒数据查询</div>

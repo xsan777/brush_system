@@ -51,7 +51,7 @@ class Brank_account(models.Model):
 
 # 子账户记录
 class Account_record(models.Model):
-    datess = models.DateTimeField(verbose_name='创建日期', )
+    datess = models.DateTimeField(verbose_name='创建日期',)
     account_name = models.ForeignKey(Brank_account, on_delete=models.CASCADE)
     start_money = models.IntegerField(verbose_name='初始资金')
     end_money = models.IntegerField(verbose_name='结余资金')
@@ -98,5 +98,5 @@ class Log(models.Model):
     add_time = models.DateTimeField(verbose_name='操作日期', auto_now=True, )
     operator = models.ForeignKey(Userinfo, on_delete=models.CASCADE)
     operation_type = models.CharField(verbose_name='操作类型', max_length=32)
-    before_operation = models.CharField(verbose_name='操作前', max_length=500)
-    after_operation = models.CharField(verbose_name='操作后', max_length=500)
+    before_operation = models.CharField(verbose_name='操作前', max_length=600)
+    after_operation = models.CharField(verbose_name='操作后', max_length=600)
