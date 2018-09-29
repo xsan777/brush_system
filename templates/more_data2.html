@@ -7,7 +7,7 @@
     <form class="form-inline" id="search_data" method="post">
         <div class="form-group">
             <label for="exampleInputName2">日期:</label>
-            <input type="date" class="form-control" value="{{ now_time }}" name="add_time">
+            <input type="date" class="form-control" value="{{ now_time }}" name="add_time" id="se_date">
         </div>
         <div class="form-group">
             <label for="exampleInputName2">操作人:</label>
@@ -20,18 +20,19 @@
         </div>
         <div class="form-group">
             <label for="exampleInputName2">店铺:</label>
-            <select name="shopname" id="shopname" class="form-control">
+            <select name="shopname" id="shopname" class="form-control" onchange="change_url()">
                 <option value="alls">全部</option>
                 {% for shopss in shops %}
                     <option value="{{ shopss }}">{{ shopss }}</option>
                 {% endfor %}
-
             </select>
         </div>
         <input type="submit" value="查找" class="btn btn-default">
+        <a href="/download_brush/" id="downss"><input type="button" value="下载" class="btn btn-default"></a>
+
         {% csrf_token %}
     </form>
-    <br>
+
     <hr>
     {#显示数据#}
     <div id="tabless">
@@ -55,7 +56,8 @@
                     <tr id="{{ forloop.counter }}">
                         <td id="num">{{ forloop.counter }}</td>
                         <td>{{ table.shopname }}</td>
-                        <td>{{ table.wang_wang_number }}</td>
+                        <td> <span data-container="body" data-toggle="popover" data-placement="right" data-content="123"
+                                   id="search_wangwang" data-html="true"> {{ table.wang_wang_number }}</span></td>
                         <td>{{ table.online_order_number }}</td>
                         <td>{{ table.transaction_data }}</td>
                         <td>{{ table.payment_type }}</td>
@@ -222,7 +224,11 @@
     {#动态从数据库里取店铺#}
     <script>
         function change_shop() {
-            console.log('kdjkaj')
+            var operator = $('#operator').val();
+            var shopss = $('#shopname').val();
+            var dates = $('#se_date').val();
+            var urls = '/download_brush/?operator=' + operator + '&shopname=' + shopss + '&add_time=' + dates;
+            $('#downss').attr('href', urls)
             var kj = $('#operator').find("option:selected").text();
             $.ajax({
                 url: "/chose_shop/",
@@ -310,4 +316,42 @@
             window.location.reload()
         }
     </script>
+    {#下载数据#}
+    <script>
+        function change_url() {
+            var operator = $('#operator').val();
+            var shopss = $('#shopname').val();
+            var dates = $('#se_date').val();
+            var urls = '/download_brush/?operator=' + operator + '&shopname=' + shopss + '&add_time=' + dates;
+            $('#downss').attr('href', urls)
+        }
+    </script>
+
+    {#    表格里根据旺旺号查询最近一次喝酒时间#}
+    <script>
+        $('span#search_wangwang').hover(function () {
+                var wangwang_num = $(this).text();
+                console.log(wangwang_num);
+                $.ajax({
+                    url: "/erp/search_by_wangwang_num/",
+                    type: "GET",
+                    dataType: 'json',
+                    data: {'wangwang_num': wangwang_num},
+                    async: false,
+                    success: function (msg) {
+                        var add_data = '最近喝酒时间：' + msg['pay_date'] + '<br/>' + '喝酒店铺：' + msg['shop_name'];
+                        $('span#search_wangwang').attr('data-content', add_data);
+                    },
+                    error: function () {
+                        $('span#search_wangwang').attr('data-content', '该旺旺号之前没有喝酒');
+                    }
+                });
+                $(this).popover('show');
+            }, function () {
+                $(this).popover('hide');
+                $('span#search_wangwang').attr('data-content', '');
+            }
+        );
+    </script>
+
 {% endblock %}

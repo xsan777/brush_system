@@ -89,7 +89,7 @@ class Brush_single_entry(models.Model):
     payment_account = models.ForeignKey(Brank_account, on_delete=models.CASCADE)
     operator = models.ForeignKey(Userinfo, on_delete=models.CASCADE)
     remarks = models.CharField(verbose_name='备注', max_length=64)
-    add_time = models.DateTimeField(verbose_name='创建日期', auto_now=True, )
+    add_time = models.DateTimeField(verbose_name='创建日期',max_length=16)
     deletes = models.CharField(max_length=5)
 
 

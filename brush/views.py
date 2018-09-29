@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from brush.models import *
 import time, json, datetime
 from .forms import *
+import django_excel as excel
 
 
 # Create your views here.
@@ -57,12 +58,6 @@ def login(request):
                     return redirect(to=search_total_count)
         msg = '用户名或密码错误'
     return render(request, 'login.html', {'err_msg': msg})
-
-
-# 退出
-def log_out(request):
-    user = request.session.get('username')
-    return redirect(to=login)
 
 
 # 用户管理
@@ -847,9 +842,11 @@ def total_countmanagement(request):
     makes = 0
     account_unmakes = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     for i in account_unmakes:
-        check_countss = Account_record.objects.filter(datess__gte=now_time,account_name__total_account_name=i.total_account_name, deletes=False).all()
+        check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__total_account_name=i.total_account_name,
+                                                      deletes=False).all()
         if check_countss:
-            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__total_account_name=i.total_account_name, deletes=False).get()
+            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__total_account_name=i.total_account_name,
+                                                          deletes=False).get()
             if check_countss.makes == 'False':
                 reminds = '(有账户未确认)'
                 unmakes += 1
@@ -988,7 +985,7 @@ def countmanagement(request):
     add_times = datetime.datetime.now()
     account = Brank_account.objects.filter(brank_operator__username=user, deletes=False).all()
     if rouse == '财务':
-        count = Account_record.objects.filter(datess__date=get_nday_list2(2,now_time), deletes=False).all()
+        count = Account_record.objects.filter(datess__date=get_nday_list2(2, now_time), deletes=False).all()
     else:
         count = Account_record.objects.filter(datess__date=now_time, operator__username=user, deletes=False).all()
     forms = Forms()
@@ -1065,7 +1062,7 @@ def countmanagement(request):
     if rouse == '运营':
         return render(request, 'countmanagement2.html',
                       {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'formm': forms, 'edit_form': edit_form, 'errs': errs,
-                       'user': user, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,'total_reminds':total_reminds})
+                       'user': user, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'total_reminds': total_reminds})
     else:
         return render(request, 'countmanagement.html',
                       {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'user': user, 'admin_flog': admin_flog})
@@ -1376,11 +1373,12 @@ def brushmanagement(request):
             if len(online_order_numbers) != 18:
                 errs = '线上订单号格式错误'
         if errs == '':
+            add_times = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
             Brush_single_entry.objects.create(shopname=shopnames, qq_or_weixin=qq_or_weixins, wang_wang_number=wang_wang_numbers,
                                               online_order_number=online_order_numbers, transaction_data=transaction_datas,
                                               payment_type=payment_types, payment_amount=payment_amounts,
                                               payment_account=Brank_account.objects.get(account_name=payment_accounts, deletes=False),
-                                              operator=operators, remarks=remarkss, deletes=False)
+                                              operator=operators, remarks=remarkss, deletes=False, add_time=add_times)
             if Account_record.objects.filter(datess__date=now_time, account_name__account_name=payment_accounts, deletes=False):
                 Account_record.objects.filter(datess__date=now_time, account_name__account_name=payment_accounts, deletes=False).update(makes=False)
             last_table = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=user).last()
@@ -1421,7 +1419,8 @@ def brushmanagement(request):
                 total_reminds = '(总账户未确认)'
     return render(request, 'brush2.html',
                   {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'add_brush_form': add_brush_form,
-                   'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,'total_reminds':total_reminds})
+                   'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,
+                   'total_reminds': total_reminds})
 
 
 # 修改喝酒数据
@@ -1522,10 +1521,10 @@ def more_date(request):
     user = request.session.get('username')
     if user == None:
         return redirect(to=login)
-    title = '更多数据'
+    title = '喝酒数据查询'
     userss = user
     operators = userss
-    all_user = Userinfo.objects.filter(deletes=False).values('username').all()
+    all_user = Userinfo.objects.filter(rouse='运营', deletes=False).values('username').all()
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     account = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
@@ -1579,7 +1578,7 @@ def more_date(request):
         return render(request, 'more_data2.html',
                       {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
                        'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'reminds': reminds, 'makes': makes,
-                       'unmakes': unmakes,'total_reminds':total_reminds})
+                       'unmakes': unmakes, 'total_reminds': total_reminds})
     else:
         return render(request, 'more_data.html',
                       {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
@@ -1588,13 +1587,12 @@ def more_date(request):
 
 # 更多页面加载店铺名
 def chose_shop(request):
-    user = request.session.get('username')
     users = request.GET.get('operator')
     if users == '全部':
         shops = Shops.objects.filter(deletes='False').values_list('shopname').all()
         shops = [i for i in shops]
     else:
-        shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
+        shops = Userinfo.objects.get(username=users, deletes=False).shop.filter(deletes=False).all()
         shops = [i.shopname for i in shops]
     msg = json.dumps({'shops': shops})
     return HttpResponse(msg)
@@ -1674,7 +1672,8 @@ def check_account(request):
     return render(request, 'check_account2.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money,
                    'actual_cost': actual_cost, 'user': user, 'edit_brush_form': edit_brush_form, 'shops': shops, 'user': user,
-                   'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'errs': errs,'total_reminds':total_reminds,'actual_err':actual_err})
+                   'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'errs': errs, 'total_reminds': total_reminds,
+                   'actual_err': actual_err})
 
 
 # 确认核对
@@ -1733,7 +1732,7 @@ def search_count(request):
     else:
         return render(request, 'countmanagement2.html',
                       {'title': title, 'account': account2, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
-                       'user': user, 'admin_flog': admin_flog,'total_reminds':total_reminds})
+                       'user': user, 'admin_flog': admin_flog, 'total_reminds': total_reminds})
 
 
 # 账户账单
@@ -1884,9 +1883,11 @@ def check_total_account(request):
     makes = 0
     account_unmakes = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     for i in account_unmakes:
-        check_countss = Account_record.objects.filter(datess__gte=now_time,account_name__total_account_name=i.total_account_name, deletes=False).all()
+        check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__total_account_name=i.total_account_name,
+                                                      deletes=False).all()
         if check_countss:
-            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__total_account_name=i.total_account_name, deletes=False).get()
+            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__total_account_name=i.total_account_name,
+                                                          deletes=False).get()
             if check_countss.makes == 'False':
                 reminds = '(有账户未确认)'
                 unmakes += 1
@@ -1894,7 +1895,8 @@ def check_total_account(request):
                 makes += 1
     return render(request, 'check_total_account2.html',
                   {'title': title, 'tables': tables, 'total_account_all': total_account_all, 'user': user, 'now_time': now_time, 'err': errs,
-                   'unmakes': unmake, 'edit_form': edit_form, 'total_cost': total_cost, 'account_cost': account_cost,'total_reminds':total_reminds,'unmakes':unmakes,'makes':makes,'reminds':reminds})
+                   'unmakes': unmake, 'edit_form': edit_form, 'total_cost': total_cost, 'account_cost': account_cost, 'total_reminds': total_reminds,
+                   'unmakes': unmakes, 'makes': makes, 'reminds': reminds})
 
 
 # 总账户确认核对
@@ -1930,7 +1932,7 @@ def search_total_count(request):
     else:
         search_date = now_time
         if rouse == '财务':
-            search_date = get_nday_list2(2,now_time)
+            search_date = get_nday_list2(2, now_time)
         count = Total_account_record.objects.filter(datess__date=search_date, deletes=False).all()
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
@@ -1956,4 +1958,87 @@ def search_total_count(request):
     else:
         return render(request, 'total_countmanagement2.html',
                       {'title': title, 'account': account2, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
-                       'user': user,'total_reminds':total_reminds })
+                       'user': user, 'total_reminds': total_reminds})
+
+
+# 下载喝酒数据
+def download_brush(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    userss = user
+    now_time1 = time.strftime('%Y-%m-%d', time.localtime())
+    tables = Brush_single_entry.objects.filter(add_time__date=now_time1, operator__username=userss, deletes='False').order_by('add_time')
+    operators = request.GET.get('operator')
+    shopss = request.GET.get('shopname')
+    now_time = request.GET.get('add_time')
+    if operators and shopss and now_time:
+        if shopss == 'alls' and operators == 'alls':
+            tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes='False').order_by('add_time')
+        elif shopss == 'alls':
+            tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=operators, deletes='False').order_by(
+                'add_time')
+        else:
+            tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shopss, deletes='False').order_by(
+                'add_time')
+    sheet1 = [["喝酒时间","店铺名","QQ或微信号","旺旺号","线上订单号","成交日期","付款类型","付款金额","付款账户","备注","操作员"]]
+    for i in tables:
+        row1 = []
+        row1.append(i.add_time)
+        row1.append(i.shopname)
+        row1.append(i.qq_or_weixin)
+        row1.append(i.wang_wang_number)
+        row1.append(i.online_order_number)
+        row1.append(i.transaction_data)
+        row1.append(i.payment_type)
+        row1.append(i.payment_amount)
+        row1.append(i.payment_account.account_name)
+        row1.append(i.remarks)
+        row1.append(i.operator.username)
+        sheet1.append(row1)
+    file_names = str(now_time1) + '的喝酒数据'
+    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name='测试',file_name=file_names)
+
+
+
+# 下载店铺账单
+def down_shop_bill(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    first_shop = Shops.objects.filter(deletes=False).first()
+    if first_shop:
+        shop_name = first_shop.shopname
+    else:
+        shop_name = ''
+    now_time2 = request.GET.get('check_data')
+    shop_name2 = request.GET.get('shop_name')
+    tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shop_name, deletes=False).all()
+    if now_time2 and shop_name2:
+        tables = Brush_single_entry.objects.filter(add_time__date=now_time2, shopname=shop_name2, deletes=False).all()
+
+    ########################
+    import pyexcel
+    sheet1 = [["喝酒时间","店铺名","QQ或微信号","旺旺号","线上订单号","成交日期","付款类型","付款金额","备注","操作员"]]
+    for i in tables:
+        row1 = []
+        row1.append(i.add_time)
+        row1.append(i.shopname)
+        row1.append(i.qq_or_weixin)
+        row1.append(i.wang_wang_number)
+        row1.append(i.online_order_number)
+        row1.append(i.transaction_data)
+        row1.append(i.payment_type)
+        row1.append(i.payment_amount)
+        row1.append(i.remarks)
+        row1.append(i.operator.username)
+        sheet1.append(row1)
+    ########################
+    column_names = ["add_time", "shopname", "qq_or_weixin", "wang_wang_number", "online_order_number", "transaction_data", "payment_type",
+                    "payment_amount", "remarks","operator"]
+    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name='测试',)
+    # return excel.make_response_from_query_sets(tables, column_names, "xlsx", status=200, sheet_name='测试',)

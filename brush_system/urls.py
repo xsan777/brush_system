@@ -22,7 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.login),
     path('erp/',include('erp.urls')),
-    path('log_out/', views.log_out),
     path('total_brankmanagement/',views.total_brank_management),
     path('verification_total_account/',views.verification_total_account),
     path('shopmanagement/', views.shopmanagement),
@@ -60,4 +59,6 @@ urlpatterns = [
     path('search_total_count/',views.search_total_count),
     path('shop_bill/',views.shop_bill),
     path('account_bill/',views.account_bill),
+    path('download_brush/',views.download_brush),
+    path('down_shop_bill/',views.down_shop_bill),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -22,9 +22,12 @@ def search_by_order_num(request):
 def search_by_wangwang_num(request):
     asd = '219441250672567971'
     wang_wang_numbers = request.GET.get('wangwang_num')
+    wang_wang_numbers = str(wang_wang_numbers).strip()
+    print(wang_wang_numbers)
     # order_num = Brush_single_entry.objects.using('default').get(wang_wang_number=wang_wang_numbers, deletes=False)
-    search_o_id = JstOrdersQuery.objects.using('erp_database').filter(shop_buyer_id=wang_wang_numbers).last()
-    search_o_id = JstOrdersQuerySpecialSingle.objects.using('erp_database').get(o_id=search_o_id.o_id)
-    msg = {'pay_date':str(search_o_id.pay_date),'shop_name':search_o_id.shop_name,}
+    search_o_id = JstOrdersQuery.objects.using('erp_database').filter(shop_buyer_id='卡通图片399362580').last()
+    print(search_o_id)
+    search_o_id2 = JstOrdersQuerySpecialSingle.objects.using('erp_database').get(o_id=search_o_id.o_id)
+    msg = {'pay_date':str(search_o_id.pay_date),'shop_name':search_o_id2.shop_name,}
     msg = json.dumps(msg)
     return HttpResponse(msg)
