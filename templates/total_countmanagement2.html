@@ -10,7 +10,7 @@
         <div class="form-group">
             <label for="exampleInputName2"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;总账户名:</label>
             <select name="total_account_name" id="account_name" class="form-control">
-                {% for acc in account %}
+                {% for acc in total_account_all %}
                     <option value="{{ acc.total_account_name }}">{{ acc.total_account_name }}</option>
                 {% endfor %}
             </select>

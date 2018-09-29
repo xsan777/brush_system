@@ -3,6 +3,8 @@
     <link rel="stylesheet" href="/static/css/check_account.css">
 {% endblock %}
 {% block content %}
+    <h2>店铺账单</h2>
+    <hr>
     <form class="form-inline" id="check_data" method="post">
         <div class="form-group">
             <label for="exampleInputName2">日期:</label>
@@ -19,7 +21,6 @@
         <input type="submit" value="查询" class="btn btn-default">
         {% csrf_token %}
     </form>
-    <br>
     <hr>
     <div id="tabless">
         <table class="table table-striped">

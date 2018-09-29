@@ -21,7 +21,6 @@
         <input type="submit" value="核对" class="btn btn-default">
         {% csrf_token %}
     </form>
-    <br>
     <hr>
     {#显示数据#}
     <div id="tabless">
@@ -169,11 +168,20 @@
     </div>
 
     <h3 class="col-lg-offset-8">喝酒花销：<span id="pay">{{ pay_money }}</span></h3>
-    <h3 class="col-lg-offset-8">账户差额：<span id="actual" style="color: red">{{ actual_cost }}</span>
+    <h3 class="col-lg-offset-8">提现费用：<span id="pay">{{ weixin_withdraw_moneys }}</span></h3>
+    <h3 class="col-lg-offset-8">账户差额：<span id="actual">{{ actual_cost }}</span></h3>
     <input type="button" onclick="make()" value="核对确认" class="btn btn-info col-lg-offset-8" id="make">
-
 {% endblock %}
 {% block js %}
+    {#子账户选框默认选中#}
+    <script>
+        $("#payment_account").find("option").each(function () {
+            var ff = '{{ account_select }}';
+            if ($(this).val() == ff) {
+                $(this).attr("selected", "selected");
+            }
+        });
+    </script>
     <script>
         var errs = '{{ errs }}';
         if (errs != '') {
@@ -187,7 +195,12 @@
             var actual_errs = '<h3><span id="errsss" >' + '{{ actual_err }}' + '</span></h3>';
             $('#actual').append(actual_errs)
         }
-        if ('{{ unmakes }}' == 0) {
+        else {
+            if ('{{ pay_money_all }}' == '{{ actual_cost }}') {
+                $('#make').show();
+            }
+        }
+        if ('{{ makes_stats }}' == 'True') {
             $('#make').attr("value", "已确认");
             $('#make').prop("disabled", true);
         }

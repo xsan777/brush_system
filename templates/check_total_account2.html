@@ -155,6 +155,15 @@
 
 {% endblock %}
 {% block js %}
+    {#总账户选框默认选中#}
+    <script>
+        $("#payment_account").find("option").each(function () {
+            var ff = '{{ total_account_select }}';
+            if ($(this).val() == ff) {
+                $(this).attr("selected", "selected");
+            }
+        });
+    </script>
     <script>
         var errs = '{{ err }}';
         if (errs != '') {
@@ -167,7 +176,7 @@
     </script>
     <script>
         $('#update_ids').hide();
-        if ('{{ unmakes }}' == 0) {
+        if ('{{ unmake_stats }}' == 0) {
             $('#make').attr("value", "已确认");
             $('#make').prop("disabled", true);
         }
