@@ -216,11 +216,33 @@
     {#查询该旺旺号近期喝酒时间#}
 
     <script>
+        $('input#wang_wang_number').hover(function () {
+                var wangwang_num = $(this).val();
+                console.log(wangwang_num)
+                $.ajax({
+                    url: "/erp/search_by_wangwang_num2/",
+                    type: "GET",
+                    dataType: 'json',
+                    data: {'wangwang_num': wangwang_num},
+                    async: false,
+                    success: function (msg) {
+                        $('input#wang_wang_number').attr('data-content', msg);
+                    },
+                    error: function () {
+                        $('input#wang_wang_number').attr('data-content', '该旺旺号之前没有喝酒');
+                    }
+                });
+                $(this).popover('show');
+            }, function () {
+                $(this).popover('hide');
+                $('span#search_wangwang').attr('data-content', '');
+            }
+        );
+    </script>
+    <script>
         {#表格里的旺旺号查询#}
-
         $('span#search_wangwang').hover(function () {
                 var wangwang_num = $(this).text();
-                console.log(wangwang_num);
                 $.ajax({
                     url: "/erp/search_by_wangwang_num/",
                     type: "GET",
@@ -228,8 +250,7 @@
                     data: {'wangwang_num': wangwang_num},
                     async: false,
                     success: function (msg) {
-                        var add_data = '最近喝酒时间：' + msg['pay_date']+'<br/>'+'喝酒店铺：'+msg['shop_name'];
-                        $('span#search_wangwang').attr('data-content', add_data);
+                        $('span#search_wangwang').attr('data-content', msg);
                     },
                     error: function () {
                         $('span#search_wangwang').attr('data-content', '该旺旺号之前没有喝酒');

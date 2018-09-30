@@ -1560,7 +1560,6 @@ def more_date(request):
         else:
             tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shopss, deletes='False').order_by(
                 'add_time')
-    rouse = request.session.get('rouse')
     accountss = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     reminds = ''
     unmakes = 0
@@ -1574,33 +1573,20 @@ def more_date(request):
                 unmakes += 1
             if check_countss.makes == 'True':
                 makes += 1
-    # 财务账户提示账户未确认
-    now_time = time.strftime('%Y-%m-%d', time.localtime())
-    now_time = get_nday_list2(2, now_time)
-    all_account_makes = Total_account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
-    if len(all_account_makes) == 0:
-        admin_flog = 1
-    else:
-        admin_flog = 0
     # 总账户未确认提示运营
     total_reminds = ''
     user_total_account = Userinfo.objects.get(username=user, deletes=False)
     account__ = user_total_account.total_brank_account.filter(deletes=False).all()
-    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    now_time3 = time.strftime('%Y-%m-%d', time.localtime())
     for m in account__:
-        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        account2 = Total_account_record.objects.filter(datess__date=now_time3, account_name=m, deletes=False).all()
         for i in account2:
             if i.makes == 'False':
                 total_reminds = '(总账户未确认)'
-    if rouse == '运营':
-        return render(request, 'more_data2.html',
-                      {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
-                       'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'reminds': reminds, 'makes': makes,
-                       'unmakes': unmakes, 'total_reminds': total_reminds})
-    else:
-        return render(request, 'more_data.html',
-                      {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
-                       'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'admin_flog': admin_flog})
+    return render(request, 'more_data2.html',
+                  {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
+                   'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'reminds': reminds, 'makes': makes,
+                   'unmakes': unmakes, 'total_reminds': total_reminds})
 
 
 # 更多页面加载店铺名
@@ -1840,12 +1826,12 @@ def shop_bill(request):
         return redirect(to=login)
     title = '店铺账单'
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    first_shop = Shops.objects.filter(deletes=False).first()
+    first_shop = Shops.objects.filter(deletes=True).first()
     if first_shop:
         shop_name = first_shop.shopname
     else:
         shop_name = ''
-    accounts = Shops.objects.filter(deletes=False).all()
+    accounts = Shops.objects.filter(deletes=True).all()
     if request.method == 'POST':
         now_time = request.POST.get('check_data')
         shop_name = request.POST.get('shop_name')
@@ -2035,8 +2021,8 @@ def download_brush(request):
     if user == None:
         return redirect(to=login)
     userss = user
-    now_time1 = time.strftime('%Y-%m-%d', time.localtime())
-    tables = Brush_single_entry.objects.filter(add_time__date=now_time1, operator__username=userss, deletes='False').order_by('add_time')
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=userss, deletes='False').order_by('add_time')
     operators = request.GET.get('operator')
     shopss = request.GET.get('shopname')
     now_time = request.GET.get('add_time')
@@ -2064,7 +2050,7 @@ def download_brush(request):
         row1.append(i.remarks)
         row1.append(i.operator.username)
         sheet1.append(row1)
-    file_names = str(now_time1) + '的喝酒数据'
+    file_names = str(now_time) + '的喝酒数据'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name='测试', file_name=file_names)
 
 
@@ -2074,7 +2060,7 @@ def down_shop_bill(request):
     if user == None:
         return redirect(to=login)
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    first_shop = Shops.objects.filter(deletes=False).first()
+    first_shop = Shops.objects.filter(deletes=True).first()
     if first_shop:
         shop_name = first_shop.shopname
     else:
@@ -2084,8 +2070,6 @@ def down_shop_bill(request):
     tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shop_name, deletes=False).all()
     if now_time2 and shop_name2:
         tables = Brush_single_entry.objects.filter(add_time__date=now_time2, shopname=shop_name2, deletes=False).all()
-
-    ########################
     sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "备注", "操作员"]]
     for i in tables:
         row1 = []
@@ -2100,7 +2084,5 @@ def down_shop_bill(request):
         row1.append(i.remarks)
         row1.append(i.operator.username)
         sheet1.append(row1)
-    ########################
-    column_names = ["add_time", "shopname", "qq_or_weixin", "wang_wang_number", "online_order_number", "transaction_data", "payment_type",
-                    "payment_amount", "remarks", "operator"]
-    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name='测试', )
+    file_names = str(now_time) + '  '+shop_name +'的喝酒数据'
+    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name='测试',file_name=file_names )

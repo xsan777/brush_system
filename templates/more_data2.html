@@ -1,13 +1,14 @@
 {% extends 'basc2.html' %}
-{% block head %}
+{% block head %}    
     <link rel="stylesheet" href="/static/css/moredata.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
     {#数据筛选框#}
     <form class="form-inline" id="search_data" method="post">
         <div class="form-group">
             <label for="exampleInputName2">日期:</label>
-            <input type="date" class="form-control" value="{{ now_time }}" name="add_time" id="se_date">
+            <input type="date" class="form-control" value="{{ now_time }}" name="add_time" id="se_date" onchange="change_url()">
         </div>
         <div class="form-group">
             <label for="exampleInputName2">操作人:</label>
@@ -58,6 +59,7 @@
                         <td>{{ table.shopname }}</td>
                         <td> <span data-container="body" data-toggle="popover" data-placement="right" data-content="123"
                                    id="search_wangwang" data-html="true"> {{ table.wang_wang_number }}</span></td>
+
                         <td>{{ table.online_order_number }}</td>
                         <td>{{ table.transaction_data }}</td>
                         <td>{{ table.payment_type }}</td>
@@ -259,7 +261,7 @@
                 type: "GET",
                 dataType: 'json',
                 data: {'id': mm, 'num': kj},
-                async: true,
+                async: false,
                 success: function (arg) {
                     $("#update_shopname").find("option").each(function () {
                         if ($(this).val() == arg['shopname']) {
@@ -295,7 +297,7 @@
                 type: "POST",
                 dataType: 'json',
                 data: $('#update_form').serialize(),
-                async: true,
+                async: false,
             })
         }
     </script>
@@ -318,6 +320,12 @@
     </script>
     {#下载数据#}
     <script>
+        var operator = $('#operator').val();
+        var shopss = $('#shopname').val();
+        var dates = $('#se_date').val();
+        var urls = '/download_brush/?operator=' + operator + '&shopname=' + shopss + '&add_time=' + dates;
+        $('#downss').attr('href', urls)
+
         function change_url() {
             var operator = $('#operator').val();
             var shopss = $('#shopname').val();
@@ -327,11 +335,11 @@
         }
     </script>
 
-    {#    表格里根据旺旺号查询最近一次喝酒时间#}
+    {#表格里根据旺旺号查询最近90天的喝酒时间#}
     <script>
+        $('#delays').hide();
         $('span#search_wangwang').hover(function () {
                 var wangwang_num = $(this).text();
-                console.log(wangwang_num);
                 $.ajax({
                     url: "/erp/search_by_wangwang_num/",
                     type: "GET",
@@ -339,8 +347,7 @@
                     data: {'wangwang_num': wangwang_num},
                     async: false,
                     success: function (msg) {
-                        var add_data = '最近喝酒时间：' + msg['pay_date'] + '<br/>' + '喝酒店铺：' + msg['shop_name'];
-                        $('span#search_wangwang').attr('data-content', add_data);
+                        $('span#search_wangwang').attr('data-content', msg);
                     },
                     error: function () {
                         $('span#search_wangwang').attr('data-content', '该旺旺号之前没有喝酒');
