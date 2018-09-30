@@ -1,7 +1,8 @@
 {% extends 'basc.html' %}
 {% block head %}
-    <link rel="stylesheet" href="">
+<link rel="stylesheet" href="/static/css/total_brankmanagement.css">
 {% endblock %}
+
 {% block content %}
     <h2>添加总账户</h2>
     <hr>
@@ -173,7 +174,7 @@
                 url: "/verification_total_account/",
                 type: "GET",
                 dataType: 'json',
-                data: {'total_account_name': total_account_name,'total_brank_card_num':total_brank_card_num},
+                data: {'total_account_name': total_account_name, 'total_brank_card_num': total_brank_card_num},
                 async: false,
                 success: function (msg) {
                     console.log(msg)

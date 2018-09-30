@@ -326,7 +326,7 @@ def shopmanagement(request):
         tables['shop_name'] = shop.shopname
         tables['id'] = shop.id
         owners = ''
-        for owner in shop.userinfo_set.filter(deletes=False).all():
+        for owner in shop.userinfo_set.filter(rouse='运营',deletes=False).all():
             owners += str(owner.username)
             owners += '、'
         tables['shop_owners'] = owners
@@ -439,33 +439,6 @@ def total_brank_management(request):
     if rouse == '运营':
         return render(request, 'login.html', {'err_msg': '当前账户权限不足，请使用其他账号'})
     title = '总账户管理'
-    account_names = request.GET.get('account_name')
-    if account_names:
-        tables = Total_brank_account.objects.filter(total_account_name=account_names, deletes=False).all()
-    else:
-        tables = Total_brank_account.objects.filter(deletes=False).all()
-    table_list = []
-    for i in tables:
-        tables = {}
-        tables['id'] = i.id
-        tables['account_name'] = i.total_account_name
-        tables['brank_name'] = i.total_brank_name
-        tables['brank_card_number'] = i.total_brank_card_number
-        tables['brank_number'] = i.total_brank_number
-        own_shops = ''
-        for own_shop in i.shops_set.filter(deletes=False).all():
-            own_shops += str(own_shop.shopname)
-            own_shops += '、'
-        tables['shop_owner'] = own_shops
-        owers = ''
-        for ower in i.userinfo_set.filter(deletes=False).all():
-            owers += str(ower.username)
-            owers += '、'
-        tables['owers'] = owers
-        table_list.append(tables)
-    add_total_brank_form = Total_brank_account_form()
-    edit_total_brank_form = Edit_total_brank_account_form()
-    msg = ''
     if request.method == 'POST':
         now_time = time.strftime('%Y-%m-%d', time.localtime())
         total_account_names = request.POST.get('total_brank_account_name')
@@ -485,14 +458,42 @@ def total_brank_management(request):
                     user_add.total_brank_account.add(Total_brank_account.objects.get(total_account_name=total_account_names, deletes=False))
                 last_total_account = Total_brank_account.objects.filter(deletes=False).last()
                 operation_types = '创建总账户'
-                after_operations = '{id：%d，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，}' % (
-                    last_total_account.id, account_names, total_brank_names, total_brank_numbers, total_brank_card_numbers,)
+                after_operations = '{id：%d，总账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，}' % (
+                    last_total_account.id, total_account_names, total_brank_names, total_brank_numbers, total_brank_card_numbers,)
                 Log.objects.create(operator=Userinfo.objects.get(username=user, deletes=False), operation_type=operation_types,
                                    after_operation=after_operations)
             else:
                 msg = '该总账户卡号已存在'
         else:
             msg = '该总账户名已存在'
+    account_names = request.GET.get('account_name')
+    if account_names:
+        tables = Total_brank_account.objects.filter(total_account_name=account_names, deletes=False).all()
+    else:
+        tables = Total_brank_account.objects.filter(deletes=False).all()
+    table_list = []
+    for i in tables:
+        tables = {}
+        tables['id'] = i.id
+        tables['account_name'] = i.total_account_name
+        tables['brank_name'] = i.total_brank_name
+        tables['brank_card_number'] = i.total_brank_card_number
+        tables['brank_number'] = i.total_brank_number
+        own_shops = ''
+        for own_shop in i.shops_set.filter(deletes=False).all():
+            own_shops += str(own_shop.shopname)
+            own_shops += '、'
+        tables['shop_owner'] = own_shops
+        owers = ''
+        for ower in i.userinfo_set.filter(rouse='运营',deletes=False).all():
+            owers += str(ower.username)
+            owers += '、'
+        tables['owers'] = owers
+        table_list.append(tables)
+    add_total_brank_form = Total_brank_account_form()
+    edit_total_brank_form = Edit_total_brank_account_form()
+    msg = ''
+
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     now_time = get_nday_list2(2, now_time)
@@ -1649,15 +1650,20 @@ def check_account(request):
         pay_money_all = pay_money + weixin_withdraw_moneys
         star_money_img = account_data.start_money_img
         end_money_img = account_data.end_money_img
+        weixin_img = account_data.weixin_img
         makes_stats = account_data.makes
         if star_money_img and end_money_img:
-            actual_cost = float(account_data.start_money) - float(account_data.end_money)
-            if pay_money_all != actual_cost:
-                actual_err = '账目有问题，请仔细核对'
+            if weixin_withdraw_moneys !=0 and weixin_img == '':
+                actual_err = '该账户没有上传截图，无法核账'
+            else:
+                actual_cost = float(account_data.start_money) - float(account_data.end_money)
+                if pay_money_all != actual_cost:
+                    actual_err = '账目有问题，请仔细核对'
         else:
-            actual_err = '该账户没有上传截图，无法核账'
+            actual_err = '该账户缺少截图，无法核账'
     else:
         actual_err = '没有当天的账户信息，无法核账'
+    print(actual_err)
     accountss = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     # 提示运营有账户未确认
     reminds = ''
