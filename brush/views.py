@@ -39,6 +39,15 @@ def get_nday_list2(n, now_time):
     return before_n_days2[0]
 
 
+# 获取下载的月份
+def t_mouth(search_time):
+    search_time = search_time.split('-')
+    mouths = search_time[1]
+    if mouths[0] == '0':
+        return mouths[1]
+    else:
+        return mouths
+
 # 登录
 def login(request):
     msg = ''
@@ -326,7 +335,7 @@ def shopmanagement(request):
         tables['shop_name'] = shop.shopname
         tables['id'] = shop.id
         owners = ''
-        for owner in shop.userinfo_set.filter(rouse='运营',deletes=False).all():
+        for owner in shop.userinfo_set.filter(rouse='运营', deletes=False).all():
             owners += str(owner.username)
             owners += '、'
         tables['shop_owners'] = owners
@@ -439,6 +448,7 @@ def total_brank_management(request):
     if rouse == '运营':
         return render(request, 'login.html', {'err_msg': '当前账户权限不足，请使用其他账号'})
     title = '总账户管理'
+    msg = ''
     if request.method == 'POST':
         now_time = time.strftime('%Y-%m-%d', time.localtime())
         total_account_names = request.POST.get('total_brank_account_name')
@@ -485,14 +495,13 @@ def total_brank_management(request):
             own_shops += '、'
         tables['shop_owner'] = own_shops
         owers = ''
-        for ower in i.userinfo_set.filter(rouse='运营',deletes=False).all():
+        for ower in i.userinfo_set.filter(rouse='运营', deletes=False).all():
             owers += str(ower.username)
             owers += '、'
         tables['owers'] = owers
         table_list.append(tables)
     add_total_brank_form = Total_brank_account_form()
     edit_total_brank_form = Edit_total_brank_account_form()
-    msg = ''
 
     # 财务账户提示账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
@@ -1653,7 +1662,7 @@ def check_account(request):
         weixin_img = account_data.weixin_img
         makes_stats = account_data.makes
         if star_money_img and end_money_img:
-            if weixin_withdraw_moneys !=0 and weixin_img == '':
+            if weixin_withdraw_moneys != 0 and weixin_img == '':
                 actual_err = '该账户没有上传截图，无法核账'
             else:
                 actual_cost = float(account_data.start_money) - float(account_data.end_money)
@@ -1663,7 +1672,6 @@ def check_account(request):
             actual_err = '该账户缺少截图，无法核账'
     else:
         actual_err = '没有当天的账户信息，无法核账'
-    print(actual_err)
     accountss = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     # 提示运营有账户未确认
     reminds = ''
@@ -1837,7 +1845,7 @@ def shop_bill(request):
         shop_name = first_shop.shopname
     else:
         shop_name = ''
-    accounts = Shops.objects.filter(deletes=True).all()
+    accounts = Shops.objects.filter(deletes=False).all()
     if request.method == 'POST':
         now_time = request.POST.get('check_data')
         shop_name = request.POST.get('shop_name')
@@ -1846,7 +1854,6 @@ def shop_bill(request):
     for table in tables:
         pay_money += float(table.payment_amount)
     # 财务账户提示账户未确认
-    now_time = time.strftime('%Y-%m-%d', time.localtime())
     now_time2 = get_nday_list2(2, now_time)
     all_account_makes = Total_account_record.objects.filter(datess__date=now_time2, makes=False, deletes=False).all()
     if len(all_account_makes) == 0:
@@ -2090,5 +2097,41 @@ def down_shop_bill(request):
         row1.append(i.remarks)
         row1.append(i.operator.username)
         sheet1.append(row1)
-    file_names = str(now_time) + '  '+shop_name +'的喝酒数据'
-    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name='测试',file_name=file_names )
+    file_names = str(now_time) + '  ' + shop_name + '的喝酒数据'
+    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name='测试', file_name=file_names)
+
+
+# 按月下载店铺账单
+def down_shop_bill2(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    now_time = datetime.datetime.now().month
+    first_shop = Shops.objects.filter(deletes=True).first()
+    if first_shop:
+        shop_name = first_shop.shopname
+    else:
+        shop_name = ''
+    now_time2 = request.GET.get('check_data')
+    shop_name2 = request.GET.get('shop_name')
+    tables = Brush_single_entry.objects.filter(add_time__month=now_time, shopname=shop_name, deletes=False).all()
+    if now_time2 and shop_name2:
+        now_time2 = t_mouth(now_time2)
+        now_time = now_time2
+        tables = Brush_single_entry.objects.filter(add_time__month=now_time2, shopname=shop_name2, deletes=False).all()
+    sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "备注", "操作员"]]
+    for i in tables:
+        row1 = []
+        row1.append(i.add_time)
+        row1.append(i.shopname)
+        row1.append(i.qq_or_weixin)
+        row1.append(i.wang_wang_number)
+        row1.append(i.online_order_number)
+        row1.append(i.transaction_data)
+        row1.append(i.payment_type)
+        row1.append(i.payment_amount)
+        row1.append(i.remarks)
+        row1.append(i.operator.username)
+        sheet1.append(row1)
+    file_names = str(now_time) + '月  ' + shop_name2 + '的喝酒数据'
+    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name='测试', file_name=file_names)

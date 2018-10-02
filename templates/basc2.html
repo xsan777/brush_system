@@ -41,7 +41,6 @@
         width: 95%;
         height: 800px;
         margin: 20px 50px;
-    {#background-color: #1b6d85;#}
     }
 
     #nav {
@@ -130,14 +129,15 @@
         <hr id="nav_hr">
     </a>
     <div class="menuss">
-        <a href="/brushmanagement/">
-            <div class="menus">每日喝酒数据录入</div>
-        </a>
+
         <a href="/total_countmanagement/">
             <div class="menus">总账户转账数据录入</div>
         </a>
         <a href="/countmanagement/">
             <div class="menus">子账户转账数据录入</div>
+        </a>
+        <a href="/brushmanagement/">
+            <div class="menus">每日喝酒数据录入</div>
         </a>
     </div>
     <a href="javascript:void(0);" onclick="menu2()">
@@ -156,22 +156,7 @@
         <a href="/more_date/">
             <div class="menus">喝酒数据查询</div>
         </a>
-        {#        <a href="/account_bill/">#}
-        {#            <div class="menus">账户账单</div>#}
-        {#        </a>#}
     </div>
-    {#    <a href="/countmanagement/">#}
-    {#        <div class="menu">账户记录管理</div>#}
-
-    {#    </a>#}
-    {#    <a href="/brushmanagement/">#}
-    {#        <div class="menu">喝酒数据管理</div>#}
-    {#        <hr>#}
-    {#    </a>#}
-    {#    <a href="/check_account/">#}
-    {#        <div class="menu">账户核对</div>#}
-
-    {#    </a>#}
 </div>
 <div id="content">
     <div id="cont">
@@ -182,23 +167,9 @@
     </div>
 
 </div>
-{#<script>#}
-{#    $('.menuss').hide();#}
-{#    $('.menuss2').hide();#}
-{#</script>#}
-{#<script>#}
-{#    function menu1() {#}
-{#        $('.menuss').toggle();#}
-{#    }#}
-{##}
-{#    function menu2() {#}
-{#        $('.menuss2').toggle();#}
-{#    }#}
-{#</script>#}
 <script>
     var i = 1;
     while (i <= '{{ unmakes }}') {
-        {#var red_light = '<i class="fa fa-circle" id="red_lights"></i> ';#}
         var red_light = '<img src="/static/unmakesure.gif" alt="" id="lights">';
         $('#light').append(red_light)
         i = i + 1

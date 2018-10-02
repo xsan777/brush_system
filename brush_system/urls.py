@@ -61,4 +61,5 @@ urlpatterns = [
     path('account_bill/',views.account_bill),
     path('download_brush/',views.download_brush),
     path('down_shop_bill/',views.down_shop_bill),
+    path('down_shop_bill2/',views.down_shop_bill2),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
