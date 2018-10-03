@@ -21,6 +21,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.login),
+    path('update_passwd/',views.update_passwd),
     path('erp/',include('erp.urls')),
     path('total_brankmanagement/',views.total_brank_management),
     path('verification_total_account/',views.verification_total_account),
@@ -35,6 +36,7 @@ urlpatterns = [
     path('countmanagement/', views.countmanagement),
     path('total_countmanagement/', views.total_countmanagement),
     path('brushmanagement/', views.brushmanagement),
+    path('brushmanagement2/', views.brushmanagement_2),
     path('edit/',views.edit),
     path('edit_total_brank/',views.edit_total_brank),
     path('edit_user/',views.edit_user),

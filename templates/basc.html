@@ -111,8 +111,13 @@
     }
 </style>
 <div id="nav">
-    <div id="logo">宝儿喝酒数据管理系统 <span class="col-lg-offset-8" style="font-size: 1.8rem">欢迎，{{ user }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
-            id="remind"></span><a href=" /" style="font-size:small ">退出</a></span></div>
+    <div id="logo">宝儿喝酒数据管理系统 <span class="col-lg-offset-9" style="font-size: 1.8rem">欢迎，<span class="dropdown">
+        <a href="javascript:void(0); " id="nav_user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">{{ user }}</a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href=" /" style="font-size:small ">退出</a></li>
+            <li onclick="update_passwd()" data-toggle="#update_passwd_modal"><a href="javascript:void(0);" style="font-size:small " id="update_passwd" >修改密码</a></li>
+        </ul>
+        </span>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
 
 </div>
 {#左侧导航#}
@@ -182,6 +187,65 @@
     </div>
 
 </div>
+{#修改密码#}
+<div class="modal fade" id="update_passwd_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="update_passwd_form" method="post" action="/update_passwd/">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-3 control-label">新密码</label>
+                        <div class="col-sm-9">
+                            {{ update_passwd.passwd }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-3 control-label">确认密码</label>
+                        <div class="col-sm-9">
+                            {{ update_passwd.passwd2 }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-9 col-sm-10">
+                            <button type="button" class="btn btn-default" onclick="make_sure_update()">确认修改</button>
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function update_passwd() {
+        $('#update_passwd_modal').modal('show');
+    }
+</script>
+
+{#确定修改密码#}
+<script>
+    function make_sure_update() {
+        $.ajax({
+            url: "/update_passwd/",
+            type: "POST",
+            dataType: 'json',
+            data: $('#update_passwd_form').serialize(),
+            async: false,
+            success: function (arr) {
+                if (arr != '') {
+                    alert(arr);
+                }
+                else {
+                    window.location.replace('/');
+                }
+            }
+        })
+    }
+</script>
 {#<script>#}
 {#    $('.menuss').hide();#}
 {#    $('.menuss2').hide();#}

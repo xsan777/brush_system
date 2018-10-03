@@ -46,7 +46,8 @@
                     <td id="num">{{ forloop.counter }}</td>
                     <td>{{ table.shopname }}</td>
                     <td>{{ table.qq_or_weixin }}</td>
-                    <td>{{ table.wang_wang_number }}</td>
+                    <td><span data-container="body" data-toggle="popover" data-placement="right" data-content=""
+                              id="search_wangwang" data-html="true">{{ table.wang_wang_number }}</span></td>
                     <td>{{ table.online_order_number }}</td>
                     <td>{{ table.transaction_data }}</td>
                     <td>{{ table.payment_type }}</td>
@@ -166,13 +167,37 @@
             </div>
         </div>
     </div>
-
     <h3 class="col-lg-offset-8">喝酒花销：<span id="pay">{{ pay_money }}</span></h3>
     <h3 class="col-lg-offset-8">提现费用：<span id="pay">{{ weixin_withdraw_moneys }}</span></h3>
     <h3 class="col-lg-offset-8">账户差额：<span id="actual">{{ actual_cost }}</span></h3>
     <input type="button" onclick="make()" value="核对确认" class="btn btn-info col-lg-offset-8" id="make">
 {% endblock %}
 {% block js %}
+    <script>
+        {#表格里的旺旺号查询#}
+        $('span#search_wangwang').hover(function () {
+                $('[data-toggle="popover"]').popover();
+                var wangwang_num = $(this).text();
+                $.ajax({
+                    url: "/erp/search_by_wangwang_num/",
+                    type: "GET",
+                    dataType: 'json',
+                    data: {'wangwang_num': wangwang_num},
+                    async: false,
+                    success: function (msg) {
+                        $('span#search_wangwang').attr('data-content', msg);
+                    },
+                    error: function () {
+                        $('span#search_wangwang').attr('data-content', '该旺旺号之前没有喝酒');
+                    }
+                });
+                $(this).popover('show');
+            }, function () {
+                $(this).popover('hide');
+                $('span#search_wangwang').attr('data-content', '');
+            }
+        );
+    </script>
     {#子账户选框默认选中#}
     <script>
         $("#payment_account").find("option").each(function () {

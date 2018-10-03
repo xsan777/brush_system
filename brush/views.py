@@ -48,6 +48,7 @@ def t_mouth(search_time):
     else:
         return mouths
 
+
 # 登录
 def login(request):
     msg = ''
@@ -67,6 +68,29 @@ def login(request):
                     return redirect(to=search_total_count)
         msg = '用户名或密码错误'
     return render(request, 'login.html', {'err_msg': msg})
+
+    # 修改密码
+
+from django.views.decorators.csrf import csrf_exempt
+
+
+def update_passwd(request):
+    user = request.session.get('username')
+    rouse = request.session.get('rouse')
+    if user == None:
+        return redirect(to=login)
+    passwds = request.POST.get('passwd')
+    passwd2s = request.POST.get('passwd2')
+    if passwds and passwd2s:
+        if passwds == passwd2s:
+            Userinfo.objects.filter(username=user, deletes=False).update(passwd=passwds)
+            msg = ''
+            msg = json.dumps(msg)
+
+        else:
+            msg = '两次输入密码不一致，请重新修改'
+            msg = json.dumps(msg)
+        return HttpResponse(msg)
 
 
 # 用户管理
@@ -171,9 +195,10 @@ def adduser(request):
         admin_flog = 1
     else:
         admin_flog = 0
+    update_passwd = Updata_passwd()
     return render(request, 'user.html',
                   {'title': title, 'tables': table_list, 'shops': shopss, 'add_form': add_form, 'edit_user': edit_form, 'err_msg': err_msg,
-                   'msgs': msgs, 'user': user, 'admin_flog': admin_flog, 'total_account': total_account})
+                   'msgs': msgs, 'user': user, 'admin_flog': admin_flog, 'total_account': total_account, 'update_passwd': update_passwd})
 
 
 # 用户名验证
@@ -351,9 +376,10 @@ def shopmanagement(request):
         admin_flog = 1
     else:
         admin_flog = 0
+    update_passwd = Updata_passwd()
     return render(request, 'shops.html',
                   {'title': title, 'tables': shop_info, 'add_shop_form': add_shop_form, 'edit_shop_form': edit_shop_form, 'user': user,
-                   'admin_flog': admin_flog, 'total_brank_all': total_brank_all})
+                   'admin_flog': admin_flog, 'total_brank_all': total_brank_all, 'update_passwd': update_passwd})
 
 
 # 查找店铺
@@ -511,9 +537,10 @@ def total_brank_management(request):
         admin_flog = 1
     else:
         admin_flog = 0
+    update_passwd = Updata_passwd()
     return render(request, 'total_brankmanagement.html',
                   {'title': title, 'tables': table_list, 'add_total_brank_form': add_total_brank_form, 'msg': msg,
-                   'edit_total_brank_form': edit_total_brank_form, 'user': user, 'admin_flog': admin_flog})
+                   'edit_total_brank_form': edit_total_brank_form, 'user': user, 'admin_flog': admin_flog, 'update_passwd': update_passwd})
 
 
 # 验证总账户名
@@ -662,9 +689,11 @@ def brankmanagement(request):
         admin_flog = 1
     else:
         admin_flog = 0
+    update_passwd = Updata_passwd()
     return render(request, 'brankmanagement.html',
                   {'title': title, 'tables': table_list, 'add_brank_account_form': add_brank_account_form, 'user_list': user_list, 'msg': msg,
-                   'edit_brank_account_form': edit_brank_account_form, 'user': user, 'admin_flog': admin_flog, 'total_accounts': total_accounts})
+                   'edit_brank_account_form': edit_brank_account_form, 'user': user, 'admin_flog': admin_flog, 'total_accounts': total_accounts,
+                   'update_passwd': update_passwd})
 
 
 # 搜索银行账户
@@ -881,14 +910,16 @@ def total_countmanagement(request):
         admin_flog = 1
     else:
         admin_flog = 0
+    update_passwd = Updata_passwd()
     if rouse == '运营':
         return render(request, 'total_countmanagement2.html',
                       {'title': title, 'total_account_all': account, 'count': count, 'nowss': now_time, 'formm': forms, 'edit_form': edit_form,
-                       'errs': errs,
+                       'errs': errs, 'update_passwd': update_passwd,
                        'user': user, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'total_reminds': total_reminds})
     else:
         return render(request, 'countmanagement.html',
-                      {'title': title, 'account': account, 'count': count, 'nowss': now_time1, 'user': user, 'admin_flog': admin_flog})
+                      {'title': title, 'account': account, 'count': count, 'nowss': now_time1, 'user': user, 'admin_flog': admin_flog,
+                       'update_passwd': update_passwd})
 
 
 # 修改总账户记录数据
@@ -1069,13 +1100,16 @@ def countmanagement(request):
         admin_flog = 1
     else:
         admin_flog = 0
+    update_passwd = Updata_passwd()
     if rouse == '运营':
         return render(request, 'countmanagement2.html',
                       {'title': title, 'account': account, 'count': count, 'nowss': now_time, 'formm': forms, 'edit_form': edit_form, 'errs': errs,
+                       'update_passwd': update_passwd,
                        'user': user, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'total_reminds': total_reminds})
     else:
         return render(request, 'countmanagement.html',
-                      {'title': title, 'account': account, 'count': count, 'nowss': now_time1, 'user': user, 'admin_flog': admin_flog})
+                      {'title': title, 'account': account, 'count': count, 'nowss': now_time1, 'user': user, 'admin_flog': admin_flog,
+                       'update_passwd': update_passwd})
 
 
 # 修改子账户记录数据
@@ -1283,7 +1317,6 @@ def edit_count_2(request):
             total_brank_names = new_date.account_name.total_account_name.total_account_name
             total_account_records = Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=total_brank_names,
                                                                         deletes=False).all()
-            print(total_account_records)
             if len(total_account_records) > 0:
                 Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=total_brank_names, deletes=False).update(
                     makes=False)
@@ -1428,10 +1461,11 @@ def brushmanagement(request):
         for i in account2:
             if i.makes == 'False':
                 total_reminds = '(总账户未确认)'
+    update_passwd = Updata_passwd()
     return render(request, 'brush2.html',
                   {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'add_brush_form': add_brush_form,
                    'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,
-                   'total_reminds': total_reminds})
+                   'total_reminds': total_reminds, 'update_passwd': update_passwd})
 
 
 # 修改喝酒数据
@@ -1593,10 +1627,11 @@ def more_date(request):
         for i in account2:
             if i.makes == 'False':
                 total_reminds = '(总账户未确认)'
+    update_passwd = Updata_passwd()
     return render(request, 'more_data2.html',
                   {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
                    'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'reminds': reminds, 'makes': makes,
-                   'unmakes': unmakes, 'total_reminds': total_reminds})
+                   'unmakes': unmakes, 'total_reminds': total_reminds, 'update_passwd': update_passwd})
 
 
 # 更多页面加载店铺名
@@ -1696,10 +1731,12 @@ def check_account(request):
         for i in account2:
             if i.makes == 'False':
                 total_reminds = '(总账户未确认)'
+    update_passwd = Updata_passwd()
     return render(request, 'check_account2.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money,
                    'actual_cost': actual_cost, 'user': user, 'edit_brush_form': edit_brush_form, 'shops': shops, 'user': user,
                    'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'errs': errs, 'total_reminds': total_reminds,
+                   'update_passwd': update_passwd,
                    'actual_err': actual_err, 'makes_stats': makes_stats, 'account_select': account_select, 'pay_money_all': pay_money_all,
                    'weixin_withdraw_moneys': weixin_withdraw_moneys})
 
@@ -1771,13 +1808,15 @@ def search_count(request):
                 unmakes += 1
             if check_countss.makes == 'True':
                 makes += 1
+    update_passwd = Updata_passwd()
     if rouse == '财务':
-        return render(request, 'countmanagement.html', {'title': title, 'account': account, 'count': count, 'nowss': search_date, 'user': user})
+        return render(request, 'countmanagement.html',
+                      {'title': title, 'account': account, 'count': count, 'nowss': search_date, 'user': user, 'update_passwd': update_passwd})
     else:
         return render(request, 'countmanagement2.html',
                       {'title': title, 'account': account3, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
                        'user': user, 'admin_flog': admin_flog, 'total_reminds': total_reminds, 'reminds': reminds, 'unmakes': unmakes,
-                       'makes': makes})
+                       'makes': makes, 'update_passwd': update_passwd})
 
 
 # 账户账单
@@ -1828,8 +1867,10 @@ def account_bill(request):
         admin_flog = 1
     else:
         admin_flog = 0
+    update_passwd = Updata_passwd()
     return render(request, 'account_bill.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money,
+                   'update_passwd': update_passwd,
                    'actual_cost': actual_cost, 'user': user, 'account_name': account_names, 'count_stats': count_stats, 'admin_flog': admin_flog})
 
 
@@ -1860,9 +1901,10 @@ def shop_bill(request):
         admin_flog = 1
     else:
         admin_flog = 0
+    update_passwd = Updata_passwd()
     return render(request, 'shop_bill.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money, 'user': user,
-                   'shop_name': shop_name, 'admin_flog': admin_flog})
+                   'shop_name': shop_name, 'admin_flog': admin_flog, 'update_passwd': update_passwd})
 
 
 # 总账户核对
@@ -1939,10 +1981,11 @@ def check_total_account(request):
                 unmakes += 1
             if check_countss.makes == 'True':
                 makes += 1
+    update_passwd = Updata_passwd()
     return render(request, 'check_total_account2.html',
                   {'title': title, 'tables': tables, 'total_account_all': total_account_all, 'user': user, 'now_time': now_time, 'err': errs,
                    'unmake_stats': unmake_stats, 'edit_form': edit_form, 'total_cost': total_cost, 'account_cost': account_cost,
-                   'total_reminds': total_reminds, 'unmakes': unmakes, 'makes': makes, 'reminds': reminds,
+                   'total_reminds': total_reminds, 'unmakes': unmakes, 'makes': makes, 'reminds': reminds, 'update_passwd': update_passwd,
                    'total_account_select': total_account_select})
 
 
@@ -2015,14 +2058,15 @@ def search_total_count(request):
                 unmakes += 1
             if check_countss.makes == 'True':
                 makes += 1
+    update_passwd = Updata_passwd()
     if rouse == '财务':
         return render(request, 'total_countmanagement.html',
-                      {'title': title, 'count': count, 'nowss': search_date, 'user': user, 'admin_flog': admin_flog})
+                      {'title': title, 'count': count, 'nowss': search_date, 'user': user, 'admin_flog': admin_flog, 'update_passwd': update_passwd})
     else:
         return render(request, 'total_countmanagement2.html',
                       {'title': title, 'account': account2, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
                        'user': user, 'total_reminds': total_reminds, 'total_account_all': total_account_all, 'reminds': reminds, 'unmakes': unmakes,
-                       'makes': makes})
+                       'update_passwd': update_passwd, 'makes': makes})
 
 
 # 下载喝酒数据
@@ -2135,3 +2179,125 @@ def down_shop_bill2(request):
         sheet1.append(row1)
     file_names = str(now_time) + '月  ' + shop_name2 + '的喝酒数据'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name='测试', file_name=file_names)
+
+
+#################测试新功能
+from erp.views import Verification
+
+
+def brushmanagement_2(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    title = '喝酒'
+    account = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
+    shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=user, deletes='False')
+    len_ = len(tables)
+    if len_ > 15:
+        tables = tables[:len_ - 16:-1]
+    else:
+        tables = tables[::-1]
+    add_brush_form = Add_brush_data()
+    edit_brush_form = Edit_brush_data()
+    errs = ''
+    if request.method == 'POST':
+        shopnames = request.POST.get('shopname')
+        qq_or_weixins = request.POST.get('qq_or_weixin')
+        qq_or_weixins = str(qq_or_weixins).strip()
+        wang_wang_numbers = request.POST.get('wang_wang_number')
+        wang_wang_numbers = str(wang_wang_numbers).strip()
+        online_order_numbers = request.POST.get('online_order_number')
+        online_order_numbers = online_order_numbers.strip()
+        transaction_datas = request.POST.get('transaction_data')
+        payment_types = request.POST.get('payment_type')
+        payment_amounts = request.POST.get('payment_amount')
+        payment_accounts = request.POST.get('payment_account')
+        operators = Userinfo.objects.get(username=user, deletes=False)
+        remarkss = request.POST.get('remarks')
+        if payment_accounts == None:
+            errs = '账户名不能为空'
+        else:
+            # 验证付款金额是否为float类型
+            try:
+                float(payment_amounts)
+            except ValueError:
+                errs = '付款金额必须为数字'
+            onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers, transaction_data=transaction_datas,
+                                                      payment_type=payment_types, deletes=False).all()
+            if onlys:
+                errs = '该订单记录已存在'
+            if len(online_order_numbers) != 18:
+                errs = '线上订单号格式错误'
+        if errs == '':
+            add_times = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+            Brush_single_entry.objects.create(shopname=shopnames, qq_or_weixin=qq_or_weixins, wang_wang_number=wang_wang_numbers,
+                                              online_order_number=online_order_numbers, transaction_data=transaction_datas,
+                                              payment_type=payment_types, payment_amount=payment_amounts,
+                                              payment_account=Brank_account.objects.get(account_name=payment_accounts, deletes=False),
+                                              operator=operators, remarks=remarkss, deletes=False, add_time=add_times)
+            if Account_record.objects.filter(datess__date=now_time, account_name__account_name=payment_accounts, deletes=False):
+                Account_record.objects.filter(datess__date=now_time, account_name__account_name=payment_accounts, deletes=False).update(makes=False)
+            last_table = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=user).last()
+            last_add_time = t(last_table.add_time)
+            operation_types = '创建喝酒数据'
+            after_operations = '{id：%s，店铺名：%s，旺旺号：%s，线上订单号：%s，成交日期：%s，付款类型：%s，付款金额：%s，付款账户：%s，操作员：%s，备注：%s}' % (
+                last_table.id, shopnames, wang_wang_numbers, online_order_numbers, transaction_datas, payment_types, payment_amounts,
+                payment_accounts, user, remarkss)
+            Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
+            msg = json.dumps(
+                {'id': last_table.id, 'shopname': shopnames, 'wang_wang_number': wang_wang_numbers, 'online_order_number': online_order_numbers,
+                 'transaction_data': transaction_datas, 'payment_type': payment_types, 'payment_amount': payment_amounts,
+                 'payment_account': payment_accounts, 'remarks': remarkss, 'add_time': last_add_time, 'qq_or_weixin': qq_or_weixins})
+            return HttpResponse(msg)
+        else:
+            return HttpResponse(json.dumps({'err': errs}))
+    # 验证线上订单号是否存在
+    online_unexit_num = 0
+    tables_list = []
+    for table in tables:
+        line = {}
+        online_order_numbers = table.online_order_number
+        verification = Verification()
+        online_stats = verification.order_online(online_order_numbers, now_time)
+        line['online_stats'] = online_stats
+        online_unexit_num += online_stats
+        line['add_time'] = table.add_time
+        line['shopname'] = table.shopname
+        line['qq_or_weixin'] = table.qq_or_weixin
+        line['wang_wang_number'] = table.wang_wang_number
+        line['online_order_number'] = table.online_order_number
+        line['transaction_data'] = table.transaction_data
+        line['payment_type'] = table.payment_type
+        line['payment_amount'] = table.payment_amount
+        line['payment_account'] = table.payment_account.account_name
+        line['remarks'] = table.remarks
+        tables_list.append(line)
+
+    reminds = ''
+    unmakes = 0
+    makes = 0
+    for i in account:
+        check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).all()
+        if check_countss:
+            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).get()
+            if check_countss.makes == 'False':
+                reminds = '(有账户未确认)'
+                unmakes += 1
+            if check_countss.makes == 'True':
+                makes += 1
+    # 总账户未确认提示运营
+    total_reminds = ''
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    for m in account__:
+        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        for i in account2:
+            if i.makes == 'False':
+                total_reminds = '(总账户未确认)'
+    return render(request, 'erp_templates/brush2.html',
+                  {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables_list, 'add_brush_form': add_brush_form,
+                   'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,
+                   'total_reminds': total_reminds, })

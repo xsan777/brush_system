@@ -59,6 +59,7 @@
     {#显示数据#}
     <table class="table table-striped">
         <tr>
+            <th>订单状态</th>
             <th>创建时间</th>
             <th>店铺</th>
             <th>QQ或微信</th>
@@ -72,6 +73,7 @@
             <th>操作</th>
         </tr>
         <tr id="0">
+            <td></td>
             <td id="add_time"></td>
             <td id="shopname"></td>
             <td id="qq_or_weixin"></td>
@@ -89,6 +91,10 @@
         {% for table in tables %}
             <tr id="{{ forloop.counter }}">
                 {#<td id="num">{{ forloop.counter }}</td>#}
+                {% if table.online_stats == 1 %}
+                    <td><i class="fa fa-warning"></i></td>
+                {% endif %}
+{#                <td>{{ table.online_stats}}</td>#}
                 <td>{{ table.add_time }}</td>
                 <td>{{ table.shopname }}</td>
                 <td>{{ table.qq_or_weixin }}</td>
@@ -98,7 +104,7 @@
                 <td>{{ table.transaction_data }}</td>
                 <td>{{ table.payment_type }}</td>
                 <td>{{ table.payment_amount }}</td>
-                <td>{{ table.payment_account.account_name }}</td>
+                <td>{{ table.payment_account}}</td>
                 <td>{{ table.remarks }}</td>
                 <td><a class="glyphicon glyphicon-pencil" href="javascript:void(0);" onclick="edit_data({{ table.id }},this)" title="编辑" id="bsd"></a>
                     <a class="glyphicon glyphicon-remove" href="javascript:void(0);" onclick="delete_data({{ table.id }},this)" title="删除"
@@ -313,7 +319,7 @@
                         $('tr#2').attr("id", 3);
                         $('tr#1').attr("id", 2);
                         $('tr#0').attr("id", 1);
-                        $('tr#1').before('<tr id="0"><td id="add_time"></td></td><td id="shopname"><td id="qq_or_weixin"></td></td><td id="wang_wang_number"></td><td id="online_order_number"></td>\n' +
+                        $('tr#1').before('<tr id="0"><td></td><td id="add_time"></td></td><td id="shopname"><td id="qq_or_weixin"></td></td><td id="wang_wang_number"></td><td id="online_order_number"></td>\n' +
                             '            <td id="transaction_data"></td>\n' +
                             '            <td id="payment_type"></td>\n' +
                             '            <td id="payment_amount"></td>\n' +
@@ -390,6 +396,7 @@
                     $('#update_ids').attr('value', arg['ids']);
                     $('#edit_model').modal('show');
                 },
+
             })
         }
     </script>
