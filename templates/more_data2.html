@@ -11,23 +11,24 @@
             <input type="date" class="form-control" value="{{ now_time }}" name="add_time" id="se_date" onchange="change_url()">
         </div>
         <div class="form-group">
+            <label for="exampleInputName2">店铺:</label>
+            <select name="shopname" id="shopname" class="form-control" onchange="change_operator()">
+                {#<option value="alls">全部</option>#}
+                {% for shopss in shops %}
+                    <option value="{{ shopss }}">{{ shopss }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
             <label for="exampleInputName2">操作人:</label>
-            <select name="operator" id="operator" class="form-control" onchange="change_shop()">
+            <select name="operator" id="operator" class="form-control" onchange="change_url()" >
                 {% for user in all_user %}
                     <option value="{{ user.username }}">{{ user.username }}</option>
                 {% endfor %}
                 <option value="alls">全部</option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="exampleInputName2">店铺:</label>
-            <select name="shopname" id="shopname" class="form-control" onchange="change_url()">
-                <option value="alls">全部</option>
-                {% for shopss in shops %}
-                    <option value="{{ shopss }}">{{ shopss }}</option>
-                {% endfor %}
-            </select>
-        </div>
+
         <input type="submit" value="查找" class="btn btn-default">
         <a href="/download_brush/" id="downss"><input type="button" value="下载" class="btn btn-default"></a>
 
@@ -49,7 +50,7 @@
                     <th>付款金额</th>
                     <th>付款账户</th>
                     <th>备注</th>
-                    <th>创建(修改)时间</th>
+                    <th>创建时间</th>
                     <th>操作人</th>
                     <th>操作</th>
                 </tr>
@@ -100,10 +101,10 @@
                         <td>{{ table.transaction_data }}</td>
                         <td>{{ table.payment_type }}</td>
                         <td>{{ table.payment_amount }}</td>
-                        <td>{{ table.payment_account }}</td>
+                        <td>{{ table.payment_account.account_name }}</td>
                         <td>{{ table.remarks }}</td>
                         <td>{{ table.add_time }}</td>
-                        <td>{{ table.operator }}</td>
+                        <td>{{ table.operator.username }}</td>
                     </tr>
                 {% endfor %}
             </table>
@@ -162,9 +163,11 @@
                                     <option value="快递费">快递费</option>
                                     <option value="手续费">手续费</option>
                                     <option value="删评价">删评价</option>
-                                    <option value="收藏">收藏</option>
+                                    <option value="收藏">收藏、加购</option>
                                     <option value="刮刮卡">刮刮卡</option>
-                                    <option value="加购">加购</option>
+                                    <option value="返款">返款</option>
+                                    <option value="直通车点击">直通车点击</option>
+                                    <option value="其他">其他</option>
                                 </select>
                             </div>
                         </div>
@@ -223,29 +226,29 @@
             }
         });
     </script>
-    {#动态从数据库里取店铺#}
+    {#动态从数据库里取操作人#}
     <script>
-        function change_shop() {
+        function change_operator() {
             var operator = $('#operator').val();
             var shopss = $('#shopname').val();
             var dates = $('#se_date').val();
             var urls = '/download_brush/?operator=' + operator + '&shopname=' + shopss + '&add_time=' + dates;
             $('#downss').attr('href', urls)
-            var kj = $('#operator').find("option:selected").text();
+            var kj = $('#shopname').find("option:selected").text();
             $.ajax({
-                url: "/chose_shop/",
+                url: "/chose_operator/",
                 type: "GET",
                 dataType: 'json',
-                data: {'operator': kj},
+                data: {'shopname': kj},
                 async: true,
                 success: function (arg) {
-                    $('#shopname').children().remove();
+                    $('#operator').children().remove();
 
-                    for (var i = 0; i < arg['shops'].length; i++) {
-                        var add_options = '<option value="' + arg['shops'][i] + '">' + arg['shops'][i] + '</option>';
-                        $('#shopname').append(add_options);
+                    for (var i = 0; i < arg['operators'].length; i++) {
+                        var add_options = '<option value="' + arg['operators'][i] + '">' + arg['operators'][i] + '</option>';
+                        $('#operator').append(add_options);
                     }
-                    $('#shopname').append('<option value="alls">全部</option>');
+                    {#$('#shopname').append('<option value="alls">全部</option>');#}
                 }
             })
         }

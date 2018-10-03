@@ -15,10 +15,12 @@
             {{ add_brush_form.qq_or_weixin }}
         </div>
         <div class="form-group">
-            {{ add_brush_form.wang_wang_number }}<a href="javascript:void(0);"><i class="fa fa-user-circle-o" aria-hidden="true" id="wang_wang_number"></i></a>&nbsp;
+            {{ add_brush_form.wang_wang_number }}<a href="javascript:void(0);"><i class="fa fa-user-circle-o" aria-hidden="true"
+                                                                                  id="wang_wang_number"></i></a>&nbsp;
         </div>
         <div class="form-group">
-            {{ add_brush_form.online_order_number }}
+
+            <input type="text" placeholder="线上订单号" class="form-control" id="online_order_number">
         </div>
         <div class="form-group">
             <input type="date" class="form-control" value="{{ now_time }}" name="transaction_data">
@@ -33,9 +35,11 @@
                 <option value="快递费">快递费</option>
                 <option value="手续费">手续费</option>
                 <option value="删评价">删评价</option>
-                <option value="收藏">收藏</option>
+                <option value="收藏">收藏、加购</option>
                 <option value="刮刮卡">刮刮卡</option>
-                <option value="加购">加购</option>
+                <option value="返款">返款</option>
+                <option value="直通车点击">直通车点击</option>
+                <option value="其他">其他</option>
             </select>
         </div>
         <div class="form-group">
@@ -93,7 +97,7 @@
                 <td>{{ table.shopname }}</td>
                 <td>{{ table.qq_or_weixin }}</td>
                 <td><span data-container="body" data-toggle="popover" data-placement="right" data-content=""
-                           id="search_wangwang" data-html="true">{{ table.wang_wang_number }}</span></td>
+                          id="search_wangwang" data-html="true">{{ table.wang_wang_number }}</span></td>
                 <td>{{ table.online_order_number }}</td>
                 <td>{{ table.transaction_data }}</td>
                 <td>{{ table.payment_type }}</td>
@@ -164,9 +168,11 @@
                                     <option value="快递费">快递费</option>
                                     <option value="手续费">手续费</option>
                                     <option value="删评价">删评价</option>
-                                    <option value="收藏">收藏</option>
+                                    <option value="收藏">收藏、加购</option>
                                     <option value="刮刮卡">刮刮卡</option>
-                                    <option value="加购">加购</option>
+                                    <option value="返款">返款</option>
+                                    <option value="直通车点击">直通车点击</option>
+                                    <option value="其他">其他</option>
                                 </select>
                             </div>
                         </div>
@@ -195,7 +201,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-9 col-sm-10">
-                                <button type="submit" class="btn btn-default">确认修改</button>
+                                <button type="button" class="btn btn-default" onclick="make_sure()">确认修改</button>
                             </div>
                         </div>
                         {% csrf_token %}
@@ -204,7 +210,7 @@
             </div>
         </div>
     </div>
-{% endblock %}}
+{% endblock %}
 {% block js %}
     {#隐藏15行以后的数据以及预留添加行#}
     <script>
@@ -216,7 +222,7 @@
 
     <script>
         $('i#wang_wang_number').hover(function () {
-            $('[data-toggle="popover"]').popover();
+                $('[data-toggle="popover"]').popover();
                 var wangwang_num = $('input#wang_wang_number').val();
                 $.ajax({
                     url: "/erp/search_by_wangwang_num2/",
@@ -241,7 +247,7 @@
     <script>
         {#表格里的旺旺号查询#}
         $('span#search_wangwang').hover(function () {
-            $('[data-toggle="popover"]').popover();
+                $('[data-toggle="popover"]').popover();
                 var wangwang_num = $(this).text();
                 $.ajax({
                     url: "/erp/search_by_wangwang_num/",
@@ -270,7 +276,7 @@
             var wang_wang_number = $('#wang_wang_number').val();
             var online_order_number = $('#online_order_number').val();
             var payment_amount = $('#payment_amount').val();
-            if (wang_wang_number != '' && online_order_number != '' && payment_amount != '') {
+            if (wang_wang_number != '' && payment_amount != '') {
                 $.ajax({
                     url: "/brushmanagement/",
                     type: "POST",
@@ -401,7 +407,15 @@
                 type: "POST",
                 dataType: 'json',
                 data: $('#update_form').serialize(),
-                async: true,
+                async: false,
+                success: function (msg) {
+                    if (msg == '') {
+                        window.location.replace('/brushmanagement/');
+                    }
+                    else {
+                        alert(msg)
+                    }
+                }
             })
         }
     </script>

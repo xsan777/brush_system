@@ -52,7 +52,7 @@ urlpatterns = [
     path('delete_total_count/',views.delete_total_count),
     path('deletes_brank/',views.deletes_brank),
     path('more_date/',views.more_date),
-    path('chose_shop/',views.chose_shop),
+    path('chose_operator/',views.chose_operator),
     path('check_account/',views.check_account),
     path('check_total_account/',views.check_total_account),
     path('make_account/',views.make_account),

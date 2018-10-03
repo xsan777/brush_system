@@ -85,19 +85,19 @@
                     <td>{{ table.end_money }}</td>
                     <td>{{ table.weixin_withdraw_money }}</td>
                     {% if  table.start_money_img %}
-                        <td><a href="javascript:void(0);" onclick="big_img('{{ table.start_money_img }}')"><img
+                        <td><a href="/media/{{ table.start_money_img }}" onclick="big_img('{{ table.start_money_img }}')" target="view_window"><img
                                 src="/media/{{ table.start_money_img }}"
                                 alt="" id="smar_img"></a></td>
                     {% else %}
                         <td></td>
                     {% endif %}
                     {% if  table.end_money_img %}
-                        <td><a href="/media/{{ table.end_money_img }}"><img src="/media/{{ table.end_money_img }}" alt="" id="smar_img"></a></td>
+                        <td><a href="/media/{{ table.end_money_img }}" target="view_window"><img src="/media/{{ table.end_money_img }}" alt="" id="smar_img"></a></td>
                     {% else %}
                         <td></td>
                     {% endif %}
                     {% if  table.weixin_img %}
-                        <td><a href="/media/{{ table.weixin_img }}"><img src="/media/{{ table.weixin_img }}" alt="" id="smar_img"></a></td>
+                        <td><a href="/media/{{ table.weixin_img }}" target="view_window"><img src="/media/{{ table.weixin_img }}" alt="" id="smar_img"></a></td>
                     {% else %}
                         <td></td>
                     {% endif %}

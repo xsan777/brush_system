@@ -69,11 +69,8 @@ def login(request):
         msg = '用户名或密码错误'
     return render(request, 'login.html', {'err_msg': msg})
 
-    # 修改密码
 
-from django.views.decorators.csrf import csrf_exempt
-
-
+# 修改密码
 def update_passwd(request):
     user = request.session.get('username')
     rouse = request.session.get('rouse')
@@ -83,10 +80,18 @@ def update_passwd(request):
     passwd2s = request.POST.get('passwd2')
     if passwds and passwd2s:
         if passwds == passwd2s:
+            user_id = Userinfo.objects.get(username=user, deletes=False)
             Userinfo.objects.filter(username=user, deletes=False).update(passwd=passwds)
             msg = ''
             msg = json.dumps(msg)
-
+            operators = Userinfo.objects.get(username=user, deletes=False)
+            operation_types = '用户自己修改密码'
+            before_operations = '{id：%d，用户名：%s，旧密码：%s，角色：%s，职位描述：%s，}' % (
+                user_id.id, user_id.username, user_id.passwd, user_id.rouse, user_id.description,)
+            after_operations = '{id：%s，用户名：%s，新密码：%s，角色：%s，职位描述：%s，}' % (
+                user_id.id, user, passwds, rouse, user_id.description,)
+            Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations,
+                               before_operation=before_operations)
         else:
             msg = '两次输入密码不一致，请重新修改'
             msg = json.dumps(msg)
@@ -1395,7 +1400,8 @@ def brushmanagement(request):
         wang_wang_numbers = request.POST.get('wang_wang_number')
         wang_wang_numbers = str(wang_wang_numbers).strip()
         online_order_numbers = request.POST.get('online_order_number')
-        online_order_numbers = online_order_numbers.strip()
+        if online_order_numbers:
+            online_order_numbers = online_order_numbers.strip()
         transaction_datas = request.POST.get('transaction_data')
         payment_types = request.POST.get('payment_type')
         payment_amounts = request.POST.get('payment_amount')
@@ -1414,8 +1420,9 @@ def brushmanagement(request):
                                                       payment_type=payment_types, deletes=False).all()
             if onlys:
                 errs = '该订单记录已存在'
-            if len(online_order_numbers) != 18:
-                errs = '线上订单号格式错误'
+            if online_order_numbers != None:
+                if len(online_order_numbers) != 18:
+                    errs = '线上订单号格式错误'
         if errs == '':
             add_times = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
             Brush_single_entry.objects.create(shopname=shopnames, qq_or_weixin=qq_or_weixins, wang_wang_number=wang_wang_numbers,
@@ -1493,8 +1500,10 @@ def edit(request):
             float(payment_amounts)
         except ValueError:
             errs = '付款金额必须为数字'
+        if online_order_numbers != '':
+            if len(online_order_numbers) != 18:
+                errs = '线上订单号格式错误'
         if errs == '':
-            add_time = datetime.datetime.now()
             last_date = Brush_single_entry.objects.filter(id=ids).get()
             Brush_single_entry.objects.filter(id=ids).update(shopname=shopnames, qq_or_weixin=qq_or_weixins, wang_wang_number=wang_wang_numbers,
                                                              online_order_number=online_order_numbers, transaction_data=transaction_datas,
@@ -1522,18 +1531,8 @@ def edit(request):
                 remarkss)
             Log.objects.create(operator=operators, operation_type=operation_types, before_operation=before_operations,
                                after_operation=after_operations)
-            return redirect(to=brushmanagement)
-        else:
-            title = '喝酒'
-            account = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
-            shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
-            now_time = time.strftime('%Y-%m-%d', time.localtime())
-            tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator=operators, deletes='False')[::-1]
-            add_brush_form = Add_brush_data()
-            edit_brush_form = Edit_brush_data()
-            return render(request, 'brush2.html',
-                          {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables,
-                           'add_brush_form': add_brush_form, 'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs})
+
+        return HttpResponse(json.dumps(errs))
     current_data = Brush_single_entry.objects.filter(id=ids).get()
     msg = json.dumps({'ids': current_data.id, 'shopname': current_data.shopname, 'qq_or_weixin': current_data.qq_or_weixin,
                       'wang_wang_number': current_data.wang_wang_number, 'online_order_number': current_data.online_order_number,
@@ -1586,24 +1585,23 @@ def more_date(request):
     title = '喝酒数据查询'
     userss = user
     operators = userss
-    all_user = Userinfo.objects.filter(rouse='运营', deletes=False).values('username').all()
+    first_shop = Userinfo.objects.filter(username=user, deletes=False).get().shop.filter(deletes=False).first()
+    all_user = Shops.objects.filter(shopname=first_shop, deletes=False).get().userinfo_set.filter(rouse='运营', deletes=False).all()
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     account = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
     shopss = 'alls'
-    tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=userss, deletes='False').order_by('add_time')
+    tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=userss, shopname=first_shop, deletes='False').order_by(
+        'add_time')
     if request.method == 'POST':
         operators = request.POST.get('operator')
         shopss = request.POST.get('shopname')
         now_time = request.POST.get('add_time')
-        if shopss == 'alls' and operators == 'alls':
-            tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes='False').order_by('add_time')
-        elif shopss == 'alls':
-            tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=operators, deletes='False').order_by(
-                'add_time')
+        if operators == 'alls':
+            tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shopss, deletes='False').order_by('add_time')
         else:
-            tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shopss, deletes='False').order_by(
-                'add_time')
+            tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=operators, shopname=shopss,
+                                                       deletes='False').order_by('add_time')
     accountss = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     reminds = ''
     unmakes = 0
@@ -1634,16 +1632,16 @@ def more_date(request):
                    'unmakes': unmakes, 'total_reminds': total_reminds, 'update_passwd': update_passwd})
 
 
-# 更多页面加载店铺名
-def chose_shop(request):
-    users = request.GET.get('operator')
-    if users == '全部':
-        shops = Shops.objects.filter(deletes='False').values_list('shopname').all()
-        shops = [i for i in shops]
-    else:
-        shops = Userinfo.objects.get(username=users, deletes=False).shop.filter(deletes=False).all()
-        shops = [i.shopname for i in shops]
-    msg = json.dumps({'shops': shops})
+# 更多页面加载操作人
+def chose_operator(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    shops_ = request.GET.get('shopname')
+    operators = Shops.objects.filter(shopname=shops_, deletes=False).get().userinfo_set.filter(rouse='运营', deletes=False).values_list(
+        'username').all()
+    operators = [i for i in operators]
+    msg = json.dumps({'operators': operators})
     return HttpResponse(msg)
 
 
@@ -1685,8 +1683,11 @@ def check_account(request):
     else:
         tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes='False').all()
     pay_money = 0.0
+    un_online_order_number = 0
     for table in tables:
         pay_money += float(table.payment_amount)
+        if table.online_order_number == '':
+            un_online_order_number +=1
     account_data = Account_record.objects.filter(account_name=account, datess__date=now_time, deletes=False).all()
     if account_data:
         account_data = account_data.get()
@@ -1703,6 +1704,8 @@ def check_account(request):
                 actual_cost = float(account_data.start_money) - float(account_data.end_money)
                 if pay_money_all != actual_cost:
                     actual_err = '账目有问题，请仔细核对'
+                if un_online_order_number != 0 :
+                    actual_err = '有'+ str(un_online_order_number)+'条记录没有订单号'
         else:
             actual_err = '该账户缺少截图，无法核账'
     else:
@@ -2074,9 +2077,6 @@ def download_brush(request):
     user = request.session.get('username')
     if user == None:
         return redirect(to=login)
-    user = request.session.get('username')
-    if user == None:
-        return redirect(to=login)
     userss = user
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=userss, deletes='False').order_by('add_time')
@@ -2089,9 +2089,11 @@ def download_brush(request):
         elif shopss == 'alls':
             tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=operators, deletes='False').order_by(
                 'add_time')
+        elif operators == 'alls':
+            tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shopss, deletes='False').order_by('add_time')
         else:
-            tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shopss, deletes='False').order_by(
-                'add_time')
+            tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shopss, operator__username=operators,
+                                                       deletes='False').order_by('add_time')
     sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "付款账户", "备注", "操作员"]]
     for i in tables:
         row1 = []
@@ -2255,14 +2257,23 @@ def brushmanagement_2(request):
             return HttpResponse(json.dumps({'err': errs}))
     # 验证线上订单号是否存在
     online_unexit_num = 0
+    order_unexit_num = 0
     tables_list = []
+    verification = Verification()
     for table in tables:
         line = {}
         online_order_numbers = table.online_order_number
-        verification = Verification()
         online_stats = verification.order_online(online_order_numbers, now_time)
-        line['online_stats'] = online_stats
-        online_unexit_num += online_stats
+        if online_stats == 0:
+            order_stats = verification.special_order(online_order_numbers, now_time)
+            if order_stats == 0:
+                pass
+            else:
+                line['online_stats'] = order_stats
+                order_unexit_num += order_stats - 1
+        else:
+            line['online_stats'] = online_stats
+            online_unexit_num += online_stats
         line['add_time'] = table.add_time
         line['shopname'] = table.shopname
         line['qq_or_weixin'] = table.qq_or_weixin

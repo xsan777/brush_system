@@ -20,7 +20,6 @@ def get_nday_list2(n, now_time):
 def search_by_order_num(request):
     asd = '219441250672567971'
     online_order_numbers = request.GET.get('oreder_num')
-    print(online_order_numbers)
     order_num = Brush_single_entry.objects.using('default').get(online_order_number=online_order_numbers, deletes=False)
     search_o_id = JstOrdersQuery.objects.using('erp_database').get(so_id=order_num.online_order_number)
     print(search_o_id.pay_date)
@@ -35,8 +34,8 @@ def search_by_wangwang_num(request):
     # order_num = Brush_single_entry.objects.using('default').get(wang_wang_number=wang_wang_numbers, deletes=False)
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     search_o_id = JstOrdersQuery.objects.using('erp_database').filter(pay_date__gte=get_nday_list2(90, now_time),
-                                                                  shop_buyer_id=wang_wang_numbers).all()
-    msg  = ''
+                                                                      shop_buyer_id=wang_wang_numbers).all()
+    msg = ''
     for i in search_o_id:
         search_o_id2 = JstOrdersQuerySpecialSingle.objects.using('erp_database').get(o_id=i.o_id)
         msg = msg + '喝酒时间：' + str(i.pay_date) + '<br/> ' + '喝酒店铺：' + search_o_id2.shop_name + '<br/>'
@@ -63,9 +62,18 @@ def search_by_wangwang_num2(request):
 # 喝酒数据与erp数据相互验证
 class Verification(object):
     # 验证线上订单号是否存在
-    def order_online(self, order_online_num,nowtime):
-        order_stats = JstOrdersQuery.objects.using('erp_database').filter(order_date=nowtime, so_id=order_online_num).all()
+    def order_online(self, order_online_num, nowtime):
+        order_stats = JstOrdersQuery.objects.using('erp_database').filter(order_date__date=nowtime, so_id=order_online_num).all()
         if len(order_stats) > 0:
             return 0
+        else:
+            return 1
+    #验证该线上订单号是否为特殊单
+    def special_order(self, order_online_num, nowtime):
+        search_o_id = JstOrdersQuery.objects.using('erp_database').filter(order_date__date=nowtime, so_id=order_online_num).all()
+        if len(search_o_id) >0:
+            special_order_stats = JstOrdersQuerySpecialSingle.objects.using('erp_database').filter(order_date__date=nowtime, o_id=search_o_id.o_id).all()
+            if len(special_order_stats) > 0:
+                return 0
         else:
             return 1

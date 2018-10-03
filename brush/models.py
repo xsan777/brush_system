@@ -30,7 +30,7 @@ class Shops(models.Model):
 # 用户表
 class Userinfo(models.Model):
     passwd = models.CharField(verbose_name='密码', max_length=16)
-    username = models.CharField(verbose_name='用户名', max_length=32, )
+    username = models.CharField(verbose_name='用户名', max_length=32)
     rouse = models.CharField(verbose_name='角色', max_length=8)
     description = models.CharField(u'职位描述', max_length=64)
     shop = models.ManyToManyField("Shops")

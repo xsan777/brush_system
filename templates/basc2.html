@@ -7,118 +7,14 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/basc2.css">
+    <link rel="stylesheet" href="/static/css/brush_stats.css">
     {#    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">#}
     {% block head %}
 
     {% endblock %}
 </head>
 <body>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        background-color: #3d3d3d;
-    }
-
-    #left_nav {
-        float: left;
-        background-color: #3d3d3d;
-        width: 12%;
-        height: 100%;
-    }
-
-    #content {
-        float: left;
-        width: 88%;
-        height: 100%;
-        background-color: white;
-    }
-
-    #cont {
-        width: 95%;
-        height: 800px;
-        margin: 20px 50px;
-    }
-
-    #nav {
-        background-color: #212121;
-        height: 50px;
-    }
-
-    #logo {
-        padding-top: 10px;
-        margin-left: 20px;
-        font-size: 1.5em;
-        color: #ffffff;
-    }
-
-    .menu {
-        padding-top: 15px;
-        text-align: left;
-        font-size: 1.3em;
-        color: white;
-    }
-
-    .menus {
-        padding-bottom: 5px;
-        text-align: center;
-        font-size: 1.3em;
-        color: white;
-        background-color: #2e3636;
-    }
-
-    .menus:hover {
-        background-color: #3c3d22;
-    }
-
-    a:hover {
-        text-decoration: none
-    }
-
-    hr#nav_hr {
-        width: 90%;
-        height: 1px;
-        background-color: #585858;
-        margin-bottom: -5px;
-        border: none;
-    }
-
-    hr {
-        width: 90%;
-        height: 1px;
-        background-color: #585858;
-
-        border: none;
-    }
-
-    #remind {
-        height: 10px;
-        font-size: small;
-        color: red;
-    }
-
-    #lights {
-        width: 25px;
-        height: 25px;
-    }
-
-    .left_nav {
-        float: left;
-    }
-
-    .right_nav {
-        float: right;
-        margin-right: 40px;
-    }
-
-    #nav_user {
-        font-size: 1.8rem;
-        color: white;
-    }
-</style>
 <div id="nav">
     <div id="logo"><span class="left_nav">宝儿喝酒数据管理系统</span> <span class="right_nav" style="font-size: 1.8rem"><span id="light"></span>&nbsp;&nbsp;&nbsp;欢迎，
         <span class="dropdown">
@@ -163,6 +59,14 @@
         <a href="/check_total_account/">
             <div class="menus">总账户核对 <span id="remind">{{ total_reminds }}</span></div>
         </a>
+    </div>
+    <a href="javascript:void(0);" onclick="menu2()">
+        <div class="menu">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;数据查询及下载
+        </div>
+        <hr id="nav_hr">
+    </a>
+    <div class="menuss2">
         <a href="/more_date/">
             <div class="menus">喝酒数据查询</div>
         </a>
@@ -223,8 +127,6 @@
         $('#light').append(grend_light);
         j = j + 1
     }
-
-
 </script>
 {#修改密码#}
 <script>
@@ -252,8 +154,10 @@
         })
     }
 </script>
+
 {% block js %}
 
 {% endblock %}
+<script src="/static/js/brush_stats.js"></script>
 </body>
 </html>
