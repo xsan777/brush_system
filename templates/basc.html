@@ -115,7 +115,8 @@
         <a href="javascript:void(0); " id="nav_user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">{{ user }}</a>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
             <li><a href=" /" style="font-size:small ">退出</a></li>
-            <li onclick="update_passwd()" data-toggle="#update_passwd_modal"><a href="javascript:void(0);" style="font-size:small " id="update_passwd" >修改密码</a></li>
+            <li onclick="update_passwd()" data-toggle="#update_passwd_modal"><a href="javascript:void(0);" style="font-size:small "
+                                                                                id="update_passwd">修改密码</a></li>
         </ul>
         </span>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
 
@@ -156,25 +157,24 @@
         <a href="/countmanagement/">
             <div class="menus">子账户核对情况<span id="nav_remind"></span></div>
         </a>
+    </div>
+    <a href="javascript:void(0);" onclick="menu2()">
+        <div class="menu">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;报表分析
+        </div>
+        <hr id="nav_hr">
+    </a>
+    <div class="menuss2">
         <a href="/shop_bill/">
             <div class="menus">店铺账单</div>
         </a>
-        <a href="/account_bill/">
-            <div class="menus">账户账单</div>
+{#        <a href="/account_bill/">#}
+{#            <div class="menus">子账户账单</div>#}
+{#        </a>#}
+        <a href="/total_account_bill/">
+            <div class="menus">总账户账单</div>
         </a>
     </div>
-    {#    <a href="/countmanagement/">#}
-    {#        <div class="menu">账户记录管理</div>#}
-
-    {#    </a>#}
-    {#    <a href="/brushmanagement/">#}
-    {#        <div class="menu">喝酒数据管理</div>#}
-    {#        <hr>#}
-    {#    </a>#}
-    {#    <a href="/check_account/">#}
-    {#        <div class="menu">账户核对</div>#}
-
-    {#    </a>#}
 </div>
 <div id="content">
     <div class="alert alert-danger" role="alert" id="remind" style="font-family: 微软雅黑"><span id="admin_alert"><h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;昨&nbsp;&nbsp;日&nbsp;&nbsp;有&nbsp;&nbsp;总&nbsp;&nbsp;账&nbsp;&nbsp;户&nbsp;&nbsp;未&nbsp;&nbsp;确&nbsp;&nbsp;认</h4></span>

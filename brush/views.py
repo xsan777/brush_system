@@ -1416,13 +1416,15 @@ def brushmanagement(request):
                 float(payment_amounts)
             except ValueError:
                 errs = '付款金额必须为数字'
-            onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers, transaction_data=transaction_datas,
-                                                      payment_type=payment_types, deletes=False).all()
-            if onlys:
-                errs = '该订单记录已存在'
-            if online_order_numbers != None:
+            # 验证线上订单号格式
+            if online_order_numbers != '':
                 if len(online_order_numbers) != 18:
                     errs = '线上订单号格式错误'
+                else:
+                    onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers, transaction_data=transaction_datas,
+                                                              payment_type=payment_types, deletes=False).all()
+                    if len(onlys) > 0:
+                        errs = '该订单记录已存在'
         if errs == '':
             add_times = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
             Brush_single_entry.objects.create(shopname=shopnames, qq_or_weixin=qq_or_weixins, wang_wang_number=wang_wang_numbers,
@@ -1548,7 +1550,6 @@ def delete_data(request):
     if user == None:
         return redirect(to=login)
     ids = request.GET.get('id')
-    print(ids)
     Brush_single_entry.objects.filter(id=ids).update(deletes='True', add_time=datetime.datetime.now())
     # 修改子账户确认状态
     now_time = time.strftime('%Y-%m-%d', time.localtime())
@@ -1687,7 +1688,7 @@ def check_account(request):
     for table in tables:
         pay_money += float(table.payment_amount)
         if table.online_order_number == '':
-            un_online_order_number +=1
+            un_online_order_number += 1
     account_data = Account_record.objects.filter(account_name=account, datess__date=now_time, deletes=False).all()
     if account_data:
         account_data = account_data.get()
@@ -1704,8 +1705,8 @@ def check_account(request):
                 actual_cost = float(account_data.start_money) - float(account_data.end_money)
                 if pay_money_all != actual_cost:
                     actual_err = '账目有问题，请仔细核对'
-                if un_online_order_number != 0 :
-                    actual_err = '有'+ str(un_online_order_number)+'条记录没有订单号'
+                if un_online_order_number != 0:
+                    actual_err = '有' + str(un_online_order_number) + '条记录没有订单号'
         else:
             actual_err = '该账户缺少截图，无法核账'
     else:
@@ -1822,7 +1823,40 @@ def search_count(request):
                        'makes': makes, 'update_passwd': update_passwd})
 
 
-# 账户账单
+# 店铺账单
+def shop_bill(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    title = '店铺账单'
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    first_shop = Shops.objects.filter(deletes=True).first()
+    if first_shop:
+        shop_name = first_shop.shopname
+    else:
+        shop_name = ''
+    accounts = Shops.objects.filter(deletes=False).all()
+    if request.method == 'POST':
+        now_time = request.POST.get('check_data')
+        shop_name = request.POST.get('shop_name')
+    tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shop_name, deletes=False).all()
+    pay_money = 0
+    for table in tables:
+        pay_money += float(table.payment_amount)
+    # 财务账户提示账户未确认
+    now_time2 = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time2, makes=False, deletes=False).all()
+    if len(all_account_makes) == 0:
+        admin_flog = 1
+    else:
+        admin_flog = 0
+    update_passwd = Updata_passwd()
+    return render(request, 'shop_bill.html',
+                  {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money, 'user': user,
+                   'shop_name': shop_name, 'admin_flog': admin_flog, 'update_passwd': update_passwd})
+
+
+# 子账户账单
 def account_bill(request):
     title = '账户账单'
     user = request.session.get('username')
@@ -1877,37 +1911,34 @@ def account_bill(request):
                    'actual_cost': actual_cost, 'user': user, 'account_name': account_names, 'count_stats': count_stats, 'admin_flog': admin_flog})
 
 
-# 店铺账单
-def shop_bill(request):
+# 总账户账单
+def total_account_bill(request):
+    title = '总账户账单'
     user = request.session.get('username')
     if user == None:
         return redirect(to=login)
-    title = '店铺账单'
+    total_account_all = Total_brank_account.objects.filter(deletes=False).all()
+    first_account = total_account_all[0]
     now_time = time.strftime('%Y-%m-%d', time.localtime())
-    first_shop = Shops.objects.filter(deletes=True).first()
-    if first_shop:
-        shop_name = first_shop.shopname
-    else:
-        shop_name = ''
-    accounts = Shops.objects.filter(deletes=False).all()
+    first_account_post = ''
     if request.method == 'POST':
-        now_time = request.POST.get('check_data')
-        shop_name = request.POST.get('shop_name')
-    tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shop_name, deletes=False).all()
-    pay_money = 0
-    for table in tables:
-        pay_money += float(table.payment_amount)
-    # 财务账户提示账户未确认
-    now_time2 = get_nday_list2(2, now_time)
-    all_account_makes = Total_account_record.objects.filter(datess__date=now_time2, makes=False, deletes=False).all()
-    if len(all_account_makes) == 0:
-        admin_flog = 1
-    else:
-        admin_flog = 0
-    update_passwd = Updata_passwd()
-    return render(request, 'shop_bill.html',
-                  {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money, 'user': user,
-                   'shop_name': shop_name, 'admin_flog': admin_flog, 'update_passwd': update_passwd})
+        first_account_post = request.POST.get('account_name')
+        now_time_post = request.POST.get('check_data')
+        if first_account_post and now_time_post:
+            first_account = Total_brank_account.objects.filter(total_account_name=first_account_post, deletes=False).get()
+            now_time = now_time_post
+        elif first_account_post and now_time_post == '':
+            first_account = Total_brank_account.objects.filter(total_account_name=first_account_post, deletes=False).get()
+        elif first_account_post == '' and now_time_post:
+            now_time = now_time_post
+    first_accounts = first_account.brank_account_set.filter(deletes=False).values('account_name')
+    table_list = []
+    for account in first_accounts:
+        table = Brush_single_entry.objects.filter(add_time__date=now_time, payment_account__account_name=account['account_name'], deletes=False).all()
+        table_list.append(table)
+    return render(request, 'total_account_bill.html',
+                  {'title': title, 'user': user, 'table_list': table_list, 'now_time': now_time, 'total_account_all': total_account_all,
+                   'account_name': first_account_post})
 
 
 # 总账户核对
@@ -2144,7 +2175,7 @@ def down_shop_bill(request):
         row1.append(i.operator.username)
         sheet1.append(row1)
     file_names = str(now_time) + '  ' + shop_name + '的喝酒数据'
-    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name='测试', file_name=file_names)
+    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=shop_name, file_name=file_names)
 
 
 # 按月下载店铺账单
@@ -2180,7 +2211,111 @@ def down_shop_bill2(request):
         row1.append(i.operator.username)
         sheet1.append(row1)
     file_names = str(now_time) + '月  ' + shop_name2 + '的喝酒数据'
-    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name='测试', file_name=file_names)
+    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=shop_name2, file_name=file_names)
+
+
+# 按日下载总账户喝酒数据
+def down_total_account_brush(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    total_account_all = Total_brank_account.objects.filter(deletes=False).all()
+    first_account = total_account_all[0]
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    first_account_post = request.GET.get('account_name')
+    now_time_post = request.GET.get('check_data')
+    if first_account_post and now_time_post:
+        first_account = Total_brank_account.objects.filter(total_account_name=first_account_post, deletes=False).get()
+        now_time = now_time_post
+    elif first_account_post and now_time_post == '':
+        first_account = Total_brank_account.objects.filter(total_account_name=first_account_post, deletes=False).get()
+    elif first_account_post == '' and now_time_post:
+        now_time = now_time_post
+    first_accounts = first_account.brank_account_set.filter(deletes=False).values('account_name')
+    sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "收入金额", "付款金额", "账户结余", "付款类型", "付款账户", "备注", "操作员"], ]
+    account_start_money = Total_account_record.objects.filter(datess__date=now_time,
+                                                              account_name__total_account_name=first_account.total_account_name, deletes=False).all()
+    if len(account_start_money) > 0:
+        account_start_money = Total_account_record.objects.filter(datess__date=now_time,
+                                                                  account_name__total_account_name=first_account.total_account_name,
+                                                                  deletes=False).values('start_money').get()
+        account_start_money = float(account_start_money['start_money'])
+    else:
+        account_start_money = 0.0
+    sheet1.append(["", "", "", "", "", "", account_start_money, "", account_start_money, "", ""])
+    for account in first_accounts:
+        table = Brush_single_entry.objects.filter(add_time__date=now_time, payment_account__account_name=account['account_name'], deletes=False).all()
+        for i in table:
+            row1 = []
+            row1.append(i.add_time)
+            row1.append(i.shopname)
+            row1.append(i.qq_or_weixin)
+            row1.append(i.wang_wang_number)
+            row1.append(i.online_order_number)
+            row1.append(i.transaction_data)
+            row1.append('')
+            row1.append(i.payment_amount)
+            account_last_money = account_start_money - float(i.payment_amount)
+            account_start_money = account_last_money
+            row1.append(account_last_money)
+            row1.append(i.payment_type)
+            row1.append(i.payment_account.account_name)
+            row1.append(i.remarks)
+            row1.append(i.operator.username)
+            sheet1.append(row1)
+    file_names = str(now_time) + '  ' + first_account_post + '的喝酒数据'
+    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=first_account_post, file_name=file_names)
+
+
+# 按月下载总账户喝酒数据
+def down_total_account_brush2(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    total_account_all = Total_brank_account.objects.filter(deletes=False).all()
+    first_account = total_account_all[0]
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    first_account_post = request.GET.get('account_name')
+    now_time_post = request.GET.get('check_data')
+    if first_account_post and now_time_post:
+        first_account = Total_brank_account.objects.filter(total_account_name=first_account_post, deletes=False).get()
+        now_time = now_time_post
+    elif first_account_post and now_time_post == '':
+        first_account = Total_brank_account.objects.filter(total_account_name=first_account_post, deletes=False).get()
+    elif first_account_post == '' and now_time_post:
+        now_time = now_time_post
+    first_accounts = first_account.brank_account_set.filter(deletes=False).values('account_name')
+    sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "账户结余", "付款账户", "备注", "操作员"]]
+    for account in first_accounts:
+        account_start_money = Account_record.objects.filter(datess__date=now_time, account_name__account_name=account['account_name'],
+                                                            deletes=False).all()
+        if len(account_start_money) > 0:
+            account_start_money = Account_record.objects.filter(datess__date=now_time, account_name__account_name=account['account_name'],
+                                                                deletes=False).values(
+                'start_money').get()
+            account_start_money = float(account_start_money['start_money'])
+        else:
+            account_start_money = 0.0
+        table = Brush_single_entry.objects.filter(add_time__date=now_time, payment_account__account_name=account['account_name'], deletes=False).all()
+        for i in table:
+            row1 = []
+            row1.append(i.add_time)
+            row1.append(i.shopname)
+            row1.append(i.qq_or_weixin)
+            row1.append(i.wang_wang_number)
+            row1.append(i.online_order_number)
+            row1.append(i.transaction_data)
+            row1.append(i.payment_type)
+            row1.append(i.payment_amount)
+            account_last_money = account_start_money - float(i.payment_amount)
+            account_start_money = account_last_money
+            row1.append(account_last_money)
+            row1.append(i.payment_account.account_name)
+            row1.append(i.remarks)
+            row1.append(i.operator.username)
+            sheet1.append(row1)
+    file_names = str(now_time) + '  ' + first_account_post + '的喝酒数据'
+    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=first_account_post, file_name=file_names)
 
 
 #################测试新功能
@@ -2226,12 +2361,14 @@ def brushmanagement_2(request):
                 float(payment_amounts)
             except ValueError:
                 errs = '付款金额必须为数字'
-            onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers, transaction_data=transaction_datas,
-                                                      payment_type=payment_types, deletes=False).all()
-            if onlys:
-                errs = '该订单记录已存在'
-            if len(online_order_numbers) != 18:
-                errs = '线上订单号格式错误'
+            if online_order_numbers != '':
+                if len(online_order_numbers) != 18:
+                    errs = '线上订单号格式错误'
+                else:
+                    onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers, transaction_data=transaction_datas,
+                                                              payment_type=payment_types, deletes=False).all()
+                    if len(onlys) > 0:
+                        errs = '该订单记录已存在'
         if errs == '':
             add_times = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
             Brush_single_entry.objects.create(shopname=shopnames, qq_or_weixin=qq_or_weixins, wang_wang_number=wang_wang_numbers,

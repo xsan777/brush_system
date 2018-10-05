@@ -20,13 +20,13 @@
         </div>
         <div class="form-group">
 
-            <input type="text" placeholder="线上订单号" class="form-control" id="online_order_number">
+            <input type="text" placeholder="线上订单号" class="form-control" id="online_order_number" name="online_order_number">
         </div>
         <div class="form-group">
             <input type="date" class="form-control" value="{{ now_time }}" name="transaction_data">
         </div>
         <div class="form-group">
-            <select name="payment_type" id="" class="form-control">
+            <select name="payment_type" id="payment_type" class="form-control">
                 <option value="本金">本金</option>
                 <option value="佣金">佣金</option>
                 <option value="买家秀">买家秀</option>
@@ -37,8 +37,8 @@
                 <option value="删评价">删评价</option>
                 <option value="收藏">收藏、加购</option>
                 <option value="刮刮卡">刮刮卡</option>
-                <option value="返款">返款</option>
                 <option value="直通车点击">直通车点击</option>
+                <option value="返款">返款</option>
                 <option value="其他">其他</option>
             </select>
         </div>
@@ -53,7 +53,7 @@
             </select>
         </div>
         <div class="form-group ">
-            <input type="text" class="form-control col-lg-1" id="exampleInputPassword3" placeholder="备注" name="remarks">
+            <input type="text" class="form-control col-lg-1" id="remarks" placeholder="备注" name="remarks">
         </div>
         <input type="button" value="添加" class="btn btn-default" onclick="addFunction()">
         {% csrf_token %}
@@ -170,8 +170,8 @@
                                     <option value="删评价">删评价</option>
                                     <option value="收藏">收藏、加购</option>
                                     <option value="刮刮卡">刮刮卡</option>
-                                    <option value="返款">返款</option>
                                     <option value="直通车点击">直通车点击</option>
+                                    <option value="返款">返款</option>
                                     <option value="其他">其他</option>
                                 </select>
                             </div>
@@ -219,7 +219,6 @@
         $('#update_ids').hide();
     </script>
     {#查询该旺旺号近期喝酒时间#}
-
     <script>
         $('i#wang_wang_number').hover(function () {
                 $('[data-toggle="popover"]').popover();
@@ -244,9 +243,10 @@
             }
         );
     </script>
+    {#表格里的旺旺号查询#}
     <script>
-        {#表格里的旺旺号查询#}
         $('span#search_wangwang').hover(function () {
+                console.log('dj')
                 $('[data-toggle="popover"]').popover();
                 var wangwang_num = $(this).text();
                 $.ajax({
@@ -270,13 +270,22 @@
         );
 
     </script>
+
     {#创建数据#}
     <script>
         function addFunction() {
             var wang_wang_number = $('#wang_wang_number').val();
             var online_order_number = $('#online_order_number').val();
             var payment_amount = $('#payment_amount').val();
+            var pay_type = $('#payment_type').val();
+            var remark = $('#remarks').val();
             if (wang_wang_number != '' && payment_amount != '') {
+                if (pay_type == '买家秀' || pay_type == '其他') {
+                    if (remark == '') {
+                        alert("付款类型为‘买家秀’或‘其他’时，必须填写备注");
+                        return
+                    }
+                }
                 $.ajax({
                     url: "/brushmanagement/",
                     type: "POST",
@@ -319,16 +328,20 @@
                         $('tr#2').attr("id", 3);
                         $('tr#1').attr("id", 2);
                         $('tr#0').attr("id", 1);
-                        $('tr#1').before('<tr id="0"><td id="add_time"></td></td><td id="shopname"><td id="qq_or_weixin"></td></td><td id="wang_wang_number"></td><td id="online_order_number"></td>\n' +
+                        $('tr#1').before('        <tr id="0">\n' +
+                            '            <td id="add_time"></td>\n' +
+                            '            <td id="shopname"></td>\n' +
+                            '            <td id="qq_or_weixin"></td>\n' +
+                            '            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang"></span></td>\n' +
+                            '            <td id="online_order_number"></td>\n' +
                             '            <td id="transaction_data"></td>\n' +
                             '            <td id="payment_type"></td>\n' +
                             '            <td id="payment_amount"></td>\n' +
                             '            <td id="payment_account"></td>\n' +
                             '            <td id="remarks"></td>\n' +
-                            '  </td>' +
-                            '            <td><a class="glyphicon glyphicon-pencil" href="javascript:void(0);"  title="编辑" id="bsd"></a>\n' +
-                            '                <a class="glyphicon glyphicon-remove" href="javascript:void(0);"  title="删除" id="dele"></a>\n' +
-                            '            </td>' +
+                            '            <td><a class="glyphicon glyphicon-pencil" href="javascript:void(0);" onclick="edit_data({{ table.id }},this)" title="编辑" id="bsd"></a>\n' +
+                            '                <a class="glyphicon glyphicon-remove" href="javascript:void(0);" onclick="delete_data({{ table.id }},this)" title="删除" id="dele"></a>\n' +
+                            '            </td>\n' +
                             '        </tr>');
                         $('tr#2').children('td#num').html(2);
                         $('tr#3').children('td#num').html(3);
@@ -355,7 +368,6 @@
 
                 })
             }
-
         }
 
 
@@ -371,7 +383,6 @@
                 data: {'id': mm, 'num': kj},
                 async: true,
                 success: function (arg) {
-
                     $("#update_shopname").find("option").each(function () {
                         if ($(this).val() == arg['shopname']) {
                             $(this).attr("selected", "selected");
@@ -402,6 +413,14 @@
     {#确定修改数据#}
     <script>
         function make_sure() {
+            var update_payment_type = $('#update_payment_type').val();
+            var update_remarks = $('#update_remarks').val();
+            if (update_payment_type == '买家秀' || update_payment_type == '其他') {
+                if (update_remarks == '') {
+                    alert("付款类型为‘买家秀’或‘其他’时，必须填写备注");
+                    return
+                }
+            }
             $.ajax({
                 url: "/edit/",
                 type: "POST",

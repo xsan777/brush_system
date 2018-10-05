@@ -61,7 +61,10 @@ urlpatterns = [
     path('search_total_count/',views.search_total_count),
     path('shop_bill/',views.shop_bill),
     path('account_bill/',views.account_bill),
+    path('total_account_bill/',views.total_account_bill),
     path('download_brush/',views.download_brush),
     path('down_shop_bill/',views.down_shop_bill),
     path('down_shop_bill2/',views.down_shop_bill2),
+    path('down_total_account_brush/',views.down_total_account_brush),
+    path('down_total_account_brush2/',views.down_total_account_brush2),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -21,7 +21,7 @@
         </div>
         <div class="form-group">
             <label for="exampleInputName2">操作人:</label>
-            <select name="operator" id="operator" class="form-control" onchange="change_url()" >
+            <select name="operator" id="operator" class="form-control" onchange="change_url()">
                 {% for user in all_user %}
                     <option value="{{ user.username }}">{{ user.username }}</option>
                 {% endfor %}
@@ -165,8 +165,8 @@
                                     <option value="删评价">删评价</option>
                                     <option value="收藏">收藏、加购</option>
                                     <option value="刮刮卡">刮刮卡</option>
-                                    <option value="返款">返款</option>
                                     <option value="直通车点击">直通车点击</option>
+                                    <option value="返款">返款</option>
                                     <option value="其他">其他</option>
                                 </select>
                             </div>
@@ -196,7 +196,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-9 col-sm-10">
-                                <button type="submit" class="btn btn-default" onclick="make_sure()">确认修改</button>
+                                <button type="button" class="btn btn-default" onclick="make_sure()">确认修改</button>
                             </div>
                         </div>
                         {% csrf_token %}
@@ -295,12 +295,29 @@
     {#确定修改数据#}
     <script>
         function make_sure() {
+            var update_payment_type = $('#update_payment_type').val();
+            var update_remarks = $('#update_remarks').val();
+            if (update_payment_type == '买家秀' || update_payment_type == '其他') {
+                if (update_remarks == '') {
+                    alert("付款类型为‘买家秀’或‘其他’时，必须填写备注");
+                    return
+                }
+            }
             $.ajax({
                 url: "/edit/",
                 type: "POST",
                 dataType: 'json',
                 data: $('#update_form').serialize(),
                 async: false,
+                success: function (msg) {
+                    if (msg == '') {
+                        window.location.replace('/more_date/');
+                    }
+                    else {
+                        alert(msg)
+                    }
+                }
+
             })
         }
     </script>

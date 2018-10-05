@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="/static/css/check_account.css">
 {% endblock %}
 {% block content %}
-    <h2>账户账单</h2>
+    <h2>子账户账单</h2>
     <hr>
     <form class="form-inline" id="check_data" method="post">
         <div class="form-group">
@@ -21,8 +21,6 @@
         <input type="submit" value="查询" class="btn btn-default">
         {% csrf_token %}
     </form>
-
-    <hr>
     <div id="tabless">
         <table class="table table-striped">
             <tr>
