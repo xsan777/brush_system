@@ -2407,6 +2407,8 @@ def brushmanagement_2(request):
                 pass
             else:
                 line['online_stats'] = order_stats
+                print(order_stats)
+                print(type(order_stats))
                 order_unexit_num += order_stats - 1
         else:
             line['online_stats'] = online_stats
@@ -2421,8 +2423,8 @@ def brushmanagement_2(request):
         line['payment_amount'] = table.payment_amount
         line['payment_account'] = table.payment_account.account_name
         line['remarks'] = table.remarks
+        line['id'] = table.id
         tables_list.append(line)
-
     reminds = ''
     unmakes = 0
     makes = 0

@@ -63,17 +63,21 @@ def search_by_wangwang_num2(request):
 class Verification(object):
     # 验证线上订单号是否存在
     def order_online(self, order_online_num, nowtime):
-        order_stats = JstOrdersQuery.objects.using('erp_database').filter(order_date__date=nowtime, so_id=order_online_num).all()
+        order_stats = JstOrdersQuery.objects.using('erp_database').filter(so_id=order_online_num).all()
         if len(order_stats) > 0:
             return 0
         else:
             return 1
-    #验证该线上订单号是否为特殊单
+
+    # 验证该线上订单号是否为特殊单
     def special_order(self, order_online_num, nowtime):
-        search_o_id = JstOrdersQuery.objects.using('erp_database').filter(order_date__date=nowtime, so_id=order_online_num).all()
-        if len(search_o_id) >0:
-            special_order_stats = JstOrdersQuerySpecialSingle.objects.using('erp_database').filter(order_date__date=nowtime, o_id=search_o_id.o_id).all()
+        search_o_id = JstOrdersQuery.objects.using('erp_database').filter(so_id=order_online_num).all()
+        if len(search_o_id) > 0:
+            for i in search_o_id:
+                special_order_stats = JstOrdersQuerySpecialSingle.objects.using('erp_database').filter(o_id=i.o_id).all()
+                break
             if len(special_order_stats) > 0:
                 return 0
-        else:
-            return 1
+            else:
+                return 2
+        return 1

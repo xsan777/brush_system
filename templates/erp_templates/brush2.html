@@ -376,7 +376,7 @@
                 data: {'id': mm, 'num': kj},
                 async: true,
                 success: function (arg) {
-
+                    console.log(411)
                     $("#update_shopname").find("option").each(function () {
                         if ($(this).val() == arg['shopname']) {
                             $(this).attr("selected", "selected");
