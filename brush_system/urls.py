@@ -62,9 +62,12 @@ urlpatterns = [
     path('shop_bill/',views.shop_bill),
     path('account_bill/',views.account_bill),
     path('total_account_bill/',views.total_account_bill),
+    path('all_data/',views.all_data),
     path('download_brush/',views.download_brush),
     path('down_shop_bill/',views.down_shop_bill),
     path('down_shop_bill2/',views.down_shop_bill2),
     path('down_total_account_brush/',views.down_total_account_brush),
     path('down_total_account_brush2/',views.down_total_account_brush2),
+    path('down_all_data/',views.down_all_data),
+    path('down_all_data2/',views.down_all_data2),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

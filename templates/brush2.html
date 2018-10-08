@@ -79,7 +79,8 @@
             <td id="add_time"></td>
             <td id="shopname"></td>
             <td id="qq_or_weixin"></td>
-            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang"></span></td>
+            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang"
+                                            data-html="true"></span></td>
             <td id="online_order_number"></td>
             <td id="transaction_data"></td>
             <td id="payment_type"></td>
@@ -221,8 +222,9 @@
     {#查询该旺旺号近期喝酒时间#}
     <script>
         $('i#wang_wang_number').hover(function () {
-                $('[data-toggle="popover"]').popover();
+                {#$('[data-toggle="popover"]').popover();#}
                 var wangwang_num = $('input#wang_wang_number').val();
+                console.log(wangwang_num);
                 $.ajax({
                     url: "/erp/search_by_wangwang_num2/",
                     type: "GET",
@@ -230,6 +232,7 @@
                     data: {'wangwang_num': wangwang_num},
                     async: false,
                     success: function (msg) {
+                        console.log(msg);
                         $('input#wang_wang_number').attr('data-content', msg);
                     },
                     error: function () {
@@ -246,8 +249,8 @@
     {#表格里的旺旺号查询#}
     <script>
         $('span#search_wangwang').hover(function () {
-                console.log('dj')
-                $('[data-toggle="popover"]').popover();
+                console.log('dj');
+                {#$('[data-toggle="popover"]').popover();#}
                 var wangwang_num = $(this).text();
                 $.ajax({
                     url: "/erp/search_by_wangwang_num/",
@@ -256,6 +259,7 @@
                     data: {'wangwang_num': wangwang_num},
                     async: false,
                     success: function (msg) {
+                        console.log(msg);
                         $('span#search_wangwang').attr('data-content', msg);
                     },
                     error: function () {
@@ -332,7 +336,7 @@
                             '            <td id="add_time"></td>\n' +
                             '            <td id="shopname"></td>\n' +
                             '            <td id="qq_or_weixin"></td>\n' +
-                            '            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang"></span></td>\n' +
+                            '            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang" data-html="true"></span></td>\n' +
                             '            <td id="online_order_number"></td>\n' +
                             '            <td id="transaction_data"></td>\n' +
                             '            <td id="payment_type"></td>\n' +
@@ -364,6 +368,30 @@
                         $('input#remarks').val("");
                         $('input#qq_or_weixin').val("");
                         $('input#online_order_number').val("");
+                        $('span#search_wangwang').hover(function () {
+                                console.log('dj');
+                                {#$('[data-toggle="popover"]').popover();#}
+                                var wangwang_num = $(this).text();
+                                $.ajax({
+                                    url: "/erp/search_by_wangwang_num/",
+                                    type: "GET",
+                                    dataType: 'json',
+                                    data: {'wangwang_num': wangwang_num},
+                                    async: false,
+                                    success: function (msg) {
+                                        console.log(msg);
+                                        $('span#search_wangwang').attr('data-content', msg);
+                                    },
+                                    error: function () {
+                                        $('span#search_wangwang').attr('data-content', '该旺旺号之前没有喝酒');
+                                    }
+                                });
+                                $(this).popover('show');
+                            }, function () {
+                                $(this).popover('hide');
+                                $('span#search_wangwang').attr('data-content', '');
+                            }
+                        );
                     },
 
                 })

@@ -1569,7 +1569,7 @@ def delete_data(request):
     operation_types = '删除喝酒数据'
     before_operations = '{id：%s，店铺名：%s，旺旺号：%s，线上订单号：%s，成交日期：%s，付款类型：%s，付款金额：%s，付款账户：%s，操作员：%s，备注：%s}' % (
         ids, last_date.shopname, last_date.wang_wang_number, last_date.online_order_number, last_date.transaction_data, last_date.payment_type,
-        last_date.payment_amount, last_date.payment_account, user, last_date.remarks)
+        last_date.payment_amount, last_date.payment_account.account_name, user, last_date.remarks)
     after_operations = '删除了id=%s喝酒数据' % (ids)
     Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations, before_operation=before_operations)
     return HttpResponse('od')
@@ -1936,9 +1936,17 @@ def total_account_bill(request):
     for account in first_accounts:
         table = Brush_single_entry.objects.filter(add_time__date=now_time, payment_account__account_name=account['account_name'], deletes=False).all()
         table_list.append(table)
+    # 财务账户提示账户未确认
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    now_time2 = get_nday_list2(2, now_time)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time2, makes=False, deletes=False).all()
+    if len(all_account_makes) == 0:
+        admin_flog = 1
+    else:
+        admin_flog = 0
     return render(request, 'total_account_bill.html',
                   {'title': title, 'user': user, 'table_list': table_list, 'now_time': now_time, 'total_account_all': total_account_all,
-                   'account_name': first_account_post})
+                   'account_name': first_account_post, 'admin_flog': admin_flog})
 
 
 # 总账户核对
@@ -2058,7 +2066,7 @@ def search_total_count(request):
         if rouse == '财务':
             search_date = get_nday_list2(2, now_time)
         count = Total_account_record.objects.filter(datess__date=search_date, deletes=False).all()
-    # 财务账户提示账户未确认
+    # 财务账户提示总账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     now_time = get_nday_list2(2, now_time)
     all_account_makes = Total_account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
@@ -2101,6 +2109,34 @@ def search_total_count(request):
                       {'title': title, 'account': account2, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
                        'user': user, 'total_reminds': total_reminds, 'total_account_all': total_account_all, 'reminds': reminds, 'unmakes': unmakes,
                        'update_passwd': update_passwd, 'makes': makes})
+
+
+# 按日查询总喝酒数据
+def all_data(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    title = '总账单'
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    payment_types = '本金'
+    if request.method == 'POST':
+        now_time = request.POST.get('search_date')
+        payment_types = request.POST.get('payment_type')
+    tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_type=payment_types, deletes=False).all()
+    payment = 0.0
+    for table in tables:
+        payment += float(table.payment_amount)
+    # 财务账户提示账户未确认
+    now_time_cheack = time.strftime('%Y-%m-%d', time.localtime())
+    now_time2 = get_nday_list2(2, now_time_cheack)
+    all_account_makes = Total_account_record.objects.filter(datess__date=now_time2, makes=False, deletes=False).all()
+    if len(all_account_makes) == 0:
+        admin_flog = 1
+    else:
+        admin_flog = 0
+    return render(request, 'all_data.html',
+                  {'title': title, 'user': user, 'now_time': now_time, 'payment_type': payment_types, 'tables': tables, 'admin_flog': admin_flog,
+                   'pay_money': payment})
 
 
 # 下载喝酒数据
@@ -2316,6 +2352,65 @@ def down_total_account_brush2(request):
             sheet1.append(row1)
     file_names = str(now_time) + '  ' + first_account_post + '的喝酒数据'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=first_account_post, file_name=file_names)
+
+
+# 按日下载总数据
+def down_all_data(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    now_time2 = request.GET.get('check_data')
+    payment_types = request.GET.get('payment_type')
+    if now_time2 and payment_types:
+        now_time = now_time2
+    tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_type=payment_types, deletes=False).all()
+    sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "备注", "操作员"]]
+    for i in tables:
+        row1 = []
+        row1.append(i.add_time)
+        row1.append(i.shopname)
+        row1.append(i.qq_or_weixin)
+        row1.append(i.wang_wang_number)
+        row1.append(i.online_order_number)
+        row1.append(i.transaction_data)
+        row1.append(i.payment_type)
+        row1.append(i.payment_amount)
+        row1.append(i.remarks)
+        row1.append(i.operator.username)
+        sheet1.append(row1)
+    file_names = str(now_time) + '  ' + '的喝酒数据'
+    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=now_time, file_name=file_names)
+
+
+# 按月下载总数据
+def down_all_data2(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    now_time = datetime.datetime.now().month
+    now_time2 = request.GET.get('check_data')
+    payment_types = request.GET.get('payment_type')
+    if now_time2 and payment_types:
+        now_time2 = t_mouth(now_time2)
+        now_time = now_time2
+    tables = Brush_single_entry.objects.filter(add_time__month=now_time, payment_type=payment_types, deletes=False).all()
+    sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "备注", "操作员"]]
+    for i in tables:
+        row1 = []
+        row1.append(i.add_time)
+        row1.append(i.shopname)
+        row1.append(i.qq_or_weixin)
+        row1.append(i.wang_wang_number)
+        row1.append(i.online_order_number)
+        row1.append(i.transaction_data)
+        row1.append(i.payment_type)
+        row1.append(i.payment_amount)
+        row1.append(i.remarks)
+        row1.append(i.operator.username)
+        sheet1.append(row1)
+    file_names = str(now_time)  + '月的喝酒数据'
+    return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=now_time, file_name=file_names)
 
 
 #################测试新功能
