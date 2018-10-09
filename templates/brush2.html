@@ -290,6 +290,10 @@
                         return
                     }
                 }
+                if (online_order_number == '' && pay_type != '刮刮卡') {
+                    alert("付款类型不为刮刮卡，必须填写线上订单号")
+                    return
+                }
                 $.ajax({
                     url: "/brushmanagement/",
                     type: "POST",
@@ -368,6 +372,7 @@
                         $('input#remarks').val("");
                         $('input#qq_or_weixin').val("");
                         $('input#online_order_number').val("");
+                        {#给新增加的行绑定通过旺旺号查询喝酒记录#}
                         $('span#search_wangwang').hover(function () {
                                 console.log('dj');
                                 {#$('[data-toggle="popover"]').popover();#}
@@ -441,29 +446,42 @@
     {#确定修改数据#}
     <script>
         function make_sure() {
+            var update_qq_or_weixin = $('#update_qq_or_weixin').val();
+            var update_wang_wang_number = $('#update_wang_wang_number').val();
+            var update_online_order_number = $('#update_online_order_number').val();
+            var update_payment_amount = $('#update_payment_amount').val();
             var update_payment_type = $('#update_payment_type').val();
             var update_remarks = $('#update_remarks').val();
-            if (update_payment_type == '买家秀' || update_payment_type == '其他') {
-                if (update_remarks == '') {
-                    alert("付款类型为‘买家秀’或‘其他’时，必须填写备注");
+            if (update_wang_wang_number != '' && update_payment_amount != '' && update_qq_or_weixin != '') {
+                if (update_payment_type == '买家秀' || update_payment_type == '其他') {
+                    if (update_remarks == '') {
+                        alert("付款类型为‘买家秀’或‘其他’时，必须填写备注");
+                        return
+                    }
+                }
+                if (update_online_order_number == '' && update_payment_type != '刮刮卡') {
+                    alert("付款类型不为刮刮卡，必须填写线上订单号")
                     return
                 }
+                $.ajax({
+                    url: "/edit/",
+                    type: "POST",
+                    dataType: 'json',
+                    data: $('#update_form').serialize(),
+                    async: false,
+                    success: function (msg) {
+                        if (msg == '') {
+                            window.location.replace('/brushmanagement/');
+                        }
+                        else {
+                            alert(msg)
+                        }
+                    }
+                })
             }
-            $.ajax({
-                url: "/edit/",
-                type: "POST",
-                dataType: 'json',
-                data: $('#update_form').serialize(),
-                async: false,
-                success: function (msg) {
-                    if (msg == '') {
-                        window.location.replace('/brushmanagement/');
-                    }
-                    else {
-                        alert(msg)
-                    }
-                }
-            })
+            else {
+                alert("QQ或微信、旺旺号、付款金额不能为空")
+            }
         }
     </script>
     {#删除数据#}

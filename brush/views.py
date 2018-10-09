@@ -1687,7 +1687,7 @@ def check_account(request):
     un_online_order_number = 0
     for table in tables:
         pay_money += float(table.payment_amount)
-        if table.online_order_number == '':
+        if table.online_order_number == '' and table.payment_type !='刮刮卡':
             un_online_order_number += 1
     account_data = Account_record.objects.filter(account_name=account, datess__date=now_time, deletes=False).all()
     if account_data:
@@ -1704,6 +1704,7 @@ def check_account(request):
             else:
                 actual_cost = float(account_data.start_money) - float(account_data.end_money)
                 actual_cost = '%.2f' % actual_cost
+                pay_money_all ='%.2f'%pay_money_all
                 if pay_money_all != actual_cost:
                     actual_err = '账目有问题，请仔细核对'
                 if un_online_order_number != 0:
@@ -1740,9 +1741,9 @@ def check_account(request):
     return render(request, 'check_account2.html',
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money,
                    'actual_cost': actual_cost, 'user': user, 'edit_brush_form': edit_brush_form, 'shops': shops, 'user': user,
-                   'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'errs': errs, 'total_reminds': total_reminds,
-                   'update_passwd': update_passwd,
-                   'actual_err': actual_err, 'makes_stats': makes_stats, 'account_select': account_select, 'pay_money_all': pay_money_all,
+                   'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'errs': errs,
+                   'total_reminds': total_reminds,'update_passwd': update_passwd,'actual_err': actual_err, 'makes_stats': makes_stats,
+                   'account_select': account_select, 'pay_money_all': pay_money_all,
                    'weixin_withdraw_moneys': weixin_withdraw_moneys})
 
 
