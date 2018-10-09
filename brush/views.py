@@ -1729,9 +1729,9 @@ def check_account(request):
     total_reminds = ''
     user_total_account = Userinfo.objects.get(username=user, deletes=False)
     account__ = user_total_account.total_brank_account.filter(deletes=False).all()
-    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    now_time3 = time.strftime('%Y-%m-%d', time.localtime())
     for m in account__:
-        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        account2 = Total_account_record.objects.filter(datess__date=now_time3, account_name=m, deletes=False).all()
         for i in account2:
             if i.makes == 'False':
                 total_reminds = '(总账户未确认)'
@@ -2111,7 +2111,7 @@ def search_total_count(request):
                        'update_passwd': update_passwd, 'makes': makes})
 
 
-# 按日查询总喝酒数据
+# 总账单
 def all_data(request):
     user = request.session.get('username')
     if user == None:
@@ -2122,7 +2122,10 @@ def all_data(request):
     if request.method == 'POST':
         now_time = request.POST.get('search_date')
         payment_types = request.POST.get('payment_type')
-    tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_type=payment_types, deletes=False).all()
+    if payment_types == '全部':
+        tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes=False).all()
+    else:
+        tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_type=payment_types, deletes=False).all()
     payment = 0.0
     for table in tables:
         payment += float(table.payment_amount)
@@ -2354,7 +2357,7 @@ def down_total_account_brush2(request):
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=first_account_post, file_name=file_names)
 
 
-# 按日下载总数据
+# 按日下载总账单
 def down_all_data(request):
     user = request.session.get('username')
     if user == None:
@@ -2364,7 +2367,10 @@ def down_all_data(request):
     payment_types = request.GET.get('payment_type')
     if now_time2 and payment_types:
         now_time = now_time2
-    tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_type=payment_types, deletes=False).all()
+    if payment_types == '全部':
+        tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes=False).all()
+    else:
+        tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_type=payment_types, deletes=False).all()
     sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "备注", "操作员"]]
     for i in tables:
         row1 = []
@@ -2394,7 +2400,10 @@ def down_all_data2(request):
     if now_time2 and payment_types:
         now_time2 = t_mouth(now_time2)
         now_time = now_time2
-    tables = Brush_single_entry.objects.filter(add_time__month=now_time, payment_type=payment_types, deletes=False).all()
+    if payment_types == '全部':
+        tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes=False).all()
+    else:
+        tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_type=payment_types, deletes=False).all()
     sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "备注", "操作员"]]
     for i in tables:
         row1 = []

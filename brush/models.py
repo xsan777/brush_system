@@ -53,8 +53,8 @@ class Brank_account(models.Model):
 class Account_record(models.Model):
     datess = models.DateTimeField(verbose_name='创建日期',)
     account_name = models.ForeignKey(Brank_account, on_delete=models.CASCADE)
-    start_money = models.IntegerField(verbose_name='初始资金')
-    end_money = models.IntegerField(verbose_name='结余资金')
+    start_money = models.CharField(verbose_name='初始资金',max_length=16)
+    end_money = models.CharField(verbose_name='结余资金',max_length=16)
     weixin_withdraw_money = models.IntegerField(verbose_name='微信提现手续费')
     operator = models.ForeignKey(Userinfo, on_delete=models.CASCADE)
     makes = models.CharField(max_length=5, verbose_name='运营确认')
@@ -68,8 +68,8 @@ class Account_record(models.Model):
 class Total_account_record(models.Model):
     datess = models.DateTimeField(verbose_name='创建日期', )
     account_name = models.ForeignKey(Total_brank_account, on_delete=models.CASCADE)
-    start_money = models.IntegerField(verbose_name='初始资金')
-    end_money = models.IntegerField(verbose_name='结余资金')
+    start_money = models.CharField(verbose_name='初始资金',max_length=16)
+    end_money = models.CharField(verbose_name='结余资金',max_length=16)
     operator = models.ForeignKey(Userinfo, on_delete=models.CASCADE)
     makes = models.CharField(max_length=5, verbose_name='运营确认')
     start_money_img = models.ImageField(upload_to='start_img')

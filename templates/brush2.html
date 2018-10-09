@@ -230,7 +230,7 @@
                     type: "GET",
                     dataType: 'json',
                     data: {'wangwang_num': wangwang_num},
-                    async: false,
+                    async: true,
                     success: function (msg) {
                         console.log(msg);
                         $('input#wang_wang_number').attr('data-content', msg);
@@ -257,7 +257,7 @@
                     type: "GET",
                     dataType: 'json',
                     data: {'wangwang_num': wangwang_num},
-                    async: false,
+                    async: true,
                     success: function (msg) {
                         console.log(msg);
                         $('span#search_wangwang').attr('data-content', msg);
