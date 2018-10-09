@@ -1703,6 +1703,7 @@ def check_account(request):
                 actual_err = '该账户没有上传截图，无法核账'
             else:
                 actual_cost = float(account_data.start_money) - float(account_data.end_money)
+                actual_cost = '%.2f'%actual_cost
                 if pay_money_all != actual_cost:
                     actual_err = '账目有问题，请仔细核对'
                 if un_online_order_number != 0:
@@ -1976,6 +1977,7 @@ def check_total_account(request):
             for table in tables_queryset:
                 tables.append(table)
                 account_cost = account_cost + float(table.start_money) - float(table.end_money)
+                account_cost = '%.2f'%account_cost
                 if table.makes == 'False':
                     errs = '存在未确认的子账户，总账户无法确认'
         unmake_stats = 0
@@ -1986,6 +1988,7 @@ def check_total_account(request):
         else:
             total_account_make = total_account_make.get()
             total_cost = float(total_account_make.start_money) - float(total_account_make.end_money)
+            total_cost = '%.2f'%total_cost
             if total_account_make.start_money_img and total_account_make.end_money_img:
                 pass
             else:
@@ -2104,11 +2107,7 @@ def search_total_count(request):
     if rouse == '财务':
         return render(request, 'total_countmanagement.html',
                       {'title': title, 'count': count, 'nowss': search_date, 'user': user, 'admin_flog': admin_flog, 'update_passwd': update_passwd})
-    else:
-        return render(request, 'total_countmanagement2.html',
-                      {'title': title, 'account': account2, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
-                       'user': user, 'total_reminds': total_reminds, 'total_account_all': total_account_all, 'reminds': reminds, 'unmakes': unmakes,
-                       'update_passwd': update_passwd, 'makes': makes})
+
 
 
 # 总账单
