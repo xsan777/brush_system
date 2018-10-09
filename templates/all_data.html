@@ -1,6 +1,6 @@
 {% extends 'basc.html' %}
 {% block head %}
-
+    <link rel="stylesheet" href="/static/css/all_data.css">
 {% endblock %}
 {% block content %}
     <h2>总账单</h2>
@@ -35,6 +35,7 @@
         {% csrf_token %}
     </form>
     <br>
+{#    显示数据#}
     <div id="tabless">
         <table class="table table-striped">
             <tr>
@@ -67,7 +68,7 @@
             {% endfor %}
         </table>
     </div>
-    <h3 class="col-lg-offset-10">店铺花销：<span id="pay">{{ pay_money }}</span>
+    <h3 class="col-lg-offset-10">{{ payment_type }}花销：<span id="pay">{{ pay_money }}</span>
     </h3>
 {% endblock %}
 {% block js %}
@@ -82,11 +83,20 @@
 
         function cheage_down() {
             var search_date = $('#search_date').val();
-            var search_shop = $('#shop_name').val();
-            var down_url = '/down_all_data/?check_data=' + search_date + '&payment_type=' + search_shop;
-            var down_url2 = '/down_all_data2/?check_data=' + search_date + '&payment_type=' + search_shop;
+            var payment_type = $('#payment_type').val();
+            var down_url = '/down_all_data/?check_data=' + search_date + '&payment_type=' + payment_type;
+            var down_url2 = '/down_all_data2/?check_data=' + search_date + '&payment_type=' + payment_type;
             $('#down').attr('href', down_url);
             $('#down2').attr('href', down_url2);
         }
+    </script>
+{#    默认显示付款类型#}
+    <script>
+        $("#payment_type").find("option").each(function () {
+            var ff = '{{ payment_type }}';
+            if ($(this).val() == ff) {
+                $(this).attr("selected", "selected");
+            }
+        });
     </script>
 {% endblock %}

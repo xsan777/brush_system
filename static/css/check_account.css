@@ -12,3 +12,6 @@
     height: 32px;
     width: 102px;
 }
+#smar_img:hover {
+    transform: scale(5, 10);
+}

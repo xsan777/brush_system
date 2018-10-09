@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="406d6af2-ec06-4ccb-b031-9531d5d81333" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/static/css/all_data.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/brush/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/brush/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.txt" beforeDir="false" afterPath="$PROJECT_DIR$/readme.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/check_account.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/check_account.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/countmanagement.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/countmanagement.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/all_data.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/all_data.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,29 +22,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/brush/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1327">
-              <caret line="56" column="66" selection-start-line="56" selection-start-column="66" selection-end-line="56" selection-end-column="66" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="basc.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/basc.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="9" column="20" lean-forward="true" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/brush/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="1989" column="42" selection-start-line="1989" selection-start-column="42" selection-end-line="1989" selection-end-column="42" />
+            <state relative-caret-position="3123">
+              <caret line="2486" column="112" lean-forward="true" selection-start-line="2486" selection-start-column="112" selection-end-line="2486" selection-end-column="112" />
               <folding>
                 <element signature="e#0#59#0" expanded="true" />
                 <element signature="e#263#738#0" />
@@ -67,22 +53,43 @@
                 <element signature="e#99689#102716#0" />
                 <element signature="e#102754#104061#0" />
                 <element signature="e#104103#106496#0" />
+                <element signature="e#113383#116214#0" />
                 <element signature="e#116685#117809#0" />
                 <element signature="e#117854#119841#0" />
                 <element signature="e#119886#121251#0" />
                 <element signature="e#121299#122723#0" />
                 <element signature="e#122783#125778#0" />
                 <element signature="e#125839#128627#0" />
+                <element signature="e#128672#129799#0" />
+                <element signature="e#129845#130993#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tests.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/brush/tests.py">
+      <file leaf-file-name="total_brankmanagement.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/total_brankmanagement.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+            <state relative-caret-position="-1110">
+              <caret line="2" column="68" selection-start-line="2" selection-start-column="68" selection-end-line="2" selection-end-column="68" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="total_countmanagement.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/total_countmanagement.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="2" column="57" selection-start-line="2" selection-start-column="57" selection-end-line="2" selection-end-column="57" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="countmanagement.css" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/static/css/countmanagement.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="390">
+              <caret line="14" column="1" lean-forward="true" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -90,61 +97,53 @@
       <file leaf-file-name="total_countmanagement2.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/total_countmanagement2.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2490">
-              <caret line="81" column="136" selection-start-line="81" selection-start-column="136" selection-end-line="81" selection-end-column="156" />
+            <state relative-caret-position="60">
+              <caret line="2" column="52" selection-start-line="2" selection-start-column="52" selection-end-line="2" selection-end-column="52" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="basc2.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/basc2.html">
+      <file leaf-file-name="total_account_bill.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/total_account_bill.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="488">
-              <caret line="70" column="37" selection-start-line="70" selection-start-column="31" selection-end-line="70" selection-end-column="37" />
+            <state relative-caret-position="510">
+              <caret line="68" column="14" selection-start-line="68" selection-start-column="14" selection-end-line="68" selection-end-column="14" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="check_account2.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/check_account2.html">
+      <file leaf-file-name="brankmanagement.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/css/brankmanagement.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3090">
-              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
-              <folding>
-                <element signature="n#div#1;n#!!top" />
-              </folding>
+            <state relative-caret-position="150">
+              <caret line="5" column="1" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="all_data.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/all_data.html">
+      <file leaf-file-name="check_total_account2.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/check_total_account2.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="395">
-              <caret line="27" column="46" lean-forward="true" selection-start-line="27" selection-start-column="46" selection-end-line="27" selection-end-column="46" />
+            <state relative-caret-position="60">
+              <caret line="2" column="50" lean-forward="true" selection-start-line="2" selection-start-column="50" selection-end-line="2" selection-end-column="50" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="brush2.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/brush2.html">
+      <file leaf-file-name="check_account.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/css/check_account.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1048">
-              <caret line="259" column="31" selection-start-line="259" selection-start-column="31" selection-end-line="259" selection-end-column="31" />
-              <folding>
-                <element signature="e#13349#20641#0#HTML" />
-                <element signature="e#20659#22472#0#HTML" />
-                <element signature="e#22492#23410#0#HTML" />
-              </folding>
+            <state relative-caret-position="480">
+              <caret line="16" column="1" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/brush/forms.py">
+      <file leaf-file-name="countmanagement2.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/countmanagement2.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="131" column="85" selection-start-line="131" selection-start-column="69" selection-end-line="131" selection-end-column="85" />
+            <state relative-caret-position="60">
+              <caret line="2" column="56" selection-start-line="2" selection-start-column="56" selection-end-line="2" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -156,8 +155,8 @@
       <list>
         <option value="Python Script" />
         <option value="JavaScript File" />
-        <option value="CSS File" />
         <option value="HTML File" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -181,11 +180,11 @@
       <find>more_data</find>
       <find>check_data</find>
       <find>check_datas</find>
-      <find>总账户核对</find>
       <find>旺旺号</find>
       <find>子账户核对</find>
       <find>总账单</find>
       <find>search_total_count</find>
+      <find>总账户核对</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -205,10 +204,8 @@
         <option value="$PROJECT_DIR$/templates/more_data.html" />
         <option value="$PROJECT_DIR$/templates/erp_templates/test_search.html" />
         <option value="$PROJECT_DIR$/templates/check_total_account.html" />
-        <option value="$PROJECT_DIR$/static/css/countmanagement.css" />
         <option value="$PROJECT_DIR$/static/css/user.css" />
         <option value="$PROJECT_DIR$/templates/brankmanagement.html" />
-        <option value="$PROJECT_DIR$/static/css/check_account.css" />
         <option value="$PROJECT_DIR$/brush_system/settings.py" />
         <option value="$PROJECT_DIR$/erp/urls.py" />
         <option value="$PROJECT_DIR$/templates/shops.html" />
@@ -227,7 +224,6 @@
         <option value="$PROJECT_DIR$/templates/total_countmanagement.html" />
         <option value="$PROJECT_DIR$/templates/basc2.html" />
         <option value="$PROJECT_DIR$/templates/more_data2.html" />
-        <option value="$PROJECT_DIR$/templates/account_bill.html" />
         <option value="$PROJECT_DIR$/templates/total_account_bill.html" />
         <option value="$PROJECT_DIR$/erp/views.py" />
         <option value="$PROJECT_DIR$/templates/erp_templates/brush2.html" />
@@ -235,11 +231,15 @@
         <option value="$PROJECT_DIR$/templates/shop_bill.html" />
         <option value="$PROJECT_DIR$/brush_system/urls.py" />
         <option value="$PROJECT_DIR$/templates/check_account2.html" />
-        <option value="$PROJECT_DIR$/templates/all_data.html" />
         <option value="$PROJECT_DIR$/brush/models.py" />
         <option value="$PROJECT_DIR$/templates/brush2.html" />
         <option value="$PROJECT_DIR$/brush/tests.py" />
         <option value="$PROJECT_DIR$/brush/views.py" />
+        <option value="$PROJECT_DIR$/templates/account_bill.html" />
+        <option value="$PROJECT_DIR$/templates/all_data.html" />
+        <option value="$PROJECT_DIR$/static/css/all_data.css" />
+        <option value="$PROJECT_DIR$/static/css/countmanagement.css" />
+        <option value="$PROJECT_DIR$/static/css/check_account.css" />
       </list>
     </option>
   </component>
@@ -252,7 +252,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="585" />
     <option name="y" value="51" />
     <option name="width" value="1698" />
@@ -280,6 +280,17 @@
               <item name="brush_system" type="b2602c69:ProjectViewProjectNode" />
               <item name="brush_system" type="462c0819:PsiDirectoryNode" />
               <item name="brush_system" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="brush_system" type="b2602c69:ProjectViewProjectNode" />
+              <item name="brush_system" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="brush_system" type="b2602c69:ProjectViewProjectNode" />
+              <item name="brush_system" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="brush_system" type="b2602c69:ProjectViewProjectNode" />
@@ -419,13 +430,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/brush/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/user.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2790">
@@ -463,12 +467,15 @@
             <element signature="e#99689#102716#0" />
             <element signature="e#102754#104061#0" />
             <element signature="e#104103#106496#0" />
+            <element signature="e#113383#116214#0" />
             <element signature="e#116685#117809#0" />
             <element signature="e#117854#119841#0" />
             <element signature="e#119886#121251#0" />
             <element signature="e#121299#122723#0" />
             <element signature="e#122783#125778#0" />
             <element signature="e#125839#128627#0" />
+            <element signature="e#128672#129799#0" />
+            <element signature="e#129845#130993#0" />
           </folding>
         </state>
       </provider>
@@ -524,20 +531,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/erp_templates/test_search.html" />
-    <entry file="file://$PROJECT_DIR$/static/css/brankmanagement.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="5" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/css/countmanagement.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/static/css/user.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -549,13 +542,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/css/check_account.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="12" column="17" lean-forward="true" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
         </state>
       </provider>
     </entry>
@@ -581,13 +567,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/total_brankmanagement.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="2" column="68" selection-start-line="2" selection-start-column="68" selection-end-line="2" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/static/css/total_brankmanagement.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -606,20 +585,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-439">
           <caret line="84" column="106" lean-forward="true" selection-start-line="84" selection-start-column="106" selection-end-line="84" selection-end-column="106" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/countmanagement2.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="87" column="68" selection-start-line="87" selection-start-column="68" selection-end-line="87" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/check_total_account2.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="51" column="93" selection-start-line="51" selection-start-column="93" selection-end-line="51" selection-end-column="93" />
         </state>
       </provider>
     </entry>
@@ -644,13 +609,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/total_countmanagement.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="48" column="95" selection-start-line="48" selection-start-column="75" selection-end-line="48" selection-end-column="95" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/user.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="12720">
@@ -672,24 +630,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/account_bill.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="3" column="14" selection-start-line="3" selection-start-column="14" selection-end-line="3" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/erp_templates/brush2.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3360">
           <caret line="112" column="44" selection-start-line="112" selection-start-column="44" selection-end-line="112" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/total_account_bill.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2040">
-          <caret line="68" column="14" selection-start-line="68" selection-start-column="14" selection-end-line="68" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -721,13 +665,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="9" column="20" lean-forward="true" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/all_data.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="27" column="46" lean-forward="true" selection-start-line="27" selection-start-column="46" selection-end-line="27" selection-end-column="46" />
         </state>
       </provider>
     </entry>
@@ -785,13 +722,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/total_countmanagement2.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2490">
-          <caret line="81" column="136" selection-start-line="81" selection-start-column="136" selection-end-line="81" selection-end-column="156" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/brush/tests.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -799,10 +729,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/account_bill.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="66" column="14" lean-forward="true" selection-start-line="66" selection-start-column="14" selection-end-line="66" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/all_data.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="699">
+          <caret line="93" column="12" lean-forward="true" selection-start-line="93" selection-start-column="12" selection-end-line="93" selection-end-column="12" />
+          <folding>
+            <element signature="e#1680#2886#0#HTML" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/css/all_data.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="2" column="16" lean-forward="true" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/brush/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="1989" column="42" selection-start-line="1989" selection-start-column="42" selection-end-line="1989" selection-end-column="42" />
+        <state relative-caret-position="3123">
+          <caret line="2486" column="112" lean-forward="true" selection-start-line="2486" selection-start-column="112" selection-end-line="2486" selection-end-column="112" />
           <folding>
             <element signature="e#0#59#0" expanded="true" />
             <element signature="e#263#738#0" />
@@ -829,13 +783,79 @@
             <element signature="e#99689#102716#0" />
             <element signature="e#102754#104061#0" />
             <element signature="e#104103#106496#0" />
+            <element signature="e#113383#116214#0" />
             <element signature="e#116685#117809#0" />
             <element signature="e#117854#119841#0" />
             <element signature="e#119886#121251#0" />
             <element signature="e#121299#122723#0" />
             <element signature="e#122783#125778#0" />
             <element signature="e#125839#128627#0" />
+            <element signature="e#128672#129799#0" />
+            <element signature="e#129845#130993#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/css/brankmanagement.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="5" column="1" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/check_total_account2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="2" column="50" lean-forward="true" selection-start-line="2" selection-start-column="50" selection-end-line="2" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/css/check_account.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="16" column="1" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/countmanagement2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="2" column="56" selection-start-line="2" selection-start-column="56" selection-end-line="2" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/total_account_bill.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="68" column="14" selection-start-line="68" selection-start-column="14" selection-end-line="68" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/total_brankmanagement.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1110">
+          <caret line="2" column="68" selection-start-line="2" selection-start-column="68" selection-end-line="2" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/total_countmanagement.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="2" column="57" selection-start-line="2" selection-start-column="57" selection-end-line="2" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/total_countmanagement2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="2" column="52" selection-start-line="2" selection-start-column="52" selection-end-line="2" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/css/countmanagement.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="14" column="1" lean-forward="true" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
         </state>
       </provider>
     </entry>

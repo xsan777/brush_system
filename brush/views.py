@@ -1703,7 +1703,7 @@ def check_account(request):
                 actual_err = '该账户没有上传截图，无法核账'
             else:
                 actual_cost = float(account_data.start_money) - float(account_data.end_money)
-                actual_cost = '%.2f'%actual_cost
+                actual_cost = '%.2f' % actual_cost
                 if pay_money_all != actual_cost:
                     actual_err = '账目有问题，请仔细核对'
                 if un_online_order_number != 0:
@@ -1977,7 +1977,7 @@ def check_total_account(request):
             for table in tables_queryset:
                 tables.append(table)
                 account_cost = account_cost + float(table.start_money) - float(table.end_money)
-                account_cost = '%.2f'%account_cost
+                account_cost = '%.2f' % account_cost
                 if table.makes == 'False':
                     errs = '存在未确认的子账户，总账户无法确认'
         unmake_stats = 0
@@ -1988,7 +1988,7 @@ def check_total_account(request):
         else:
             total_account_make = total_account_make.get()
             total_cost = float(total_account_make.start_money) - float(total_account_make.end_money)
-            total_cost = '%.2f'%total_cost
+            total_cost = '%.2f' % total_cost
             if total_account_make.start_money_img and total_account_make.end_money_img:
                 pass
             else:
@@ -2109,7 +2109,6 @@ def search_total_count(request):
                       {'title': title, 'count': count, 'nowss': search_date, 'user': user, 'admin_flog': admin_flog, 'update_passwd': update_passwd})
 
 
-
 # 总账单
 def all_data(request):
     user = request.session.get('username')
@@ -2128,6 +2127,7 @@ def all_data(request):
     payment = 0.0
     for table in tables:
         payment += float(table.payment_amount)
+    payment = '%2.f'%payment
     # 财务账户提示账户未确认
     now_time_cheack = time.strftime('%Y-%m-%d', time.localtime())
     now_time2 = get_nday_list2(2, now_time_cheack)
@@ -2137,8 +2137,8 @@ def all_data(request):
     else:
         admin_flog = 0
     return render(request, 'all_data.html',
-                  {'title': title, 'user': user, 'now_time': now_time, 'payment_type': payment_types, 'tables': tables, 'admin_flog': admin_flog,
-                   'pay_money': payment})
+                  {'title': title, 'user': user, 'now_time': now_time, 'payment_type': payment_types, 'tables': tables,
+                   'admin_flog': admin_flog, 'pay_money': payment})
 
 
 # 下载喝酒数据
@@ -2417,7 +2417,7 @@ def down_all_data2(request):
         row1.append(i.remarks)
         row1.append(i.operator.username)
         sheet1.append(row1)
-    file_names = str(now_time)  + '月的喝酒数据'
+    file_names = str(now_time) + '月的喝酒数据'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=now_time, file_name=file_names)
 
 
