@@ -26,7 +26,8 @@
                 <th>总账户名</th>
                 <th>初始资金</th>
                 <th>结余资金</th>
-                <th>初始资金截图</th>
+                <th>前一日结余资金截图</th>
+                <th>转账资金截图</th>
                 <th>结余资金截图</th>
                 <th>操作人</th>
                 <th>确认状态</th>
@@ -38,15 +39,23 @@
                     <td>{{ table.account_name.total_account_name }}</td>
                     <td>{{ table.start_money }}</td>
                     <td>{{ table.end_money }}</td>
-                    {% if  table.start_money_img %}
-                        <td><a href="/media/{{ table.start_money_img }}" onclick="big_img('{{ table.start_money_img }}')" target="view_window"><img
-                                src="/media/{{ table.start_money_img }}"
+                    {% if  table.last_date_end_img %}
+                        <td><a href="/media/{{ table.last_date_end_img }}" onclick="big_img('{{ table.last_date_end_img }}')"
+                               target="view_window"><img
+                                src="/media/{{ table.last_date_end_img }}"
                                 alt="" id="smar_img"></a></td>
                     {% else %}
                         <td></td>
                     {% endif %}
+                    {% if  table.start_money_img %}
+                        <td><a href="/media/{{ table.start_money_img }}" onclick="big_img('{{ table.start_money_img }}')"
+                               target="view_window"><img src="/media/{{ table.start_money_img }}" alt="" id="smar_img"></a></td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
                     {% if  table.end_money_img %}
-                            <td><a href="/media/{{ table.end_money_img }}" target="view_window"><img src="/media/{{ table.end_money_img }}" alt="" id="smar_img" ></a></td>
+                        <td><a href="/media/{{ table.end_money_img }}" target="view_window"><img src="/media/{{ table.end_money_img }}" alt=""
+                                                                                                 id="smar_img"></a></td>
                     {% else %}
                         <td></td>
                     {% endif %}

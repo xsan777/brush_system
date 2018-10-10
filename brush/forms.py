@@ -118,7 +118,7 @@ class Edit_forms(forms.Form):
     start_money = forms.CharField(label='初始资金',
                                   widget=forms.TextInput(attrs={'placeholder': '初始资金', 'class': 'form-control', 'id': 'eidt_start_money'}))
     end_money = forms.CharField(label='结余资金', widget=forms.TextInput(attrs={'placeholder': '结余资金', 'class': 'form-control', 'id': 'eidt_end_money'}))
-    weixin_withdraw_money = forms.IntegerField(label='微信提现费用', widget=forms.TextInput(
+    weixin_withdraw_money = forms.CharField(label='微信提现费用', widget=forms.TextInput(
         attrs={'placeholder': '微信提现费用', 'class': 'form-control', 'id': 'eidt_weixin_withdraw_money'}))
 
 

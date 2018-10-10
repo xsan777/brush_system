@@ -27,6 +27,12 @@ class Shops(models.Model):
         return self.shopname
 
 
+# 公司微信号
+class Company_weixin(models.Model):
+    weixin = models.CharField(verbose_name='微信号', max_length=32)
+    deletes = models.CharField(max_length=5)
+
+
 # 用户表
 class Userinfo(models.Model):
     passwd = models.CharField(verbose_name='密码', max_length=16)
@@ -51,11 +57,11 @@ class Brank_account(models.Model):
 
 # 子账户记录
 class Account_record(models.Model):
-    datess = models.DateTimeField(verbose_name='创建日期',)
+    datess = models.DateTimeField(verbose_name='创建日期', )
     account_name = models.ForeignKey(Brank_account, on_delete=models.CASCADE)
-    start_money = models.CharField(verbose_name='初始资金',max_length=16)
-    end_money = models.CharField(verbose_name='结余资金',max_length=16)
-    weixin_withdraw_money = models.IntegerField(verbose_name='微信提现手续费')
+    start_money = models.CharField(verbose_name='初始资金', max_length=16)
+    end_money = models.CharField(verbose_name='结余资金', max_length=16)
+    weixin_withdraw_money = models.CharField(verbose_name='微信提现手续费',max_length=16)
     operator = models.ForeignKey(Userinfo, on_delete=models.CASCADE)
     makes = models.CharField(max_length=5, verbose_name='运营确认')
     start_money_img = models.ImageField(upload_to='start_img')
@@ -68,8 +74,8 @@ class Account_record(models.Model):
 class Total_account_record(models.Model):
     datess = models.DateTimeField(verbose_name='创建日期', )
     account_name = models.ForeignKey(Total_brank_account, on_delete=models.CASCADE)
-    start_money = models.CharField(verbose_name='初始资金',max_length=16)
-    end_money = models.CharField(verbose_name='结余资金',max_length=16)
+    start_money = models.CharField(verbose_name='初始资金', max_length=16)
+    end_money = models.CharField(verbose_name='结余资金', max_length=16)
     operator = models.ForeignKey(Userinfo, on_delete=models.CASCADE)
     makes = models.CharField(max_length=5, verbose_name='运营确认')
     start_money_img = models.ImageField(upload_to='start_img')
@@ -89,7 +95,7 @@ class Brush_single_entry(models.Model):
     payment_account = models.ForeignKey(Brank_account, on_delete=models.CASCADE)
     operator = models.ForeignKey(Userinfo, on_delete=models.CASCADE)
     remarks = models.CharField(verbose_name='备注', max_length=64)
-    add_time = models.DateTimeField(verbose_name='创建日期',max_length=16)
+    add_time = models.DateTimeField(verbose_name='创建日期', max_length=16)
     deletes = models.CharField(max_length=5)
 
 

@@ -1064,8 +1064,8 @@ def countmanagement(request):
                         Account_record.objects.create(datess=add_times, account_name=account_names, start_money=start_moneys, end_money=end_moneys,
                                                       weixin_withdraw_money=weixin_withdraw_moneys, operator=operators, makes='False',
                                                       start_money_img=request.FILES.get('start_money_img'),
-                                                      end_money_img=request.FILES.get('end_money_img'), weixin_img=request.FILES.get('weixin_img'),
-                                                      deletes=False)
+                                                      end_money_img=request.FILES.get('end_money_img'), weixin_img=request.FILES.get(
+                                'weixin_img'), deletes=False)
                         last_date = Account_record.objects.last()
                         operation_types = '创建子账户记录'
                         after_operations = '{id：%s，账户名：%s，初始资金：%s，结余资金：%s，微信提现费用：%s，操作员：%s，运营确认：False，初始资金截图：%s，结余资金截图：%s，微信提现费用截图：%s}' % (
@@ -1126,6 +1126,7 @@ def edit_count(request):
     if request.method == 'POST':
         errs = ''
         ids = request.POST.get('id')
+        print(ids)
         start_moneys = request.POST.get('start_money')
         end_moneys = request.POST.get('end_money')
         weixin_withdraw_moneys = request.POST.get('weixin_withdraw_money')
@@ -1198,6 +1199,7 @@ def edit_count(request):
                                                              start_money_img=request.FILES.get('start_money_img'),
                                                              weixin_img=request.FILES.get('weixin_img'),
                                                              end_money_img=request.FILES.get('end_money_img'), deletes=False)
+
             # 修改总账户的状态
             new_date = Account_record.objects.filter(id=ids).get()
             now_time = time.strftime('%Y-%m-%d', time.localtime())
@@ -1603,6 +1605,7 @@ def more_date(request):
         else:
             tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=operators, shopname=shopss,
                                                        deletes='False').order_by('add_time')
+
     accountss = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     reminds = ''
     unmakes = 0
@@ -1687,24 +1690,30 @@ def check_account(request):
     un_online_order_number = 0
     for table in tables:
         pay_money += float(table.payment_amount)
-        if table.online_order_number == '' and table.payment_type !='刮刮卡':
+        if table.online_order_number == '' and table.payment_type != '刮刮卡':
             un_online_order_number += 1
+    pay_money = '%.2f' % pay_money
     account_data = Account_record.objects.filter(account_name=account, datess__date=now_time, deletes=False).all()
     if account_data:
         account_data = account_data.get()
         weixin_withdraw_moneys = float(account_data.weixin_withdraw_money)
-        pay_money_all = pay_money + weixin_withdraw_moneys
+        # pay_money = float(pay_money)
+        # pay_money_all = pay_money + weixin_withdraw_moneys
+        pay_money_all = float(pay_money)
         star_money_img = account_data.start_money_img
         end_money_img = account_data.end_money_img
         weixin_img = account_data.weixin_img
         makes_stats = account_data.makes
+        weixin_withdraw_moneys = '%.2f' % weixin_withdraw_moneys
         if star_money_img and end_money_img:
-            if weixin_withdraw_moneys != 0 and weixin_img == '':
+            if weixin_withdraw_moneys != '0' and weixin_img == '':
                 actual_err = '该账户没有上传截图，无法核账'
             else:
                 actual_cost = float(account_data.start_money) - float(account_data.end_money)
                 actual_cost = '%.2f' % actual_cost
-                pay_money_all ='%.2f'%pay_money_all
+                # print(pay_money_all)
+                pay_money_all = float(pay_money_all)
+                pay_money_all = '%.2f' % pay_money_all
                 if pay_money_all != actual_cost:
                     actual_err = '账目有问题，请仔细核对'
                 if un_online_order_number != 0:
@@ -1742,12 +1751,12 @@ def check_account(request):
                   {'title': title, 'now_time': now_time, 'account': accounts, 'tables': tables, 'pay_money': pay_money,
                    'actual_cost': actual_cost, 'user': user, 'edit_brush_form': edit_brush_form, 'shops': shops, 'user': user,
                    'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'errs': errs,
-                   'total_reminds': total_reminds,'update_passwd': update_passwd,'actual_err': actual_err, 'makes_stats': makes_stats,
+                   'total_reminds': total_reminds, 'update_passwd': update_passwd, 'actual_err': actual_err, 'makes_stats': makes_stats,
                    'account_select': account_select, 'pay_money_all': pay_money_all,
                    'weixin_withdraw_moneys': weixin_withdraw_moneys})
 
 
-# 确认核对
+# 确认核对子账户
 def make_account(request):
     user = request.session.get('username')
     if user == None:
@@ -1845,6 +1854,7 @@ def shop_bill(request):
     pay_money = 0
     for table in tables:
         pay_money += float(table.payment_amount)
+    pay_money = '%.2f' % pay_money
     # 财务账户提示账户未确认
     now_time2 = get_nday_list2(2, now_time)
     all_account_makes = Total_account_record.objects.filter(datess__date=now_time2, makes=False, deletes=False).all()
@@ -1977,10 +1987,13 @@ def check_total_account(request):
             tables_queryset = Account_record.objects.filter(datess__date=now_time, account_name=account, deletes=False).all()
             for table in tables_queryset:
                 tables.append(table)
-                account_cost = account_cost + float(table.start_money) - float(table.end_money)
-                account_cost = '%.2f' % account_cost
+                account_cost = float(account_cost)
+                account_cost = account_cost + (float(table.start_money) - float(table.end_money))
                 if table.makes == 'False':
                     errs = '存在未确认的子账户，总账户无法确认'
+                    break
+            account_cost = float(account_cost)
+            account_cost = '%.2f' % account_cost
         unmake_stats = 0
         total_account_make = Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=first_total_account,
                                                                  deletes=False).all()
@@ -2058,18 +2071,26 @@ def search_total_count(request):
     if user == None:
         return redirect(to=login)
     title = '总账户记录管理'
-    total_account_all = Userinfo.objects.filter(username=user, deletes=False).get().total_brank_account.filter(deletes=False).all()
-    account2 = Userinfo.objects.filter(username=user, deletes=False).get().total_brank_account.filter(deletes=False).all()
-    forms = Forms()
-    edit_form = Edit_forms()
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     if search_date:
         count = Total_account_record.objects.filter(datess__date=search_date, deletes=False).all()
     else:
-        search_date = now_time
-        if rouse == '财务':
-            search_date = get_nday_list2(2, now_time)
+        search_date = get_nday_list2(2, now_time)
         count = Total_account_record.objects.filter(datess__date=search_date, deletes=False).all()
+    for i in count:
+        last_date = get_nday_list2(2, search_date)
+        last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+            'end_money_img')
+        count_row = {}
+        count_row['last_date_end_img'] = last_date_end_img
+        count_row['datess'] = i.datess
+        count_row['account_name'] = i.account_name
+        count_row['start_money'] = i.start_money
+        count_row['end_money'] = i.end_money
+        count_row['start_money_img'] = i.start_money_img
+        count_row['end_money_img'] = i.end_money_img
+        count_row['operator'] = i.operator.username
+
     # 财务账户提示总账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     now_time = get_nday_list2(2, now_time)
@@ -2078,16 +2099,7 @@ def search_total_count(request):
         admin_flog = 1
     else:
         admin_flog = 0
-    # 总账户未确认提示运营
-    total_reminds = ''
-    user_total_account = Userinfo.objects.get(username=user, deletes=False)
-    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
-    now_time = time.strftime('%Y-%m-%d', time.localtime())
-    for m in account__:
-        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
-        for i in account2:
-            if i.makes == 'False':
-                total_reminds = '(总账户未确认)'
+
     # 运营名下账户确认核对查询
     reminds = ''
     unmakes = 0
@@ -2108,6 +2120,8 @@ def search_total_count(request):
     if rouse == '财务':
         return render(request, 'total_countmanagement.html',
                       {'title': title, 'count': count, 'nowss': search_date, 'user': user, 'admin_flog': admin_flog, 'update_passwd': update_passwd})
+    else:
+        pass
 
 
 # 总账单
@@ -2128,7 +2142,7 @@ def all_data(request):
     payment = 0.0
     for table in tables:
         payment += float(table.payment_amount)
-    payment = '%2.f'%payment
+    payment = '%.2f' % payment
     # 财务账户提示账户未确认
     now_time_cheack = time.strftime('%Y-%m-%d', time.localtime())
     now_time2 = get_nday_list2(2, now_time_cheack)
