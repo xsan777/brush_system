@@ -1690,7 +1690,8 @@ def check_account(request):
     un_online_order_number = 0
     for table in tables:
         pay_money += float(table.payment_amount)
-        if table.online_order_number == '' and table.payment_type != '刮刮卡':
+        # if table.online_order_number == '' and table.payment_type != '刮刮卡':
+        if table.online_order_number == '':
             un_online_order_number += 1
     pay_money = '%.2f' % pay_money
     account_data = Account_record.objects.filter(account_name=account, datess__date=now_time, deletes=False).all()

@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="406d6af2-ec06-4ccb-b031-9531d5d81333" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/brush/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/brush/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/brush/views目前线上版本.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,8 +20,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/brush/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="2090" column="50" lean-forward="true" selection-start-line="2090" selection-start-column="50" selection-end-line="2090" selection-end-column="50" />
+            <state relative-caret-position="591">
+              <caret line="1708" column="44" lean-forward="true" selection-start-line="1708" selection-start-column="44" selection-end-line="1708" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -323,7 +324,7 @@
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3293348" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.34351146" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.1570338" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.261723" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15991472" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
@@ -537,6 +538,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="61" selection-start-line="61" selection-end-line="78" selection-end-column="13" />
+          <folding>
+            <element signature="n#block#1;n#!!top" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -732,8 +736,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/brush/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="2090" column="50" lean-forward="true" selection-start-line="2090" selection-start-column="50" selection-end-line="2090" selection-end-column="50" />
+        <state relative-caret-position="591">
+          <caret line="1708" column="44" lean-forward="true" selection-start-line="1708" selection-start-column="44" selection-end-line="1708" selection-end-column="44" />
         </state>
       </provider>
     </entry>
