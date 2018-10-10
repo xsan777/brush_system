@@ -2071,6 +2071,10 @@ def search_total_count(request):
     if user == None:
         return redirect(to=login)
     title = '总账户记录管理'
+    total_account_all = Userinfo.objects.filter(username=user, deletes=False).get().total_brank_account.filter(deletes=False).all()
+    account2 = Userinfo.objects.filter(username=user, deletes=False).get().total_brank_account.filter(deletes=False).all()
+    forms = Forms()
+    edit_form = Edit_forms()
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     if search_date:
         count = Total_account_record.objects.filter(datess__date=search_date, deletes=False).all()
@@ -2091,7 +2095,7 @@ def search_total_count(request):
         count_row['end_money_img'] = i.end_money_img
         count_row['operator'] = i.operator.username
 
-    # 财务账户提示总账户未确认
+        # 财务账户提示总账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     now_time = get_nday_list2(2, now_time)
     all_account_makes = Total_account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
@@ -2099,7 +2103,16 @@ def search_total_count(request):
         admin_flog = 1
     else:
         admin_flog = 0
-
+    # 总账户未确认提示运营
+    total_reminds = ''
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    for m in account__:
+        account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+        for i in account2:
+            if i.makes == 'False':
+                total_reminds = '(总账户未确认)'
     # 运营名下账户确认核对查询
     reminds = ''
     unmakes = 0
@@ -2121,7 +2134,10 @@ def search_total_count(request):
         return render(request, 'total_countmanagement.html',
                       {'title': title, 'count': count, 'nowss': search_date, 'user': user, 'admin_flog': admin_flog, 'update_passwd': update_passwd})
     else:
-        pass
+        return render(request, 'total_countmanagement2.html',
+                      {'title': title, 'account': account2, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
+                       'user': user, 'total_reminds': total_reminds, 'total_account_all': total_account_all, 'reminds': reminds, 'unmakes': unmakes,
+                       'update_passwd': update_passwd, 'makes': makes})
 
 
 # 总账单
