@@ -3,7 +3,36 @@
   <component name="ChangeListManager">
     <list default="true" id="406d6af2-ec06-4ccb-b031-9531d5d81333" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/brush/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/brush/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/brush/views目前线上版本.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/brush_system V 1.1.1.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/brush_system V 1.1.18.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/brush_system V 1.1.4.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/brush_system/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/brush_system/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.txt" beforeDir="false" afterPath="$PROJECT_DIR$/readme.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/brush2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/brush2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/check_account2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/check_account2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/more_data2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/more_data2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views目前线上版本.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/account_bill.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/all_data.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/basc.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/basc2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/brankmanagement.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/brush.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/brush2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/check_account2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/check_total_account2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/countmanagement.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/countmanagement2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/erp_templates/brush2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/more_data2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/shop_bill.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/shops.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/total_account_bill.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/total_brankmanagement.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/total_countmanagement.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/total_countmanagement2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/目前线上版本/templates/user.html" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,8 +49,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/brush/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="591">
-              <caret line="1708" column="44" lean-forward="true" selection-start-line="1708" selection-start-column="44" selection-end-line="1708" selection-end-column="44" />
+            <state relative-caret-position="367">
+              <caret line="1707" column="64" selection-start-line="1707" selection-start-column="64" selection-end-line="1707" selection-end-column="64" />
             </state>
           </provider>
         </entry>
@@ -38,8 +67,8 @@
       <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/brush_system/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2400">
-              <caret line="80" selection-start-line="94" selection-start-column="5" selection-end-line="94" selection-end-column="8" />
+            <state relative-caret-position="382">
+              <caret line="86" column="8" lean-forward="true" selection-start-line="86" selection-start-column="8" selection-end-line="86" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -65,8 +94,13 @@
       <file leaf-file-name="brush2.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/brush2.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="13890">
-              <caret line="463" column="26" selection-start-line="463" selection-start-column="26" selection-end-line="463" selection-end-column="26" />
+            <state relative-caret-position="309">
+              <caret line="227" selection-start-line="227" selection-end-line="227" />
+              <folding>
+                <element signature="e#12300#13328#0#HTML" />
+                <element signature="e#14419#20790#0#HTML" />
+                <element signature="e#20869#22682#0#HTML" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -74,8 +108,22 @@
       <file leaf-file-name="check_account2.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/check_account2.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="94">
-              <caret line="216" column="9" selection-start-line="216" selection-start-column="9" selection-end-line="216" selection-end-column="9" />
+            <state relative-caret-position="439">
+              <caret line="322" column="21" selection-start-line="322" selection-start-column="21" selection-end-line="322" selection-end-column="21" />
+              <folding>
+                <element signature="n#script#1;n#!!top" />
+                <element signature="n#script#2;n#!!top" />
+                <element signature="n#script#3;n#!!top" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="more_data2.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/more_data2.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="630">
+              <caret line="313" column="23" lean-forward="true" selection-start-line="313" selection-start-column="23" selection-end-line="313" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -112,8 +160,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ale</find>
-      <find>console</find>
       <find>店铺管理</find>
       <find>用户管</find>
       <find>账户记录</find>
@@ -137,11 +183,13 @@
       <find>check_a</find>
       <find>pay_money_all</find>
       <find>more</find>
-      <find>子账户核对</find>
       <find>子账户记录</find>
       <find>总账户核对</find>
       <find>search_total_count</find>
       <find>按日期查询总</find>
+      <find>喝酒数据</find>
+      <find>喝酒数据录入</find>
+      <find>子账户核对</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -187,16 +235,16 @@
         <option value="$PROJECT_DIR$/templates/all_data.html" />
         <option value="$PROJECT_DIR$/static/css/all_data.css" />
         <option value="$PROJECT_DIR$/static/css/check_account.css" />
-        <option value="$PROJECT_DIR$/templates/brush2.html" />
-        <option value="$PROJECT_DIR$/templates/check_account2.html" />
-        <option value="$PROJECT_DIR$/templates/more_data2.html" />
         <option value="$PROJECT_DIR$/templates/total_account_bill.html" />
         <option value="$PROJECT_DIR$/static/css/countmanagement.css" />
         <option value="$PROJECT_DIR$/templates/total_countmanagement.html" />
         <option value="$USER_HOME$/Desktop/测试修改/views.py" />
-        <option value="$PROJECT_DIR$/brush_system/settings.py" />
         <option value="$PROJECT_DIR$/brush/models.py" />
         <option value="$PROJECT_DIR$/brush/forms.py" />
+        <option value="$PROJECT_DIR$/brush_system/settings.py" />
+        <option value="$PROJECT_DIR$/templates/check_account2.html" />
+        <option value="$PROJECT_DIR$/templates/more_data2.html" />
+        <option value="$PROJECT_DIR$/templates/brush2.html" />
         <option value="$PROJECT_DIR$/brush/views.py" />
       </list>
     </option>
@@ -324,9 +372,9 @@
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3293348" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.1570338" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.174482" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.261723" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15991472" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15991472" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
@@ -646,13 +694,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/more_data2.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/total_account_bill.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1260">
@@ -674,24 +715,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/brush2.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13890">
-          <caret line="463" column="26" selection-start-line="463" selection-start-column="26" selection-end-line="463" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Desktop/测试修改/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-566">
           <caret line="1655" column="33" lean-forward="true" selection-start-line="1655" selection-start-column="33" selection-end-line="1655" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/brush_system/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2400">
-          <caret line="80" selection-start-line="94" selection-start-column="5" selection-end-line="94" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -716,13 +743,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/check_account2.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="216" column="9" selection-start-line="216" selection-start-column="9" selection-end-line="216" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://E:/公司程序版本控制/喝酒管理系统/10月9日晚上的最后版本/brush/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="31">
@@ -734,10 +754,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/check_account2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="439">
+          <caret line="322" column="21" selection-start-line="322" selection-start-column="21" selection-end-line="322" selection-end-column="21" />
+          <folding>
+            <element signature="n#script#1;n#!!top" />
+            <element signature="n#script#2;n#!!top" />
+            <element signature="n#script#3;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/more_data2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="630">
+          <caret line="313" column="23" lean-forward="true" selection-start-line="313" selection-start-column="23" selection-end-line="313" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/brush2.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="227" selection-start-line="227" selection-end-line="227" />
+          <folding>
+            <element signature="e#12300#13328#0#HTML" />
+            <element signature="e#14419#20790#0#HTML" />
+            <element signature="e#20869#22682#0#HTML" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/brush_system/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="86" column="8" lean-forward="true" selection-start-line="86" selection-start-column="8" selection-end-line="86" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/brush/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="591">
-          <caret line="1708" column="44" lean-forward="true" selection-start-line="1708" selection-start-column="44" selection-end-line="1708" selection-end-column="44" />
+        <state relative-caret-position="367">
+          <caret line="1707" column="64" selection-start-line="1707" selection-start-column="64" selection-end-line="1707" selection-end-column="64" />
         </state>
       </provider>
     </entry>

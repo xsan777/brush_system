@@ -225,6 +225,7 @@
                 {#$('[data-toggle="popover"]').popover();#}
                 var wangwang_num = $('input#wang_wang_number').val();
                 console.log(wangwang_num);
+
                 $.ajax({
                     url: "/erp/search_by_wangwang_num2/",
                     type: "GET",
@@ -283,6 +284,7 @@
             var payment_amount = $('#payment_amount').val();
             var pay_type = $('#payment_type').val();
             var remark = $('#remarks').val();
+
             if (wang_wang_number != '' && payment_amount != '') {
                 if (pay_type == '买家秀' || pay_type == '其他') {
                     if (remark == '') {
@@ -290,118 +292,118 @@
                         return
                     }
                 }
-                if (online_order_number == '' && pay_type != '刮刮卡') {
-                    alert("付款类型不为刮刮卡，必须填写线上订单号")
-                    return
-                }
-                $.ajax({
-                    url: "/brushmanagement/",
-                    type: "POST",
-                    dataType: 'json',
-                    data: $('#add_data').serialize(),
-                    async: true,
-                    success: function (arg) {
-                        if (arg['err']) {
-                            alert(arg['err']);
-                            return
-                        }
-                        var idss = arg['id'];
-                        var attri = 'edit_data(' + idss + ',this)';
-                        var attri2 = 'delete_data(' + idss + ',this)';
-                        $('tr#0').children('td#num').html(1);
-                        $('tr#0').children('td#qq_or_weixin').html(arg['qq_or_weixin']);
-                        $('tr#0').children('td#shopname').html(arg['shopname']);
-                        $('tr#0').children('td#wang_wang_number').children('span#search_wangwang').html(arg['wang_wang_number']);
-                        $('tr#0').children('td#online_order_number').html(arg['online_order_number']);
-                        $('tr#0').children('td#transaction_data').html(arg['transaction_data']);
-                        $('tr#0').children('td#payment_type').html(arg['payment_type']);
-                        $('tr#0').children('td#payment_amount').html(arg['payment_amount']);
-                        $('tr#0').children('td#payment_account').html(arg['payment_account']);
-                        $('tr#0').children('td#remarks').html(arg['remarks']);
-                        $('tr#0').children('td#add_time').html(arg['add_time']);
-                        $('tr#0').children('td').children('a#bsd').attr('onclick', attri);
-                        $('tr#0').children('td').children('a#dele').attr('onclick', attri2);
-                        $('tr#14').attr("id", 15);
-                        $('tr#13').attr("id", 14);
-                        $('tr#12').attr("id", 13);
-                        $('tr#11').attr("id", 12);
-                        $('tr#10').attr("id", 11);
-                        $('tr#9').attr("id", 10);
-                        $('tr#8').attr("id", 9);
-                        $('tr#7').attr("id", 8);
-                        $('tr#6').attr("id", 7);
-                        $('tr#5').attr("id", 6);
-                        $('tr#4').attr("id", 5);
-                        $('tr#3').attr("id", 4);
-                        $('tr#2').attr("id", 3);
-                        $('tr#1').attr("id", 2);
-                        $('tr#0').attr("id", 1);
-                        $('tr#1').before('        <tr id="0">\n' +
-                            '            <td id="add_time"></td>\n' +
-                            '            <td id="shopname"></td>\n' +
-                            '            <td id="qq_or_weixin"></td>\n' +
-                            '            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang" data-html="true"></span></td>\n' +
-                            '            <td id="online_order_number"></td>\n' +
-                            '            <td id="transaction_data"></td>\n' +
-                            '            <td id="payment_type"></td>\n' +
-                            '            <td id="payment_amount"></td>\n' +
-                            '            <td id="payment_account"></td>\n' +
-                            '            <td id="remarks"></td>\n' +
-                            '            <td><a class="glyphicon glyphicon-pencil" href="javascript:void(0);" onclick="edit_data({{ table.id }},this)" title="编辑" id="bsd"></a>\n' +
-                            '                <a class="glyphicon glyphicon-remove" href="javascript:void(0);" onclick="delete_data({{ table.id }},this)" title="删除" id="dele"></a>\n' +
-                            '            </td>\n' +
-                            '        </tr>');
-                        $('tr#2').children('td#num').html(2);
-                        $('tr#3').children('td#num').html(3);
-                        $('tr#4').children('td#num').html(4);
-                        $('tr#5').children('td#num').html(5);
-                        $('tr#6').children('td#num').html(6);
-                        $('tr#7').children('td#num').html(7);
-                        $('tr#8').children('td#num').html(8);
-                        $('tr#9').children('td#num').html(9);
-                        $('tr#10').children('td#num').html(10);
-                        $('tr#11').children('td#num').html(11);
-                        $('tr#12').children('td#num').html(12);
-                        $('tr#13').children('td#num').html(13);
-                        $('tr#14').children('td#num').html(14);
-                        $('tr#15').children('td#num').html(15);
-                        $('tr#1').show();
-                        $('tr#0').hide();
-                        $('tr#15').nextAll().hide();
-                        $('input#wang_wang_number').val("");
-                        $('input#remarks').val("");
-                        $('input#qq_or_weixin').val("");
-                        $('input#online_order_number').val("");
-                        {#给新增加的行绑定通过旺旺号查询喝酒记录#}
-                        $('span#search_wangwang').hover(function () {
-                                console.log('dj');
-                                {#$('[data-toggle="popover"]').popover();#}
-                                var wangwang_num = $(this).text();
-                                $.ajax({
-                                    url: "/erp/search_by_wangwang_num/",
-                                    type: "GET",
-                                    dataType: 'json',
-                                    data: {'wangwang_num': wangwang_num},
-                                    async: false,
-                                    success: function (msg) {
-                                        console.log(msg);
-                                        $('span#search_wangwang').attr('data-content', msg);
-                                    },
-                                    error: function () {
-                                        $('span#search_wangwang').attr('data-content', '该旺旺号之前没有喝酒');
-                                    }
-                                });
-                                $(this).popover('show');
-                            }, function () {
-                                $(this).popover('hide');
-                                $('span#search_wangwang').attr('data-content', '');
+                {#if (online_order_number == '' && pay_type != '刮刮卡') {#}
+                {#    alert("付款类型不为刮刮卡，必须填写线上订单号")#}
+                {#    return#}
+                {# } #}
+                    $.ajax({
+                        url: "/brushmanagement/",
+                        type: "POST",
+                        dataType: 'json',
+                        data: $('#add_data').serialize(),
+                        async: true,
+                        success: function (arg) {
+                            if (arg['err']) {
+                                alert(arg['err']);
+                                return
                             }
-                        );
-                    },
+                            var idss = arg['id'];
+                            var attri = 'edit_data(' + idss + ',this)';
+                            var attri2 = 'delete_data(' + idss + ',this)';
+                            $('tr#0').children('td#num').html(1);
+                            $('tr#0').children('td#qq_or_weixin').html(arg['qq_or_weixin']);
+                            $('tr#0').children('td#shopname').html(arg['shopname']);
+                            $('tr#0').children('td#wang_wang_number').children('span#search_wangwang').html(arg['wang_wang_number']);
+                            $('tr#0').children('td#online_order_number').html(arg['online_order_number']);
+                            $('tr#0').children('td#transaction_data').html(arg['transaction_data']);
+                            $('tr#0').children('td#payment_type').html(arg['payment_type']);
+                            $('tr#0').children('td#payment_amount').html(arg['payment_amount']);
+                            $('tr#0').children('td#payment_account').html(arg['payment_account']);
+                            $('tr#0').children('td#remarks').html(arg['remarks']);
+                            $('tr#0').children('td#add_time').html(arg['add_time']);
+                            $('tr#0').children('td').children('a#bsd').attr('onclick', attri);
+                            $('tr#0').children('td').children('a#dele').attr('onclick', attri2);
+                            $('tr#14').attr("id", 15);
+                            $('tr#13').attr("id", 14);
+                            $('tr#12').attr("id", 13);
+                            $('tr#11').attr("id", 12);
+                            $('tr#10').attr("id", 11);
+                            $('tr#9').attr("id", 10);
+                            $('tr#8').attr("id", 9);
+                            $('tr#7').attr("id", 8);
+                            $('tr#6').attr("id", 7);
+                            $('tr#5').attr("id", 6);
+                            $('tr#4').attr("id", 5);
+                            $('tr#3').attr("id", 4);
+                            $('tr#2').attr("id", 3);
+                            $('tr#1').attr("id", 2);
+                            $('tr#0').attr("id", 1);
+                            $('tr#1').before('        <tr id="0">\n' +
+                                '            <td id="add_time"></td>\n' +
+                                '            <td id="shopname"></td>\n' +
+                                '            <td id="qq_or_weixin"></td>\n' +
+                                '            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang" data-html="true"></span></td>\n' +
+                                '            <td id="online_order_number"></td>\n' +
+                                '            <td id="transaction_data"></td>\n' +
+                                '            <td id="payment_type"></td>\n' +
+                                '            <td id="payment_amount"></td>\n' +
+                                '            <td id="payment_account"></td>\n' +
+                                '            <td id="remarks"></td>\n' +
+                                '            <td><a class="glyphicon glyphicon-pencil" href="javascript:void(0);" onclick="edit_data({{ table.id }},this)" title="编辑" id="bsd"></a>\n' +
+                                '                <a class="glyphicon glyphicon-remove" href="javascript:void(0);" onclick="delete_data({{ table.id }},this)" title="删除" id="dele"></a>\n' +
+                                '            </td>\n' +
+                                '        </tr>');
+                            $('tr#2').children('td#num').html(2);
+                            $('tr#3').children('td#num').html(3);
+                            $('tr#4').children('td#num').html(4);
+                            $('tr#5').children('td#num').html(5);
+                            $('tr#6').children('td#num').html(6);
+                            $('tr#7').children('td#num').html(7);
+                            $('tr#8').children('td#num').html(8);
+                            $('tr#9').children('td#num').html(9);
+                            $('tr#10').children('td#num').html(10);
+                            $('tr#11').children('td#num').html(11);
+                            $('tr#12').children('td#num').html(12);
+                            $('tr#13').children('td#num').html(13);
+                            $('tr#14').children('td#num').html(14);
+                            $('tr#15').children('td#num').html(15);
+                            $('tr#1').show();
+                            $('tr#0').hide();
+                            $('tr#15').nextAll().hide();
+                            $('input#wang_wang_number').val("");
+                            $('input#remarks').val("");
+                            $('input#qq_or_weixin').val("");
+                            $('input#online_order_number').val("");
+                            {#给新增加的行绑定通过旺旺号查询喝酒记录#}
+                            $('span#search_wangwang').hover(function () {
+                                    console.log('dj');
+                                    {#$('[data-toggle="popover"]').popover();#}
+                                    var wangwang_num = $(this).text();
+                                    $.ajax({
+                                        url: "/erp/search_by_wangwang_num/",
+                                        type: "GET",
+                                        dataType: 'json',
+                                        data: {'wangwang_num': wangwang_num},
+                                        async: false,
+                                        success: function (msg) {
+                                            console.log(msg);
+                                            $('span#search_wangwang').attr('data-content', msg);
+                                        },
+                                        error: function () {
+                                            $('span#search_wangwang').attr('data-content', '该旺旺号之前没有喝酒');
+                                        }
+                                    });
+                                    $(this).popover('show');
+                                }, function () {
+                                    $(this).popover('hide');
+                                    $('span#search_wangwang').attr('data-content', '');
+                                }
+                            );
+                        },
 
-                })
+                    })
+                }
             }
-        }
 
 
     </script>
@@ -459,10 +461,10 @@
                         return
                     }
                 }
-                if (update_online_order_number == '' && update_payment_type != '刮刮卡') {
-                    alert("付款类型不为刮刮卡，必须填写线上订单号")
-                    return
-                }
+                {#if (update_online_order_number == '' && update_payment_type != '刮刮卡') {#}
+                {#    alert("付款类型不为刮刮卡，必须填写线上订单号")#}
+                {#    return#}
+                {# } #}
                 $.ajax({
                     url: "/edit/",
                     type: "POST",

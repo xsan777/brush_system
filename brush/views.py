@@ -1382,7 +1382,7 @@ def deletes_count(request):
     return redirect('/countmanagement/')
 
 
-# 添加喝酒数据
+# 喝酒数据录入
 def brushmanagement(request):
     user = request.session.get('username')
     if user == None:
@@ -1707,7 +1707,7 @@ def check_account(request):
         makes_stats = account_data.makes
         weixin_withdraw_moneys = '%.2f' % weixin_withdraw_moneys
         if star_money_img and end_money_img:
-            if weixin_withdraw_moneys != '0' and weixin_img == '':
+            if weixin_withdraw_moneys != '0.00' and weixin_img == '':
                 actual_err = '该账户没有上传截图，无法核账'
             else:
                 actual_cost = float(account_data.start_money) - float(account_data.end_money)

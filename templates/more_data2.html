@@ -308,10 +308,10 @@
                         return
                     }
                 }
-                if (update_online_order_number == '' && update_payment_type != '刮刮卡') {
-                    alert("付款类型不为刮刮卡，必须填写线上订单号")
-                    return
-                }
+                {#if (update_online_order_number == '' && update_payment_type != '刮刮卡') {#}
+                {#    alert("付款类型不为刮刮卡，必须填写线上订单号")#}
+                {#    return#}
+                {# } #}
                 $.ajax({
                     url: "/edit/",
                     type: "POST",
