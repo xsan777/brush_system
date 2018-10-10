@@ -8,6 +8,7 @@ class Updata_passwd(forms.Form):
     passwd = forms.CharField(label='新密码', widget=forms.PasswordInput(attrs={'placeholder': '新密码', 'class': 'form-control', 'id': 'passwd', }))
     passwd2 = forms.CharField(label='确认新密码', widget=forms.PasswordInput(attrs={'placeholder': '确认新密码', 'class': 'form-control', 'id': 'passwd2', }))
 
+
 # 创建总账户
 class Total_brank_account_form(forms.Form):
     total_brank_account_name = forms.CharField(label='总账户名', widget=forms.TextInput(
@@ -128,9 +129,11 @@ class Add_brush_data(forms.Form):
                                    widget=forms.TextInput(attrs={'placeholder': 'QQ或微信', 'class': 'form-control', 'id': 'qq_or_weixin'}))
     # wang_wang_number = forms.CharField(label='旺旺号',
     #                                    widget=forms.TextInput(attrs={'placeholder': '旺旺号', 'class': 'form-control', 'id': 'wang_wang_number','onchange':'search_wangwang_num_input()','data-container':'body','data-toggle':'popover','data-placement':'bottom'}))
+    # wang_wang_number = forms.CharField(label='旺旺号', widget=forms.TextInput(
+    #     attrs={'placeholder': '旺旺号', 'class': 'form-control', 'id': 'wang_wang_number', 'data-container': 'body', 'data-toggle': 'popover',
+    #            'data-placement': 'bottom', 'data-html': 'true'}))
     wang_wang_number = forms.CharField(label='旺旺号', widget=forms.TextInput(
-        attrs={'placeholder': '旺旺号', 'class': 'form-control', 'id': 'wang_wang_number', 'data-container': 'body', 'data-toggle': 'popover',
-               'data-placement': 'bottom', 'data-html': 'true'}))
+        attrs={'placeholder': '旺旺号', 'class': 'form-control', 'id': 'wang_wang_number',}))
     online_order_number = forms.CharField(label='线上订单号', widget=forms.TextInput(
         attrs={'placeholder': '线上订单号', 'class': 'form-control', 'id': 'online_order_number'}))
     payment_amount = forms.CharField(label='付款金额（收入为负）', widget=forms.TextInput(

@@ -1688,11 +1688,16 @@ def check_account(request):
         tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes='False').all()
     pay_money = 0.0
     un_online_order_number = 0
+    handing_free_all = 0.00
     for table in tables:
         pay_money += float(table.payment_amount)
         # if table.online_order_number == '' and table.payment_type != '刮刮卡':
-        if table.online_order_number == '':
+        if table.online_order_number == '' and table.payment_type != '手续费':
             un_online_order_number += 1
+        if table.payment_type == '手续费':
+            handing_free_all += float(table.payment_amount)
+
+    handing_free_all = '%.2f'%handing_free_all
     pay_money = '%.2f' % pay_money
     account_data = Account_record.objects.filter(account_name=account, datess__date=now_time, deletes=False).all()
     if account_data:
@@ -1715,10 +1720,12 @@ def check_account(request):
                 # print(pay_money_all)
                 pay_money_all = float(pay_money_all)
                 pay_money_all = '%.2f' % pay_money_all
-                if pay_money_all != actual_cost:
-                    actual_err = '账目有问题，请仔细核对'
                 if un_online_order_number != 0:
                     actual_err = '有' + str(un_online_order_number) + '条记录没有订单号'
+                elif pay_money_all != actual_cost:
+                    actual_err = '账目有问题，请仔细核对'
+                elif weixin_withdraw_moneys != handing_free_all:
+                    actual_err = '总手续费为'+handing_free_all + '，该账户记录提现费用为'+weixin_withdraw_moneys
         else:
             actual_err = '该账户缺少截图，无法核账'
     else:
