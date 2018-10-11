@@ -1692,7 +1692,7 @@ def check_account(request):
     for table in tables:
         pay_money += float(table.payment_amount)
         # if table.online_order_number == '' and table.payment_type != '刮刮卡':
-        if table.online_order_number == '' and table.payment_type != '手续费':
+        if table.online_order_number == '' and table.payment_type != '手续费' :
             un_online_order_number += 1
         if table.payment_type == '手续费':
             handing_free_all += float(table.payment_amount)
@@ -2439,9 +2439,9 @@ def down_all_data2(request):
         now_time2 = t_mouth(now_time2)
         now_time = now_time2
     if payment_types == '全部':
-        tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes=False).all()
+        tables = Brush_single_entry.objects.filter(add_time__month=now_time, deletes=False).all()
     else:
-        tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_type=payment_types, deletes=False).all()
+        tables = Brush_single_entry.objects.filter(add_time__month=now_time, payment_type=payment_types, deletes=False).all()
     sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "备注", "操作员"]]
     for i in tables:
         row1 = []

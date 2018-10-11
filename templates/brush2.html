@@ -16,12 +16,14 @@
         </div>
         <div class="form-group">
             {{ add_brush_form.wang_wang_number }}<a href="javascript:void(0);"><i class="fa fa-user-circle-o" aria-hidden="true"
-                                                                                  id="wang_wang_number" data-container="body" data-toggle="popover" trigger="hover"
-                                                                                  data-placement="right" id="search_wangwang"
+                                                                                  id="wang_wang_number" data-container="body"
+                                                                                  data-toggle="popover"
+                                                                                    {# data-trigger="hover"#}
+                                                                                  data-placement="bottom"
+                                                                                  id="search_wangwang"
                                                                                   data-html="true"></i></a>&nbsp;
         </div>
         <div class="form-group">
-
             <input type="text" placeholder="线上订单号" class="form-control" id="online_order_number" name="online_order_number">
         </div>
         <div class="form-group">
@@ -224,35 +226,37 @@
     {#查询该旺旺号近期喝酒时间#}
     <script>
 
-        $('i#wang_wang_number').hover(function () {
+        $('i#wang_wang_number').click(function () {
+            $(this).hover(function () {
+                    var wangwang_num = $('input#wang_wang_number').val();
+                    console.log(wangwang_num);
+                    $.ajax({
+                        url: "/erp/search_by_wangwang_num2/",
+                        type: "GET",
+                        dataType: 'json',
+                        data: {'wangwang_num': wangwang_num},
+                        async: true,
+                        success: function (msg) {
+                            console.log(msg);
+                            $('i#wang_wang_number').attr('data-content', msg);
+                            $('[data-toggle="popover"]').popover();
+                            $('i#wang_wang_number').popover('show');
+                        },
+                        error: function () {
+                            console.log('err');
+                            $('i#wang_wang_number').attr('data-content', '该旺旺号之前没有喝酒');
+                            $('[data-toggle="popover"]').popover()
+                            $('i#wang_wang_number').popover('show');
+                        }
+                    });
+                    {#$('i#wang_wang_number').popover('show');#}
+                }, function () {
+                    $('i#wang_wang_number').popover('hide');
+                    $('i#wang_wang_number').attr('data-content', '');
+                }
+            )
 
-                var wangwang_num = $('input#wang_wang_number').val();
-                console.log(wangwang_num);
-                $.ajax({
-                    url: "/erp/search_by_wangwang_num2/",
-                    type: "GET",
-                    dataType: 'json',
-                    data: {'wangwang_num': wangwang_num},
-                    async: true,
-                    success: function (msg) {
-                        console.log(msg);
-                        $('i#wang_wang_number').attr('data-content', msg);
-
-                        $('i#wang_wang_number').popover();
-                        {#$('i#wang_wang_number').popover('show');#}
-                    },
-                    error: function () {
-                        console.log('err');
-                        $('i#wang_wang_number').attr('data-content', '该旺旺号之前没有喝酒');
-                        {#$('i#wang_wang_number').popover('show');#}
-                    }
-                });
-                {#$('i#wang_wang_number').popover('show');#}
-            }, function () {
-                $('i#wang_wang_number').popover('hide');
-                $('i#wang_wang_number').attr('data-content', '');
-            }
-        );
+        })
     </script>
     {#表格里的旺旺号查询#}
     <script>
@@ -274,7 +278,7 @@
                         $('span#search_wangwang').attr('data-content', '该旺旺号之前没有喝酒');
                     }
                 });
-                $(this).popover(trigger=hover);
+                $(this).popover(trigger = hover);
                 {#$(this).popover('show');#}
             }, function () {
                 $(this).popover('hide');
