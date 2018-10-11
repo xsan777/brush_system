@@ -75,7 +75,7 @@
     {#下载#}
     <script>
         var search_date = $('#search_date').val();
-        var payment_type = $('#payment_type').val();
+        var payment_type = $("#payment_type" ).find("option:selected").text();
         var down_url = '/down_all_data/?check_data=' + search_date + '&payment_type=' + payment_type;
         var down_url2 = '/down_all_data2/?check_data=' + search_date + '&payment_type=' + payment_type;
         $('#down').attr('href', down_url);
@@ -84,6 +84,7 @@
         function cheage_down() {
             var search_date = $('#search_date').val();
             var payment_type = $('#payment_type').val();
+             console.log(payment_type)
             var down_url = '/down_all_data/?check_data=' + search_date + '&payment_type=' + payment_type;
             var down_url2 = '/down_all_data2/?check_data=' + search_date + '&payment_type=' + payment_type;
             $('#down').attr('href', down_url);
@@ -95,7 +96,7 @@
         $("#payment_type").find("option").each(function () {
             var ff = '{{ payment_type }}';
             if ($(this).val() == ff) {
-                $(this).attr("selected", "selected");
+                $(this).attr("selected", true);
             }
         });
     </script>

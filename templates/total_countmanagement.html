@@ -39,13 +39,13 @@
                     <td>{{ table.account_name.total_account_name }}</td>
                     <td>{{ table.start_money }}</td>
                     <td>{{ table.end_money }}</td>
-                    {% if  table.last_date_end_img %}
+                    {% if  table.last_date_end_img != '前一日无截图' %}
                         <td><a href="/media/{{ table.last_date_end_img }}" onclick="big_img('{{ table.last_date_end_img }}')"
                                target="view_window"><img
-                                src="/media/{{ table.last_date_end_img }}"
+                                src="/media/{{ table.last_date_end_img}}"
                                 alt="" id="smar_img"></a></td>
                     {% else %}
-                        <td></td>
+                        <td>{{ table.last_date_end_img }}</td>
                     {% endif %}
                     {% if  table.start_money_img %}
                         <td><a href="/media/{{ table.start_money_img }}" onclick="big_img('{{ table.start_money_img }}')"
@@ -59,7 +59,7 @@
                     {% else %}
                         <td></td>
                     {% endif %}
-                    <td>{{ table.operator.username }}</td>
+                    <td>{{ table.operator }}</td>
                     {% if table.makes == 'False' %}
                         <td><span class="glyphicon glyphicon-remove" style="color: red"></span></td>
                     {% else %}

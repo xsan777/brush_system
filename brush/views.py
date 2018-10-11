@@ -1794,13 +1794,15 @@ def search_count(request):
     edit_form = Edit_forms()
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     if search_date:
-        count = Account_record.objects.filter(datess__date=search_date, deletes=False).all()
+        now_time = search_date
+        count = Account_record.objects.filter(datess__date=now_time, deletes=False).all()
+        # count = Account_record.objects.filter(datess__date=search_date, deletes=False).all()
     else:
-        search_date = now_time
+        # search_date = now_time
         count = Account_record.objects.filter(datess__date=now_time, deletes=False).all()
     # 财务账户提示账户未确认
-    now_time = time.strftime('%Y-%m-%d', time.localtime())
-    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=True, deletes=False).all()
+    # now_time = time.strftime('%Y-%m-%d', time.localtime())
+    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
     if len(all_account_makes) == 0:
         admin_flog = 1
     else:
@@ -1809,7 +1811,7 @@ def search_count(request):
     total_reminds = ''
     user_total_account = Userinfo.objects.get(username=user, deletes=False)
     account__ = user_total_account.total_brank_account.filter(deletes=False).all()
-    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    # now_time = time.strftime('%Y-%m-%d', time.localtime())
     for m in account__:
         account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
         for i in account2:
@@ -1834,7 +1836,7 @@ def search_count(request):
     update_passwd = Updata_passwd()
     if rouse == '财务':
         return render(request, 'countmanagement.html',
-                      {'title': title, 'account': account, 'count': count, 'nowss': search_date, 'user': user, 'update_passwd': update_passwd})
+                      {'title': title, 'account': account, 'count': count, 'nowss': search_date, 'user': user, 'update_passwd': update_passwd,'admin_flog':admin_flog})
     else:
         return render(request, 'countmanagement2.html',
                       {'title': title, 'account': account3, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
@@ -2026,7 +2028,7 @@ def check_total_account(request):
     total_reminds = ''
     user_total_account = Userinfo.objects.get(username=user, deletes=False)
     account__ = user_total_account.total_brank_account.filter(deletes=False).all()
-    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    # now_time = time.strftime('%Y-%m-%d', time.localtime())
     for m in account__:
         account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
         for i in account2:
@@ -2063,6 +2065,7 @@ def make_total_account(request):
         return redirect(to=login)
     account = request.GET.get('search_total_account_name')
     now_time = request.GET.get('check_date')
+    print(now_time)
     Total_account_record.objects.filter(datess__date=now_time, account_name__total_account_name=account, deletes=False).update(makes=True)
     operators = Userinfo.objects.get(username=user, deletes=False)
     operation_types = '总账户核对成功'
@@ -2089,12 +2092,18 @@ def search_total_count(request):
     else:
         search_date = get_nday_list2(2, now_time)
         count = Total_account_record.objects.filter(datess__date=search_date, deletes=False).all()
+    count_list = []
     for i in count:
+        count_row = {}
         last_date = get_nday_list2(2, search_date)
         last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
-            'end_money_img')
-        count_row = {}
-        count_row['last_date_end_img'] = last_date_end_img
+                'end_money_img')
+        if len(last_date_end_img)>0:
+            last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+                'end_money_img').get()
+            count_row['last_date_end_img'] = last_date_end_img['end_money_img']
+        else:
+            count_row['last_date_end_img'] = '前一日无截图'
         count_row['datess'] = i.datess
         count_row['account_name'] = i.account_name
         count_row['start_money'] = i.start_money
@@ -2102,7 +2111,8 @@ def search_total_count(request):
         count_row['start_money_img'] = i.start_money_img
         count_row['end_money_img'] = i.end_money_img
         count_row['operator'] = i.operator.username
-
+        count_row['makes'] = i.makes
+        count_list.append(count_row)
         # 财务账户提示总账户未确认
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     now_time = get_nday_list2(2, now_time)
@@ -2140,12 +2150,13 @@ def search_total_count(request):
     update_passwd = Updata_passwd()
     if rouse == '财务':
         return render(request, 'total_countmanagement.html',
-                      {'title': title, 'count': count, 'nowss': search_date, 'user': user, 'admin_flog': admin_flog, 'update_passwd': update_passwd})
+                      {'title': title, 'count': count_list, 'nowss': search_date, 'user': user, 'admin_flog': admin_flog, 'update_passwd': update_passwd})
     else:
+        print(121)
         return render(request, 'total_countmanagement2.html',
                       {'title': title, 'account': account2, 'count': count, 'nowss': search_date, 'formm': forms, 'edit_form': edit_form,
                        'user': user, 'total_reminds': total_reminds, 'total_account_all': total_account_all, 'reminds': reminds, 'unmakes': unmakes,
-                       'update_passwd': update_passwd, 'makes': makes})
+                       'update_passwd': update_passwd, 'makes': makes,'now_time':search_date})
 
 
 # 总账单
