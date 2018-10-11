@@ -1692,8 +1692,12 @@ def check_account(request):
     for table in tables:
         pay_money += float(table.payment_amount)
         # if table.online_order_number == '' and table.payment_type != '刮刮卡':
-        if table.online_order_number == '' and table.payment_type != '手续费' :
-            un_online_order_number += 1
+        if table.online_order_number == '' :
+            pay_type = table.payment_type
+            if pay_type == '手续费'or pay_type == '买家秀' or pay_type == '快递费' or pay_type == '收藏、加购'or  pay_type == '直通车点击' :
+                pass
+            else:
+                un_online_order_number += 1
         if table.payment_type == '手续费':
             handing_free_all += float(table.payment_amount)
 
