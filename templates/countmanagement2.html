@@ -30,7 +30,7 @@
         <br>
         <br>
         <div class="form-group">
-            <label for="exampleInputName2"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;初始资金截图:</label>
+            <label for="exampleInputName2"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;转账收入截图:</label>
             <input type="file" id="start_money_img" name="start_money_img">
         </div>
         <div class="form-group">
@@ -46,7 +46,7 @@
     </form>
     <br>
     <hr>
-    {#    查询日期设置#}
+    {#查询日期设置#}
     <div class="col-lg-offset-7">
         <form action="/search_count/" class="form-horizontal" id="search_form">
             <div class="form-group">
@@ -69,7 +69,8 @@
                 <th>初始资金</th>
                 <th>结余资金</th>
                 <th>微信提现费用</th>
-                <th>初始资金截图</th>
+                <th>前一日结余资金截图</th>
+                <th>转账收入截图</th>
                 <th>结余资金截图</th>
                 <th>微信提现费用截图</th>
                 <th>操作人</th>
@@ -84,6 +85,14 @@
                     <td>{{ table.start_money }}</td>
                     <td>{{ table.end_money }}</td>
                     <td>{{ table.weixin_withdraw_money }}</td>
+                    {% if  table.last_date_end_img != '前一日无截图' %}
+                        <td><a href="/media/{{ table.last_date_end_img }}" onclick="big_img('{{ table.last_date_end_img }}')"
+                               target="view_window"><img
+                                src="/media/{{ table.last_date_end_img }}"
+                                alt="" id="smar_img"></a></td>
+                    {% else %}
+                        <td>{{ table.last_date_end_img }}</td>
+                    {% endif %}
                     {% if  table.start_money_img %}
                         <td><a href="/media/{{ table.start_money_img }}" onclick="big_img('{{ table.start_money_img }}')" target="view_window"><img
                                 src="/media/{{ table.start_money_img }}"
@@ -92,12 +101,14 @@
                         <td></td>
                     {% endif %}
                     {% if  table.end_money_img %}
-                        <td><a href="/media/{{ table.end_money_img }}" target="view_window"><img src="/media/{{ table.end_money_img }}" alt="" id="smar_img"></a></td>
+                        <td><a href="/media/{{ table.end_money_img }}" target="view_window"><img src="/media/{{ table.end_money_img }}" alt=""
+                                                                                                 id="smar_img"></a></td>
                     {% else %}
                         <td></td>
                     {% endif %}
                     {% if  table.weixin_img %}
-                        <td><a href="/media/{{ table.weixin_img }}" target="view_window"><img src="/media/{{ table.weixin_img }}" alt="" id="smar_img"></a></td>
+                        <td><a href="/media/{{ table.weixin_img }}" target="view_window"><img src="/media/{{ table.weixin_img }}" alt=""
+                                                                                              id="smar_img"></a></td>
                     {% else %}
                         <td></td>
                     {% endif %}
@@ -137,30 +148,35 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;初始资金</label>
+                            <label for="exampleInputName2" class="col-sm-3 control-label"><span
+                                    style="color: red">*</span>&nbsp;&nbsp;&nbsp;初始资金</label>
                             <div class="col-sm-9">
                                 {{ edit_form.start_money }}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;结余资金</label>
+                            <label for="exampleInputName2" class="col-sm-3 control-label"><span
+                                    style="color: red">*</span>&nbsp;&nbsp;&nbsp;结余资金</label>
                             <div class="col-sm-9">
                                 {{ edit_form.end_money }}
                             </div>
                             <input type="text" id="update_ids" value="" name="id">
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;微信提现费用</label>
+                            <label for="exampleInputName2" class="col-sm-3 control-label"><span
+                                    style="color: red">*</span>&nbsp;&nbsp;&nbsp;微信提现费用</label>
                             <div class="col-sm-9">
                                 {{ edit_form.weixin_withdraw_money }}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;初始资金截图</label>
+                            <label for="exampleInputName2" class="col-sm-3 control-label"><span
+                                    style="color: red">*</span>&nbsp;&nbsp;&nbsp;初始资金截图</label>
                             <input type="file" id="eidt_start_money_img" name="start_money_img">
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputName2" class="col-sm-3 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;结余资金截图</label>
+                            <label for="exampleInputName2" class="col-sm-3 control-label"><span
+                                    style="color: red">*</span>&nbsp;&nbsp;&nbsp;结余资金截图</label>
                             <input type="file" id="eidt_end_money_img" name="end_money_img">
                         </div>
                         <div class="form-group">
