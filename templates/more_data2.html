@@ -43,6 +43,7 @@
                 <tr>
                     <th>序号</th>
                     <th>店铺</th>
+                    <th>QQ或微信</th>
                     <th>旺旺号</th>
                     <th>线上订单号</th>
                     <th>成交日期</th>
@@ -58,6 +59,7 @@
                     <tr id="{{ forloop.counter }}">
                         <td id="num">{{ forloop.counter }}</td>
                         <td>{{ table.shopname }}</td>
+                        <td>{{ table.qq_or_weixin }}</td>
                         <td> <span data-container="body" data-toggle="popover" data-placement="right" data-content="123"
                                    id="search_wangwang" data-html="true"> {{ table.wang_wang_number }}</span></td>
 
@@ -82,6 +84,7 @@
                 <tr>
                     <th>序号</th>
                     <th>店铺</th>
+                    <th>QQ或微信</th>
                     <th>旺旺号</th>
                     <th>线上订单号</th>
                     <th>成交日期</th>
@@ -96,6 +99,7 @@
                     <tr id="{{ forloop.counter }}">
                         <td id="num">{{ forloop.counter }}</td>
                         <td>{{ table.shopname }}</td>
+                        <td>{{ table.qq_or_weixin }}</td>
                         <td>{{ table.wang_wang_number }}</td>
                         <td>{{ table.online_order_number }}</td>
                         <td>{{ table.transaction_data }}</td>

@@ -18,7 +18,7 @@
             {{ add_brush_form.wang_wang_number }}<a href="javascript:void(0);"><i class="fa fa-user-circle-o" aria-hidden="true"
                                                                                   id="wang_wang_number" data-container="body"
                                                                                   data-toggle="popover"
-                {# data-trigger="hover"#}
+                                                                                  data-trigger="hover"
                                                                                   data-placement="bottom"
                                                                                   id="search_wangwang"
                                                                                   data-html="true"></i></a>&nbsp;
@@ -83,8 +83,8 @@
             <td id="add_time"></td>
             <td id="shopname"></td>
             <td id="qq_or_weixin"></td>
-            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang"
-                                            data-html="true"></span></td>
+            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang2"
+                                            data-trigger="hover" data-html="true"></span></td>
             <td id="online_order_number"></td>
             <td id="transaction_data"></td>
             <td id="payment_type"></td>
@@ -102,7 +102,7 @@
                 <td>{{ table.shopname }}</td>
                 <td>{{ table.qq_or_weixin }}</td>
                 <td><span data-container="body" data-toggle="popover" data-placement="right" data-content=""
-                          id="search_wangwang" data-html="true">{{ table.wang_wang_number }}</span></td>
+                          id="search_wangwang2" data-html="true" data-trigger="hover">{{ table.wang_wang_number }}</span></td>
                 <td>{{ table.online_order_number }}</td>
                 <td>{{ table.transaction_data }}</td>
                 <td>{{ table.payment_type }}</td>
@@ -226,100 +226,90 @@
     {#查询该旺旺号近期喝酒时间#}
     <script>
         $('i#wang_wang_number').on('mouseenter', function () {
-            console.log('鼠标进入');
+            {#console.log('鼠标进入');#}
+            $('i#wang_wang_number').attr('data-content', '');
             timer = setTimeout(function () {
-                console.log('开始查询');
+                {#console.log('开始查询');#}
                 var wangwang_num = $('input#wang_wang_number').val();
-                console.log(wangwang_num);
+                {#console.log(wangwang_num);#}
+                $.ajax({
+                        url: "/erp/search_by_wangwang_num2/",
+                        type: "GET",
+                        dataType: 'json',
+                        data: {'wangwang_num': wangwang_num},
+                        async: true,
+                        success: function (msg) {
+                            {#console.log(msg);#}
+                            {#$('i#wang_wang_number').on('mouseenter', function () {#}
+                            $('i#wang_wang_number').attr('data-content', msg);
+                            $('[data-toggle="popover"]').popover();
+                            $('i#wang_wang_number').popover('show');
+                            {# });#}
+                        },
+                        error: function () {
+                            {#console.log('err');#}
+                            {#$('i#wang_wang_number').on('mouseenter', function () {#}
+                            $('i#wang_wang_number').attr('data-content', '该旺旺号之前没有喝酒');
+                            $('[data-toggle="popover"]').popover();
+                            $('i#wang_wang_number').popover('show');
+                            {# }); #}
+                            {#$('i#wang_wang_number').on('mouseleave', function () {#}
+                            {#console.log('鼠标移走2222');#}
+                            {#$('i#wang_wang_number').popover('hide');#}
+                            {#$('i#wang_wang_number').attr('data-content', '');#}
+                            {# });#}
+                            {#console.log('测试')#}
+                        }
+                    }
+                    {#$('i#wang_wang_number').popover('show');#}
+                )
+            }, 500);
+        });
+        $('i#wang_wang_number').on('mouseleave', function () {
+            {#console.log('鼠标移走');#}
+            clearTimeout(timer);
+            $('i#wang_wang_number').popover('hide');
+            $('i#wang_wang_number').attr('data-content', '');
+        });
+    </script>
+    {#表格里的旺旺号查询#}
+    <script>
+        $('span#search_wangwang2').on('mouseenter', function () {
+            {#console.log('鼠标进入');#}
+            $('span#search_wangwang2').attr('data-content', '');
+            var wangwang_num = $(this).text();
+            var that = $(this);
+            timer = setTimeout(function () {
+                {#console.log('开始查询');#}
+                {#console.log(wangwang_num);#}
                 $.ajax({
                     url: "/erp/search_by_wangwang_num2/",
                     type: "GET",
                     dataType: 'json',
                     data: {'wangwang_num': wangwang_num},
-                    async: true,
+                    async: false,
                     success: function (msg) {
-                        console.log(msg);
-                        $('i#wang_wang_number').attr('data-content', msg);
+                        {#console.log(msg);#}
+                        $('span#search_wangwang2').attr('data-content', msg);
                         $('[data-toggle="popover"]').popover();
-                        $('i#wang_wang_number').popover('show');
                     },
                     error: function () {
                         console.log('err');
-                        $('i#wang_wang_number').attr('data-content', '该旺旺号之前没有喝酒');
-                        $('[data-toggle="popover"]').popover()
-                        $('i#wang_wang_number').popover('show');
+                        $('span#search_wangwang2').attr('data-content', '该旺旺号之前没有喝酒');
+                        $('[data-toggle="popover"]').popover();
+                        {#console.log('测试')#}
                     }
                 });
-                {#$('i#wang_wang_number').popover('show');#}
-            }, 500);
+                {#console.log('查询完毕，显示数据');#}
+                that.popover('show')
+            }, 800);
         });
-        $('i#wang_wang_number').on('mouseleave', function () {
-            console.log('鼠标移走');
+        $('span#search_wangwang2').on('mouseleave', function () {
+            {#console.log('鼠标移走');#}
             clearTimeout(timer);
-            $('i#wang_wang_number').popover('hide');
-            $('i#wang_wang_number').attr('data-content', '');
+            $('span#search_wangwang2').popover('hide');
+            $('span#search_wangwang2').attr('data-content', '');
         });
-
-        {#$('i#wang_wang_number').click(function () {#}
-        {#    $(this).hover(function () {#}
-        {#            var wangwang_num = $('input#wang_wang_number').val();#}
-        {#            console.log(wangwang_num);#}
-        {#            $.ajax({#}
-        {#                url: "/erp/search_by_wangwang_num2/",#}
-        {#                type: "GET",#}
-        {#                dataType: 'json',#}
-        {#                data: {'wangwang_num': wangwang_num},#}
-        {#                async: true,#}
-        {#                success: function (msg) {#}
-        {#                    console.log(msg);#}
-        {#                    $('i#wang_wang_number').attr('data-content', msg);#}
-        {#                    $('[data-toggle="popover"]').popover();#}
-        {#                    $('i#wang_wang_number').popover('show');#}
-        {#                },#}
-        {#                error: function () {#}
-        {#                    console.log('err');#}
-        {#                    $('i#wang_wang_number').attr('data-content', '该旺旺号之前没有喝酒');#}
-        {#                    $('[data-toggle="popover"]').popover()#}
-        {#                    $('i#wang_wang_number').popover('show');#}
-        {#                }#}
-        {#            });#}
-                    {#$('i#wang_wang_number').popover('show');#}
-        {#        }, function () {#}
-        {#            $('i#wang_wang_number').popover('hide');#}
-        {#            $('i#wang_wang_number').attr('data-content', '');#}
-        {#        }#}
-        {#    )#}
-        {##}
-        {# }) #}
-    </script>
-    {#表格里的旺旺号查询#}
-    <script>
-        $('span#search_wangwang').click(function () {
-                console.log('dj');
-                var wangwang_num = $(this).text();
-                $.ajax({
-                    url: "/erp/search_by_wangwang_num/",
-                    type: "GET",
-                    dataType: 'json',
-                    data: {'wangwang_num': wangwang_num},
-                    async: true,
-                    success: function (msg) {
-                        console.log(msg);
-                        $('span#search_wangwang').attr('data-content', msg);
-                    },
-                    error: function () {
-                        $('span#search_wangwang').attr('data-content', '该旺旺号之前没有喝酒');
-                    }
-                });
-                $(this).popover(trigger = hover);
-                {#$(this).popover('show');#}
-            }, function () {
-                $(this).popover('hide');
-                {#$('span#search_wangwang').popover('hide');#}
-                $('span#search_wangwang').attr('data-content', '');
-            }
-        );
-
     </script>
 
     {#创建数据#}
@@ -359,7 +349,7 @@
                         $('tr#0').children('td#num').html(1);
                         $('tr#0').children('td#qq_or_weixin').html(arg['qq_or_weixin']);
                         $('tr#0').children('td#shopname').html(arg['shopname']);
-                        $('tr#0').children('td#wang_wang_number').children('span#search_wangwang').html(arg['wang_wang_number']);
+                        $('tr#0').children('td#wang_wang_number').children('span#search_wangwang2').html(arg['wang_wang_number']);
                         $('tr#0').children('td#online_order_number').html(arg['online_order_number']);
                         $('tr#0').children('td#transaction_data').html(arg['transaction_data']);
                         $('tr#0').children('td#payment_type').html(arg['payment_type']);
@@ -388,7 +378,7 @@
                             '            <td id="add_time"></td>\n' +
                             '            <td id="shopname"></td>\n' +
                             '            <td id="qq_or_weixin"></td>\n' +
-                            '            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang" data-html="true"></span></td>\n' +
+                            '            <td id="wang_wang_number"><span data-container="body" data-toggle="popover" data-placement="right" id="search_wangwang2" data-html="true"></span></td>\n' +
                             '            <td id="online_order_number"></td>\n' +
                             '            <td id="transaction_data"></td>\n' +
                             '            <td id="payment_type"></td>\n' +

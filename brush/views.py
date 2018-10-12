@@ -2684,7 +2684,7 @@ def brushmanagement_2(request):
         for i in account2:
             if i.makes == 'False':
                 total_reminds = '(总账户未确认)'
-    return render(request, 'erp_templates/brush2.html',
+    return render(request, 'erp_templates/新建文件夹/brush2.html',
                   {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables_list, 'add_brush_form': add_brush_form,
                    'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,
                    'total_reminds': total_reminds, })
