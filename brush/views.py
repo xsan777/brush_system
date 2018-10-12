@@ -1565,6 +1565,7 @@ def edit(request):
         wang_wang_numbers = request.POST.get('wang_wang_number')
         wang_wang_numbers = str(wang_wang_numbers).strip()
         online_order_numbers = request.POST.get('online_order_number')
+        online_order_numbers = str(online_order_numbers).strip()
         transaction_datas = request.POST.get('transaction_data')
         payment_types = request.POST.get('payment_type')
         payment_amounts = request.POST.get('payment_amount')
@@ -1578,6 +1579,17 @@ def edit(request):
         if online_order_numbers != '':
             if len(online_order_numbers) != 18:
                 errs = '线上订单号格式错误'
+            else:
+                onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers,
+                                                          payment_type=payment_types, deletes=False).all()
+                if len(onlys) > 0:
+                    for i in onlys:
+                        exit_ = str(i.id)
+                        break
+                    print(exit_,ids)
+                    print(type(exit_),type(ids))
+                    if exit_ != ids:
+                        errs = '该订单记录已存在'
         if errs == '':
             last_date = Brush_single_entry.objects.filter(id=ids).get()
             Brush_single_entry.objects.filter(id=ids).update(shopname=shopnames, qq_or_weixin=qq_or_weixins, wang_wang_number=wang_wang_numbers,
@@ -1765,7 +1777,7 @@ def check_account(request):
         # if table.online_order_number == '' and table.payment_type != '刮刮卡':
         if table.online_order_number == '':
             pay_type = table.payment_type
-            if pay_type == '手续费' or pay_type == '买家秀' or pay_type == '快递费' or pay_type == '收藏、加购' or pay_type == '直通车点击':
+            if pay_type == '手续费' or pay_type == '买家秀' or pay_type == '快递费' or pay_type == '收藏、加购' or pay_type == '直通车点击' or pay_type == '问大家':
                 pass
             else:
                 un_online_order_number += 1
@@ -1911,7 +1923,9 @@ def search_count(request):
 
     # 财务账户提示账户未确认
     # now_time = time.strftime('%Y-%m-%d', time.localtime())
-    all_account_makes = Account_record.objects.filter(datess__date=now_time, makes=False, deletes=False).all()
+    # now_time = get_nday_list2(2,now_time)
+
+    all_account_makes = Account_record.objects.filter(datess__date=last_date, makes=False, deletes=False).all()
     if len(all_account_makes) == 0:
         admin_flog = 1
     else:
