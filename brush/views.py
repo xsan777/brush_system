@@ -861,13 +861,20 @@ def total_countmanagement(request):
                 start_moneys = request.POST.get('start_money')
                 end_moneys = request.POST.get('end_money')
                 try:
-                    float(start_moneys)
+                    start_moneys_float = float(start_moneys)
                     float(end_moneys)
                     errs = ''
                 except ValueError:
                     errs = '初始资金和结余资金必须为数字'
                 if errs == '':
                     account_names = Total_brank_account.objects.get(total_account_name=account_names, deletes=False)
+                    last_record = Total_account_record.objects.filter(account_name=account_names,deletes=False).last()
+                    try:
+                        last_end_moneys = float(last_record.end_money)
+                    except AttributeError :
+                        last_end_moneys = 0
+                    start_moneys = last_end_moneys + start_moneys_float
+                    start_moneys = '%.2f' % start_moneys
                     Total_account_record.objects.create(datess=add_times, account_name=account_names, start_money=start_moneys,
                                                         end_money=end_moneys, operator=operators, makes='False',
                                                         start_money_img=request.FILES.get('start_money_img'),
@@ -881,17 +888,26 @@ def total_countmanagement(request):
             else:
                 errs = '该账户今日已创建记录'
     count_list = []
+    last_date = get_nday_list2(2, now_time)
     for i in count:
         count_row = {}
-        last_date = get_nday_list2(2, now_time)
-        last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
-            'end_money_img')
-        if len(last_date_end_img) > 0:
-            last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
-                'end_money_img').get()
-            count_row['last_date_end_img'] = last_date_end_img['end_money_img']
+        last_end_money = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+            'end_money')
+        if len(last_end_money) > 0:
+            last_end_money = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+                'end_money').get()
+            count_row['last_end_money'] = last_end_money['end_money']
         else:
-            count_row['last_date_end_img'] = '前一日无截图'
+            count_row['last_end_money'] = '该账户没有前一天的结余记录'
+        #前一日结余资金截图
+        # last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+        #     'end_money_img')
+        # if len(last_date_end_img) > 0:
+        #     last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+        #         'end_money_img').get()
+        #     count_row['last_date_end_img'] = last_date_end_img['end_money_img']
+        # else:
+        #     count_row['last_date_end_img'] = '前一日无截图'
         # print(count_row['last_date_end_img'])
         count_row['id'] = i.id
         count_row['datess'] = i.datess
@@ -1082,8 +1098,11 @@ def countmanagement(request):
                         errs = '初始资金和结余资金和微信提现费用必须为数字'
                     if errs == '':
                         account_names = Brank_account.objects.get(account_name=account_names, deletes=False)
-                        last_record = Account_record.objects.filter(account_name=account_names, deletes=False).last()
-                        last_end_moneys = float(last_record.end_money)
+                        try:
+                            last_record = Account_record.objects.filter(account_name=account_names, deletes=False).last()
+                            last_end_moneys = float(last_record.end_money)
+                        except AttributeError :
+                            last_end_moneys = 0
                         start_moneys = last_end_moneys + start_moneys_float
                         start_moneys = '%.2f' % start_moneys
                         Account_record.objects.create(datess=add_times, account_name=account_names, start_money=start_moneys, end_money=end_moneys,
@@ -1104,21 +1123,17 @@ def countmanagement(request):
         count = Account_record.objects.filter(datess__date=get_nday_list2(2, now_time), deletes=False).all()
     else:
         count = Account_record.objects.filter(datess__date=now_time, operator__username=user, deletes=False).all()
+    last_date = get_nday_list2(2, now_time)
     count_list = []
     for i in count:
         count_row = {}
-        last_end_money = Account_record.objects.filter( account_name=i.account_name, deletes=False).values(
-            'end_money')
-        if len(last_end_money) > 1:
-            last_end_money = Account_record.objects.filter(account_name=i.account_name, deletes=False).values(
-                'end_money').order_by('-datess')[1]
-            count_row['last_end_money'] = last_end_money['end_money']
-        elif len(last_end_money) == 1 :
-            last_end_money = Account_record.objects.filter(account_name=i.account_name, deletes=False).values(
-                'end_money').order_by('-datess')[0]
+        last_end_money = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values('end_money')
+        if len(last_end_money) > 0:
+            last_end_money = Account_record.objects.filter(datess__date=last_date,account_name=i.account_name, deletes=False).values(
+                'end_money').get()
             count_row['last_end_money'] = last_end_money['end_money']
         else:
-            count_row['last_end_money'] = '没有上次结余金额'
+            count_row['last_end_money'] = '没有前一天的结余金额'
         count_row['id'] = i.id
         count_row['datess'] = i.datess
         count_row['account_name'] = i.account_name
@@ -1860,20 +1875,17 @@ def search_count(request):
     # else:
     # search_date = now_time
     count = Account_record.objects.filter(datess__date=now_time, deletes=False).all()
+    last_date = get_nday_list2(2, now_time)
     count_list = []
     for i in count:
         count_row = {}
-        last_end_money = Account_record.objects.filter( account_name=i.account_name, deletes=False).values('end_money')
-        if len(last_end_money) > 1:
-            last_end_money = Account_record.objects.filter(account_name=i.account_name, deletes=False).values(
-                'end_money').order_by('-datess')[1]
-            count_row['last_end_money'] = last_end_money['end_money']
-        elif len(last_end_money) == 1 :
-            last_end_money = Account_record.objects.filter(account_name=i.account_name, deletes=False).values(
-                'end_money').order_by('-datess')[0]
+        last_end_money = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values('end_money')
+        if len(last_end_money) > 0:
+            last_end_money = Account_record.objects.filter(datess__date=last_date,account_name=i.account_name, deletes=False).values(
+                'end_money').get()
             count_row['last_end_money'] = last_end_money['end_money']
         else:
-            count_row['last_end_money'] = '没有上次结余金额'
+            count_row['last_end_money'] = '没有前一天的结余金额'
         # 显示前一日结余资金截图
         # last_date_end_img = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
         #     'end_money_img')
@@ -2190,17 +2202,15 @@ def search_total_count(request):
         search_date = get_nday_list2(2, now_time)
         count = Total_account_record.objects.filter(datess__date=search_date, deletes=False).all()
     count_list = []
+    last_date = get_nday_list2(2, search_date)
     for i in count:
         count_row = {}
-        last_end_money = Total_account_record.objects.filter(account_name=i.account_name, deletes=False).values('end_money')
-        if len(last_end_money) >1:
-            last_end_money = Total_account_record.objects.filter(account_name=i.account_name,deletes=False).values('end_money').order_by('-datess')[1]
-            count_row['last_end_money'] = last_end_money['end_money']
-        elif len(last_end_money) ==1:
-            last_end_money = Total_account_record.objects.filter(account_name=i.account_name,deletes=False).values('end_money').order_by('-datess')[0]
+        last_end_money = Total_account_record.objects.filter(datess__date=last_date,account_name=i.account_name, deletes=False).values('end_money')
+        if len(last_end_money) >0:
+            last_end_money = Total_account_record.objects.filter(datess__date=last_date,account_name=i.account_name,deletes=False).values('end_money').get()
             count_row['last_end_money'] = last_end_money['end_money']
         else:
-            count_row['last_end_money'] ='该账户没有上次结余记录'
+            count_row['last_end_money'] ='该账户没有前一天的结余记录'
         #显示前一日的结余截图
         # last_date = get_nday_list2(2, search_date)
         # last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
@@ -2428,7 +2438,7 @@ def down_total_account_brush(request):
     elif first_account_post == '' and now_time_post:
         now_time = now_time_post
     first_accounts = first_account.brank_account_set.filter(deletes=False).values('account_name')
-    sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "收入金额", "付款金额", "账户结余", "付款类型", "付款账户", "备注", "操作员"], ]
+    sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "初始金额", "付款金额", "账户结余", "付款类型", "付款账户", "备注", "操作员"], ]
     account_start_money = Total_account_record.objects.filter(datess__date=now_time,
                                                               account_name__total_account_name=first_account.total_account_name, deletes=False).all()
     if len(account_start_money) > 0:

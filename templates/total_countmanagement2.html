@@ -16,7 +16,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="exampleInputName2"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;初始资金:</label>
+            <label for="exampleInputName2"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;今日转账收入资金:</label>
             {{ formm.start_money }}
         </div>
         <div class="form-group">
@@ -58,7 +58,7 @@
                 <th>总账户名</th>
                 <th>初始资金</th>
                 <th>结余资金</th>
-                <th>前一日结余资金截图</th>
+                <th>前一日结余资金</th>
                 <th>转账收入截图</th>
                 <th>结余资金截图</th>
                 <th>操作人</th>
@@ -72,14 +72,15 @@
                     <td>{{ table.account_name.total_account_name }}</td>
                     <td>{{ table.start_money }}</td>
                     <td>{{ table.end_money }}</td>
-                    {% if  table.last_date_end_img != '前一日无截图' %}
-                        <td><a href="/media/{{ table.last_date_end_img }}" onclick="big_img('{{ table.last_date_end_img }}')"
-                               target="view_window"><img
-                                src="/media/{{ table.last_date_end_img}}"
-                                alt="" id="smar_img"></a></td>
-                    {% else %}
-                        <td>{{ table.last_date_end_img }}</td>
-                    {% endif %}
+                    <td>{{ table.last_end_money }}</td>
+                    {#                    {% if  table.last_date_end_img != '前一日无截图' %}#}
+                    {#                        <td><a href="/media/{{ table.last_date_end_img }}" onclick="big_img('{{ table.last_date_end_img }}')"#}
+                    {#                               target="view_window"><img#}
+                    {#                                src="/media/{{ table.last_date_end_img}}"#}
+                    {#                                alt="" id="smar_img"></a></td>#}
+                    {#                    {% else %}#}
+                    {#                        <td>{{ table.last_date_end_img }}</td>#}
+                    {#                    {% endif %}#}
                     {% if  table.start_money_img %}
                         <td><a href="/media/{{ table.start_money_img }}" onclick="big_img('{{ table.start_money_img }}')" target="view_window"><img
                                 src="/media/{{ table.start_money_img }}"
@@ -88,7 +89,8 @@
                         <td></td>
                     {% endif %}
                     {% if  table.end_money_img %}
-                        <td><a href="/media/{{ table.end_money_img }}"><img src="/media/{{ table.end_money_img }}" alt="" id="smar_img" target="view_window"></a></td>
+                        <td><a href="/media/{{ table.end_money_img }}"><img src="/media/{{ table.end_money_img }}" alt="" id="smar_img"
+                                                                            target="view_window"></a></td>
                     {% else %}
                         <td></td>
                     {% endif %}

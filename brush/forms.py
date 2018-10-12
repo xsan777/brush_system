@@ -109,7 +109,7 @@ class Edit_brank_account(forms.Form):
 
 # 添加账户记录
 class Forms(forms.Form):
-    start_money = forms.CharField(label='初始资金', widget=forms.TextInput(attrs={'placeholder': '初始资金', 'class': 'form-control'}))
+    start_money = forms.CharField(label='今日转账收入资金', widget=forms.TextInput(attrs={'placeholder': '今日转账收入资金', 'class': 'form-control'}))
     end_money = forms.CharField(label='结余资金', widget=forms.TextInput(attrs={'placeholder': '结余资金', 'class': 'form-control'}))
     weixin_withdraw_money = forms.CharField(label='微信提现费用', widget=forms.TextInput(attrs={'placeholder': '微信提现费用', 'class': 'form-control'}))
 
