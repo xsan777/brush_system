@@ -944,11 +944,11 @@ def total_countmanagement(request):
                       {'title': title, 'total_account_all': account, 'count': count_list, 'nowss': now_time, 'formm': forms, 'edit_form': edit_form,
                        'errs': errs, 'update_passwd': update_passwd,
                        'user': user, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'total_reminds': total_reminds})
-    else:
-
-        return render(request, 'countmanagement.html',
-                      {'title': title, 'account': account, 'count': count, 'nowss': now_time1, 'user': user, 'admin_flog': admin_flog,
-                       'update_passwd': update_passwd})
+    # else:
+    #
+    #     return render(request, 'countmanagement.html',
+    #                   {'title': title, 'account': account, 'count': count, 'nowss': now_time1, 'user': user, 'admin_flog': admin_flog,
+    #                    'update_passwd': update_passwd})
 
 
 # 修改总账户记录数据
@@ -1109,9 +1109,13 @@ def countmanagement(request):
         count_row = {}
         last_end_money = Account_record.objects.filter( account_name=i.account_name, deletes=False).values(
             'end_money')
-        if len(last_end_money) > 0:
+        if len(last_end_money) > 1:
             last_end_money = Account_record.objects.filter(account_name=i.account_name, deletes=False).values(
                 'end_money').order_by('-datess')[1]
+            count_row['last_end_money'] = last_end_money['end_money']
+        elif len(last_end_money) == 1 :
+            last_end_money = Account_record.objects.filter(account_name=i.account_name, deletes=False).values(
+                'end_money').order_by('-datess')[0]
             count_row['last_end_money'] = last_end_money['end_money']
         else:
             count_row['last_end_money'] = '没有上次结余金额'
@@ -1859,17 +1863,27 @@ def search_count(request):
     count_list = []
     for i in count:
         count_row = {}
-        last_date = get_nday_list2(2, now_time)
-        last_date_end_img = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
-            'end_money_img')
-
-        if len(last_date_end_img) > 0:
-            last_date_end_img = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
-                'end_money_img').get()
-            count_row['last_date_end_img'] = last_date_end_img['end_money_img']
+        last_end_money = Account_record.objects.filter( account_name=i.account_name, deletes=False).values('end_money')
+        if len(last_end_money) > 1:
+            last_end_money = Account_record.objects.filter(account_name=i.account_name, deletes=False).values(
+                'end_money').order_by('-datess')[1]
+            count_row['last_end_money'] = last_end_money['end_money']
+        elif len(last_end_money) == 1 :
+            last_end_money = Account_record.objects.filter(account_name=i.account_name, deletes=False).values(
+                'end_money').order_by('-datess')[0]
+            count_row['last_end_money'] = last_end_money['end_money']
         else:
-            count_row['last_date_end_img'] = '前一日无截图'
-        print(count_row['last_date_end_img'])
+            count_row['last_end_money'] = '没有上次结余金额'
+        # 显示前一日结余资金截图
+        # last_date_end_img = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+        #     'end_money_img')
+        #
+        # if len(last_date_end_img) > 0:
+        #     last_date_end_img = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+        #         'end_money_img').get()
+        #     count_row['last_date_end_img'] = last_date_end_img['end_money_img']
+        # else:
+        #     count_row['last_date_end_img'] = '前一日无截图'
         count_row['id'] = i.id
         count_row['datess'] = i.datess
         count_row['account_name'] = i.account_name
@@ -2178,15 +2192,25 @@ def search_total_count(request):
     count_list = []
     for i in count:
         count_row = {}
-        last_date = get_nday_list2(2, search_date)
-        last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
-            'end_money_img')
-        if len(last_date_end_img) > 0:
-            last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
-                'end_money_img').get()
-            count_row['last_date_end_img'] = last_date_end_img['end_money_img']
+        last_end_money = Total_account_record.objects.filter(account_name=i.account_name, deletes=False).values('end_money')
+        if len(last_end_money) >1:
+            last_end_money = Total_account_record.objects.filter(account_name=i.account_name,deletes=False).values('end_money').order_by('-datess')[1]
+            count_row['last_end_money'] = last_end_money['end_money']
+        elif len(last_end_money) ==1:
+            last_end_money = Total_account_record.objects.filter(account_name=i.account_name,deletes=False).values('end_money').order_by('-datess')[0]
+            count_row['last_end_money'] = last_end_money['end_money']
         else:
-            count_row['last_date_end_img'] = '前一日无截图'
+            count_row['last_end_money'] ='该账户没有上次结余记录'
+        #显示前一日的结余截图
+        # last_date = get_nday_list2(2, search_date)
+        # last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+        #     'end_money_img')
+        # if len(last_date_end_img) > 0:
+        #     last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+        #         'end_money_img').get()
+        #     count_row['last_date_end_img'] = last_date_end_img['end_money_img']
+        # else:
+        #     count_row['last_date_end_img'] = '前一日无截图'
         count_row['id'] = i.id
         count_row['datess'] = i.datess
         count_row['account_name'] = i.account_name
