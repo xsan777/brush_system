@@ -4,6 +4,12 @@ from django.db import models
 # from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
+class Upload_excel(models.Model):
+    add_time = models.DateTimeField(verbose_name='上传日期', auto_now=True, )
+    excel_path = models.FileField(upload_to='excel')
+    operator = models.CharField(verbose_name='上传人', max_length=32)
+
+
 # 总账户
 class Total_brank_account(models.Model):
     datess = models.DateTimeField(verbose_name='创建日期', )
@@ -61,14 +67,13 @@ class Account_record(models.Model):
     account_name = models.ForeignKey(Brank_account, on_delete=models.CASCADE)
     start_money = models.CharField(verbose_name='初始资金', max_length=16)
     end_money = models.CharField(verbose_name='结余资金', max_length=16)
-    weixin_withdraw_money = models.CharField(verbose_name='微信提现手续费',max_length=16)
+    weixin_withdraw_money = models.CharField(verbose_name='微信提现手续费', max_length=16)
     operator = models.ForeignKey(Userinfo, on_delete=models.CASCADE)
     makes = models.CharField(max_length=5, verbose_name='运营确认')
     start_money_img = models.ImageField(upload_to='start_img')
     end_money_img = models.ImageField(upload_to='end_img')
     weixin_img = models.ImageField(upload_to='weixin_img')
     deletes = models.CharField(max_length=5)
-
 
 # 总账户记录
 class Total_account_record(models.Model):
@@ -106,3 +111,6 @@ class Log(models.Model):
     operation_type = models.CharField(verbose_name='操作类型', max_length=32)
     before_operation = models.CharField(verbose_name='操作前', max_length=600)
     after_operation = models.CharField(verbose_name='操作后', max_length=600)
+
+class Payment_type(models.Model):
+    types = models.CharField(verbose_name='付款类型',max_length=32)

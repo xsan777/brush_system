@@ -3,6 +3,9 @@ from brush.models import *
 import time, json, datetime
 from .forms import *
 import django_excel as excel
+import os
+from brush_system.settings import MEDIA_ROOT
+from .excel_validator import excel_validator
 
 
 # Create your views here.
@@ -47,6 +50,16 @@ def t_mouth(search_time):
         return mouths[1]
     else:
         return mouths
+
+
+# 验证成交日期格式是否正确
+def is_vaild_date(date):
+    import datetime
+    try:
+        datetime.datetime.strptime(date, "%Y-%m-%d")
+        return True
+    except:
+        return False
 
 
 # 登录
@@ -868,10 +881,10 @@ def total_countmanagement(request):
                     errs = '初始资金和结余资金必须为数字'
                 if errs == '':
                     account_names = Total_brank_account.objects.get(total_account_name=account_names, deletes=False)
-                    last_record = Total_account_record.objects.filter(account_name=account_names,deletes=False).last()
+                    last_record = Total_account_record.objects.filter(account_name=account_names, deletes=False).last()
                     try:
                         last_end_moneys = float(last_record.end_money)
-                    except AttributeError :
+                    except AttributeError:
                         last_end_moneys = 0
                     start_moneys = last_end_moneys + start_moneys_float
                     start_moneys = '%.2f' % start_moneys
@@ -899,7 +912,7 @@ def total_countmanagement(request):
             count_row['last_end_money'] = last_end_money['end_money']
         else:
             count_row['last_end_money'] = '该账户没有前一天的结余记录'
-        #前一日结余资金截图
+        # 前一日结余资金截图
         # last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
         #     'end_money_img')
         # if len(last_date_end_img) > 0:
@@ -1101,7 +1114,7 @@ def countmanagement(request):
                         try:
                             last_record = Account_record.objects.filter(account_name=account_names, deletes=False).last()
                             last_end_moneys = float(last_record.end_money)
-                        except AttributeError :
+                        except AttributeError:
                             last_end_moneys = 0
                         start_moneys = last_end_moneys + start_moneys_float
                         start_moneys = '%.2f' % start_moneys
@@ -1129,7 +1142,7 @@ def countmanagement(request):
         count_row = {}
         last_end_money = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values('end_money')
         if len(last_end_money) > 0:
-            last_end_money = Account_record.objects.filter(datess__date=last_date,account_name=i.account_name, deletes=False).values(
+            last_end_money = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
                 'end_money').get()
             count_row['last_end_money'] = last_end_money['end_money']
         else:
@@ -1524,15 +1537,16 @@ def brushmanagement(request):
     reminds = ''
     unmakes = 0
     makes = 0
-    for i in account:
-        check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).all()
-        if check_countss:
-            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).get()
-            if check_countss.makes == 'False':
-                reminds = '(有账户未确认)'
-                unmakes += 1
-            if check_countss.makes == 'True':
-                makes += 1
+    if len(account) > 0:
+        for i in account:
+            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).all()
+            if len(check_countss) > 0:
+                check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).get()
+                if check_countss.makes == 'False':
+                    reminds = '(有账户未确认)'
+                    unmakes += 1
+                if check_countss.makes == 'True':
+                    makes += 1
     # 总账户未确认提示运营
     total_reminds = ''
     user_total_account = Userinfo.objects.get(username=user, deletes=False)
@@ -1586,8 +1600,8 @@ def edit(request):
                     for i in onlys:
                         exit_ = str(i.id)
                         break
-                    print(exit_,ids)
-                    print(type(exit_),type(ids))
+                    print(exit_, ids)
+                    print(type(exit_), type(ids))
                     if exit_ != ids:
                         errs = '该订单记录已存在'
         if errs == '':
@@ -1893,7 +1907,7 @@ def search_count(request):
         count_row = {}
         last_end_money = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values('end_money')
         if len(last_end_money) > 0:
-            last_end_money = Account_record.objects.filter(datess__date=last_date,account_name=i.account_name, deletes=False).values(
+            last_end_money = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
                 'end_money').get()
             count_row['last_end_money'] = last_end_money['end_money']
         else:
@@ -2219,13 +2233,14 @@ def search_total_count(request):
     last_date = get_nday_list2(2, search_date)
     for i in count:
         count_row = {}
-        last_end_money = Total_account_record.objects.filter(datess__date=last_date,account_name=i.account_name, deletes=False).values('end_money')
-        if len(last_end_money) >0:
-            last_end_money = Total_account_record.objects.filter(datess__date=last_date,account_name=i.account_name,deletes=False).values('end_money').get()
+        last_end_money = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values('end_money')
+        if len(last_end_money) > 0:
+            last_end_money = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+                'end_money').get()
             count_row['last_end_money'] = last_end_money['end_money']
         else:
-            count_row['last_end_money'] ='该账户没有前一天的结余记录'
-        #显示前一日的结余截图
+            count_row['last_end_money'] = '该账户没有前一天的结余记录'
+        # 显示前一日的结余截图
         # last_date = get_nday_list2(2, search_date)
         # last_date_end_img = Total_account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
         #     'end_money_img')
@@ -2552,7 +2567,7 @@ def down_all_data(request):
         tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes=False).all()
     else:
         tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_type=payment_types, deletes=False).all()
-    sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "备注", "操作员"]]
+    sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "备注", "操作员", "付款账户"]]
     for i in tables:
         row1 = []
         row1.append(i.add_time)
@@ -2565,6 +2580,7 @@ def down_all_data(request):
         row1.append(i.payment_amount)
         row1.append(i.remarks)
         row1.append(i.operator.username)
+        row1.append(i.payment_account.account_name)
         sheet1.append(row1)
     file_names = str(now_time) + '  ' + '的喝酒数据'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=now_time, file_name=file_names)
@@ -2601,6 +2617,162 @@ def down_all_data2(request):
         sheet1.append(row1)
     file_names = str(now_time) + '月的喝酒数据'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=now_time, file_name=file_names)
+
+
+# 上传excel表格，验证数据格式并显示和要求的数据
+def upload_excel(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    title = '上传喝酒数据'
+    tables = ''
+    msg = ''
+    if request.method == 'POST':
+        now_time = time.strftime('%Y-%m-%d', time.localtime())
+        excel_path = request.FILES.get('excels')
+        Upload_excel.objects.create(excel_path=excel_path, operator=user)
+        excel_path_database = Upload_excel.objects.filter(add_time__date=now_time, operator=user).last()
+        excel_path_os = os.path.join(MEDIA_ROOT, str(excel_path_database.excel_path).replace('/', os.sep))
+        # print(excel_path_os)
+        # 准备验证信息
+        account = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
+        shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
+        account_list = []
+        for accs in account:
+            account_list.append(accs.account_name)
+        # print(account_list)
+        shop_list = []
+        for shop in shops:
+            shop_list.append(shop.shopname)
+        # print(shop_list)
+        payment_types = Payment_type.objects.values('types').all()
+        payment_type_list = []
+        for type in payment_types:
+            payment_type_list.append(type['types'])
+        verify_message = {'店铺名': shop_list, '付款账户': account_list, '付款类型': payment_type_list}
+        # 调用验证函数（传入excel_path_os，verify_message)
+        verify = excel_validator(excel_path_os, range_validator=verify_message)
+        tables, msg = verify[0], verify[1]
+        # print(msg)
+        # print(len(tables),tables[0])
+    return render(request, 'upload_excel.html', {'user': user, 'title': title, 'tables': tables, 'msg': msg})
+
+
+# 根据上传的数据添加喝酒数据
+def upload_data(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    data_err = ''
+    data_err_row = ''
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    account = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
+    shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
+    account_list = []
+    for accs in account:
+        account_list.append(accs.account_name)
+    # print(account_list)
+    shop_list = []
+    for shop in shops:
+        shop_list.append(shop.shopname)
+    # print(shop_list)
+    payment_types = Payment_type.objects.values('types').all()
+    payment_type_list = []
+    for type in payment_types:
+        payment_type_list.append(type['types'])
+    get_shop_name = request.GET.get('shopname')
+    get_row_num = request.GET.get('row_num')
+    shopnames = str(get_shop_name).strip()
+    get_qq_or_weixin = request.GET.get('qq_or_weixin')
+    qq_or_weixins = str(get_qq_or_weixin).strip()
+    get_wang_wang_number = request.GET.get('wang_wang_number')
+    wang_wang_numbers = str(get_wang_wang_number).strip()
+    get_online_order_number = request.GET.get('online_order_number')
+    online_order_numbers = str(get_online_order_number).strip()
+    get_transaction_date = request.GET.get('transaction_date')
+    transaction_dates = str(get_transaction_date).strip()
+    get_payment_type = request.GET.get('payment_type')
+    payment_types = str(get_payment_type).strip()
+    get_payment_amount = request.GET.get('payment_amount')
+    payment_amounts = str(get_payment_amount).strip()
+    get_payment_account = request.GET.get('payment_account')
+    payment_accounts = str(get_payment_account).strip()
+    get_remarks = request.GET.get('remarks')
+    remarkss = str(get_remarks).strip()
+    if shopnames in shop_list:
+        if payment_types in payment_type_list:
+            if payment_accounts in account_list:
+                if is_vaild_date(transaction_dates):
+                    try:
+                        float(payment_amounts)
+                    except ValueError:
+                        data_err = '付款金额必须为数字'
+                    # 验证线上订单号格式
+                    if online_order_numbers != '':
+                        if len(online_order_numbers) != 18:
+                            data_err = '线上订单号格式错误'
+                        else:
+                            onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers,
+                                                                      deletes=False).all()
+                            if len(onlys) > 0:
+                                data_err = '该订单记录已存在'
+                    if data_err == '':
+                        operators = Userinfo.objects.get(username=user, deletes=False)
+                        add_times = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+                        Brush_single_entry.objects.create(shopname=shopnames, qq_or_weixin=qq_or_weixins, wang_wang_number=wang_wang_numbers,
+                                                          online_order_number=online_order_numbers, transaction_data=transaction_dates,
+                                                          payment_type=payment_types, payment_amount=payment_amounts,
+                                                          payment_account=Brank_account.objects.get(account_name=payment_accounts,
+                                                                                                    deletes=False), operator=operators,
+                                                          remarks=remarkss, deletes=False, add_time=add_times)
+                        if Account_record.objects.filter(datess__date=now_time, account_name__account_name=payment_accounts, deletes=False):
+                            Account_record.objects.filter(datess__date=now_time, account_name__account_name=payment_accounts,
+                                                          deletes=False).update(makes=False)
+                        last_table = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=user).last()
+                        operation_types = '创建喝酒数据'
+                        after_operations = '{id：%s，店铺名：%s，旺旺号：%s，线上订单号：%s，成交日期：%s，付款类型：%s，付款金额：%s，付款账户：%s，操作员：%s，备注：%s}' % (
+                            last_table.id, shopnames, wang_wang_numbers, online_order_numbers, transaction_dates, payment_types, payment_amounts,
+                            payment_accounts, user, remarkss)
+                        Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations)
+                else:
+                    data_err = '成交日期格式错误，正确格式：xxxx-xx-xx'
+            else:
+                data_err = '付款账户超域非法'
+        else:
+            data_err = '付款类型超域非法'
+    else:
+        data_err = '店铺名超域非法'
+    if data_err != '':
+        data_err_row = '第' + get_row_num + '行错误原因' + data_err + '<br>'
+    msg = {'data_err_row': data_err_row, 'data_err': data_err}
+    msg_err = json.dumps(msg)
+    return HttpResponse(msg_err)
+
+
+# 下载模板文件
+from django.http import StreamingHttpResponse
+
+
+def template_file_download(request):
+    from django.utils.encoding import escape_uri_path
+    # do something...
+    template_file_database = 'excel/模板_.xlsx'
+    template_file_path = os.path.join(MEDIA_ROOT, str(template_file_database).replace('/', os.sep))
+
+    def file_iterator(file_name, chunk_size=512):
+        with open(file_name, 'rb') as f:
+            while True:
+                c = f.read(chunk_size)
+                if c:
+                    yield c
+                else:
+                    break
+    file_name = escape_uri_path('模板_')
+    response = StreamingHttpResponse(file_iterator(template_file_path))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(file_name + '.xlsx')
+
+    return response
 
 
 #################测试新功能

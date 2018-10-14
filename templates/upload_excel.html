@@ -1,0 +1,183 @@
+{% extends 'basc2.html' %}
+{% block head %}
+    <link rel="stylesheet" href="/static/css/upload_excel.css">
+{% endblock %}
+{% block content %}
+    <div class="point"><h4>温馨提示：本页面的数据为临时数据，关闭后则消失。页面上存在问题的数据可以在页面直接修改,然后逐条导入或批量导入</h4></div>
+    <form class="form-inline" action="" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="exampleInputName2"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp;上传喝酒数据excel表格:</label>
+            <input type="file" name="excels">
+        </div>
+        <input type="submit" value="上传文件" class="btn btn-default">
+
+        <button type="button" class="btn btn-default col-lg-offset-6" value="批量导入数据" id="upload_data">批量导入数据</button>
+        <a href="/template_file_download/"  class="col-lg-offset-1">下载模板文件</a>
+        {% csrf_token %}
+    </form>
+    <hr>
+    <div id="tabless">
+        <table class="table table-striped">
+            <tr>
+                <th>序号</th>
+                <th>店铺</th>
+                <th>QQ或微信</th>
+                <th>旺旺号</th>
+                <th>线上订单号</th>
+                <th>成交日期</th>
+                <th>付款类型</th>
+                <th>付款金额</th>
+                <th>付款账户</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+            {% for table in tables %}
+                <tr class="rowss" id="{{ forloop.counter }}">
+                    {# <tr id="{{ forloop.counter }}">#}
+                    <td id="row_num">{{ forloop.counter }}</td>
+                    <td contenteditable="true" id="shopname">{{ table.shopname }} </td>
+                    <td contenteditable="true" id="qq_or_weixin">{{ table.qq_or_weixin }}</td>
+                    <td contenteditable="true" id="wang_wang_number">{{ table.wang_wang_number }}</td>
+                    <td contenteditable="true" id="online_order_number">{{ table.online_order_number }}</td>
+                    <td contenteditable="true" id="transaction_date">{{ table.transaction_date }}</td>
+                    <td contenteditable="true" id="payment_type">{{ table.payment_type }}</td>
+                    <td contenteditable="true" id="payment_amount">{{ table.payment_amount }}</td>
+                    <td contenteditable="true" id="payment_account">{{ table.payment_account }}</td>
+                    <td contenteditable="true" id="remarks">{{ table.remarks }}</td>
+                    <td><a class="glyphicon glyphicon-arrow-up" href="javascript:void(0);" title="导入数据" id="single_up" onclick="single_up(this)"></a>
+                        <a class="glyphicon glyphicon-remove" href="javascript:void(0);" o title="删除" id="dele" onclick="dele(this)"></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div id="errs_head">
+        <h3>上传数据的数据存在的问题</h3>
+    </div>
+    <div id="errs2_head">
+        <h3>批量导入的数据存在的问题</h3>
+    </div>
+    <div id="errs">
+        {{ msg.tips |safe }}
+    </div>
+
+    <div id="errs2">
+
+    </div>
+{% endblock %}
+{% block js %}
+    {#    文件格式问题提示#}
+    <script>
+        if ('{{ msg.error }}' != '') {
+            alert('{{ msg.error|safe }}')
+        }
+    </script>
+    {#    批量导入数据#}
+    <script>
+        $('#upload_data').click(
+            function submit() {
+                $('tr.rowss').each(
+                    function () {
+                        var row_num = $(this).children('td#row_num').text();
+                        var shopname = $(this).children('td#shopname').text();
+                        var qq_or_weixin = $(this).children('td#qq_or_weixin').text();
+                        var wang_wang_number = $(this).children('td#wang_wang_number').text();
+                        var online_order_number = $(this).children('td#online_order_number').text();
+                        var transaction_date = $(this).children('td#transaction_date').text();
+                        var payment_type = $(this).children('td#payment_type').text();
+                        var payment_amount = $(this).children('td#payment_amount').text();
+                        var payment_account = $(this).children('td#payment_account').text();
+                        var remarks = $(this).children('td#remarks').text();
+                        {#console.log(row_num)#}
+                        {#console.log(shopname)#}
+                        {#console.log(qq_or_weixin)#}
+                        {#console.log(online_order_number)#}
+                        {#console.log(transaction_date)#}
+                        {#console.log(payment_type)#}
+                        {#console.log(payment_amount)#}
+                        {#console.log(payment_account)#}
+                        {#console.log(remarks)#}
+                        var datas = {
+                            'row_num': row_num,
+                            'shopname': shopname,
+                            'qq_or_weixin': qq_or_weixin,
+                            'wang_wang_number': wang_wang_number,
+                            'online_order_number': online_order_number,
+                            'transaction_date': transaction_date,
+                            'payment_type': payment_type,
+                            'payment_amount': payment_amount,
+                            'payment_account': payment_account,
+                            'remarks': remarks,
+                        };
+                        var this_ = this;
+                        $.ajax({
+                            url: "/upload_data/",
+                            type: "GET",
+                            dataType: 'json',
+                            data: datas,
+                            async: false,
+                            success: function (msg) {
+                                console.log(msg['data_err_row'])
+                                $('div#errs2').append(msg['data_err_row']);
+                                if (msg['data_err_row'] == '') {
+                                    $(this_).remove()
+                                }
+                            }
+                        })
+                    }
+                )
+            }
+        )
+    </script>
+    {#    单条数据导入#}
+    <script>
+        function single_up(obj) {
+            var row_num = $(obj).parent().parent().find('td#row_num').text();
+            var shopname = $(obj).parent().parent().find('td#shopname').text();
+            var qq_or_weixin = $(obj).parent().parent().find('td#qq_or_weixin').text();
+            var wang_wang_number = $(obj).parent().parent().find('td#wang_wang_number').text();
+            var online_order_number = $(obj).parent().parent().find('td#online_order_number').text();
+            var transaction_date = $(obj).parent().parent().find('td#transaction_date').text();
+            var payment_type = $(obj).parent().parent().find('td#payment_type').text();
+            var payment_amount = $(obj).parent().parent().find('td#payment_amount').text();
+            var payment_account = $(obj).parent().parent().find('td#payment_account').text();
+            var remarks = $(obj).parent().parent().find('td#remarks').text();
+            var datas = {
+                'row_num': row_num,
+                'shopname': shopname,
+                'qq_or_weixin': qq_or_weixin,
+                'wang_wang_number': wang_wang_number,
+                'online_order_number': online_order_number,
+                'transaction_date': transaction_date,
+                'payment_type': payment_type,
+                'payment_amount': payment_amount,
+                'payment_account': payment_account,
+                'remarks': remarks,
+            };
+            var this_ = $(obj).parent().parent()
+            $.ajax({
+                url: "/upload_data/",
+                type: "GET",
+                dataType: 'json',
+                data: datas,
+                async: false,
+                success: function (msg) {
+                    {#$('div#errs2').append(msg);#}
+                    if (msg['data_err'] == '') {
+                        $(this_).remove()
+                    }
+                    else {
+                        alert(msg['data_err'])
+                    }
+                }
+            })
+        }
+    </script>
+{#    删除数据#}
+    <script>
+    function dele(obj) {
+        var this_ = $(obj).parent().parent();
+         $(this_).remove()
+    }
+    </script>
+{% endblock %}

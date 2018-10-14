@@ -70,4 +70,7 @@ urlpatterns = [
     path('down_total_account_brush2/',views.down_total_account_brush2),
     path('down_all_data/',views.down_all_data),
     path('down_all_data2/',views.down_all_data2),
+    path('Upload_excel/',views.upload_excel),
+    path('upload_data/',views.upload_data),
+    path('template_file_download/',views.template_file_download),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

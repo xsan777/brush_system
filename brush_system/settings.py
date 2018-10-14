@@ -95,14 +95,14 @@ DATABASES = {
     },
     'erp_database': {
         'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'erp',
-        # 'USER': 'root',
-        # 'PASSWORD': '123456',
-        # 'HOST': '127.0.0.1',
-        'NAME': 'baoersqlerp',
-        'USER': 'panjin',
-        'PASSWORD': 'panjin456',
-        'HOST': '59.110.241.144',
+        'NAME': 'erp',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': '127.0.0.1',
+        # 'NAME': 'baoersqlerp',
+        # 'USER': 'panjin',
+        # 'PASSWORD': 'panjin456',
+        # 'HOST': '59.110.241.144',
         'PORT': 3306,
     }
 
@@ -155,4 +155,5 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/') # media即为图片上传的根路径
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/') # media即为图片上传的根路径
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')# media即为图片上传的根路径
