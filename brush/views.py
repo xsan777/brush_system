@@ -2627,35 +2627,38 @@ def upload_excel(request):
     title = '上传喝酒数据'
     tables = ''
     msg = ''
+    flog = 0
     if request.method == 'POST':
         now_time = time.strftime('%Y-%m-%d', time.localtime())
         excel_path = request.FILES.get('excels')
-        Upload_excel.objects.create(excel_path=excel_path, operator=user)
-        excel_path_database = Upload_excel.objects.filter(add_time__date=now_time, operator=user).last()
-        excel_path_os = os.path.join(MEDIA_ROOT, str(excel_path_database.excel_path).replace('/', os.sep))
-        # print(excel_path_os)
-        # 准备验证信息
-        account = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
-        shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
-        account_list = []
-        for accs in account:
-            account_list.append(accs.account_name)
-        # print(account_list)
-        shop_list = []
-        for shop in shops:
-            shop_list.append(shop.shopname)
-        # print(shop_list)
-        payment_types = Payment_type.objects.values('types').all()
-        payment_type_list = []
-        for type in payment_types:
-            payment_type_list.append(type['types'])
-        verify_message = {'店铺名': shop_list, '付款账户': account_list, '付款类型': payment_type_list}
-        # 调用验证函数（传入excel_path_os，verify_message)
-        verify = excel_validator(excel_path_os, range_validator=verify_message)
-        tables, msg = verify[0], verify[1]
-        # print(msg)
-        # print(len(tables),tables[0])
-    return render(request, 'upload_excel.html', {'user': user, 'title': title, 'tables': tables, 'msg': msg})
+        if excel_path != None:
+            Upload_excel.objects.create(excel_path=excel_path, operator=user)
+            excel_path_database = Upload_excel.objects.filter(add_time__date=now_time, operator=user).last()
+            excel_path_os = os.path.join(MEDIA_ROOT, str(excel_path_database.excel_path).replace('/', os.sep))
+            # print(excel_path_os)
+            # 准备验证信息
+            account = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
+            shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
+            account_list = []
+            for accs in account:
+                account_list.append(accs.account_name)
+            # print(account_list)
+            shop_list = []
+            for shop in shops:
+                shop_list.append(shop.shopname)
+            # print(shop_list)
+            payment_types = Payment_type.objects.values('types').all()
+            payment_type_list = []
+            for type in payment_types:
+                payment_type_list.append(type['types'])
+            verify_message = {'店铺名': shop_list, '付款账户': account_list, '付款类型': payment_type_list}
+            # 调用验证函数（传入excel_path_os，verify_message)
+            verify = excel_validator(excel_path_os, range_validator=verify_message)
+            tables, msg = verify[0], verify[1]
+            flog = 1
+            # print(msg)
+            # print(len(tables),tables[0])
+    return render(request, 'upload_excel.html', {'user': user, 'title': title, 'tables': tables, 'msg': msg, 'flog': flog})
 
 
 # 根据上传的数据添加喝酒数据
@@ -2680,24 +2683,24 @@ def upload_data(request):
     payment_type_list = []
     for type in payment_types:
         payment_type_list.append(type['types'])
-    get_shop_name = request.GET.get('shopname')
-    get_row_num = request.GET.get('row_num')
+    get_shop_name = request.POST.get('shopname')
+    get_row_num = request.POST.get('row_num')
     shopnames = str(get_shop_name).strip()
-    get_qq_or_weixin = request.GET.get('qq_or_weixin')
+    get_qq_or_weixin = request.POST.get('qq_or_weixin')
     qq_or_weixins = str(get_qq_or_weixin).strip()
-    get_wang_wang_number = request.GET.get('wang_wang_number')
+    get_wang_wang_number = request.POST.get('wang_wang_number')
     wang_wang_numbers = str(get_wang_wang_number).strip()
-    get_online_order_number = request.GET.get('online_order_number')
+    get_online_order_number = request.POST.get('online_order_number')
     online_order_numbers = str(get_online_order_number).strip()
-    get_transaction_date = request.GET.get('transaction_date')
+    get_transaction_date = request.POST.get('transaction_date')
     transaction_dates = str(get_transaction_date).strip()
-    get_payment_type = request.GET.get('payment_type')
+    get_payment_type = request.POST.get('payment_type')
     payment_types = str(get_payment_type).strip()
-    get_payment_amount = request.GET.get('payment_amount')
+    get_payment_amount = request.POST.get('payment_amount')
     payment_amounts = str(get_payment_amount).strip()
-    get_payment_account = request.GET.get('payment_account')
+    get_payment_account = request.POST.get('payment_account')
     payment_accounts = str(get_payment_account).strip()
-    get_remarks = request.GET.get('remarks')
+    get_remarks = request.POST.get('remarks')
     remarkss = str(get_remarks).strip()
     if shopnames in shop_list:
         if payment_types in payment_type_list:
@@ -2712,7 +2715,7 @@ def upload_data(request):
                         if len(online_order_numbers) != 18:
                             data_err = '线上订单号格式错误'
                         else:
-                            onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers,
+                            onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers,payment_type=payment_types,
                                                                       deletes=False).all()
                             if len(onlys) > 0:
                                 data_err = '该订单记录已存在'
@@ -2743,7 +2746,7 @@ def upload_data(request):
     else:
         data_err = '店铺名超域非法'
     if data_err != '':
-        data_err_row = '第' + get_row_num + '行错误原因' + data_err + '<br>'
+        data_err_row = '第' + get_row_num + '行错误原因：' + data_err + '<br>'
     msg = {'data_err_row': data_err_row, 'data_err': data_err}
     msg_err = json.dumps(msg)
     return HttpResponse(msg_err)
@@ -2767,6 +2770,7 @@ def template_file_download(request):
                     yield c
                 else:
                     break
+
     file_name = escape_uri_path('模板_')
     response = StreamingHttpResponse(file_iterator(template_file_path))
     response['Content-Type'] = 'application/octet-stream'
