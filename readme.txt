@@ -1,3 +1,7 @@
+版本号 V 1.2.4  增加在喝酒数据查询页面可以按照付款类型查询数据，并在页面下端显示共多少条数据，但是下载没有实现付款类型的筛选；
+commit 2e7221b1926892b9ab047f52f27ad065acb5847d 
+
+
 版本号  V 1.2.3 修改运营名下账户确认核对查询将‘ check_countss = Account_record.objects.filter(datess__glt=now_time, account_name__account_name=i.account_name, deletes=False).get()’改为‘ check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name, deletes=False).get()’。问题显像：10月16日查询10月12日的子账户记录时报错提示查询出4条记录。
 commit 5e64b1f84de651bd1e722d97e3a69b1caa83bd4e 
 

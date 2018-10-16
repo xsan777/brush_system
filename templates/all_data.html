@@ -1,6 +1,7 @@
 {% extends 'basc.html' %}
 {% block head %}
     <link rel="stylesheet" href="/static/css/all_data.css">
+
 {% endblock %}
 {% block content %}
     <h2>总账单</h2>
@@ -32,13 +33,16 @@
         <input type="submit" value="查询" class="btn btn-default">
         <a href="" id="down"><input type="button" value="按日下载" class="btn btn-default"></a>
         <a href="" id="down2"><input type="button" value="按月下载" class="btn btn-default"></a>
+      <input type="button" value="显示订单状态" class="btn btn-default col-lg-offset-5" id="show_stats"  >
         {% csrf_token %}
     </form>
     <br>
-{#    显示数据#}
+    {#    显示数据#}
     <div id="tabless">
+    <button  class="col-lg-offset-9"></button>
         <table class="table table-striped">
-            <tr>
+            <tr id="table_head">
+                <th>状态</th>
                 <th>序号</th>
                 <th>店铺</th>
                 <th>旺旺号</th>
@@ -53,17 +57,18 @@
             </tr>
             {% for table in tables %}
                 <tr id="{{ forloop.counter }}">
+                    <td id="stats"></td>
                     <td id="num">{{ forloop.counter }}</td>
-                    <td>{{ table.shopname }}</td>
-                    <td>{{ table.wang_wang_number }}</td>
-                    <td>{{ table.online_order_number }}</td>
-                    <td>{{ table.transaction_data }}</td>
-                    <td>{{ table.payment_type }}</td>
-                    <td>{{ table.payment_amount }}</td>
-                    <td>{{ table.payment_account.account_name }}</td>
-                    <td>{{ table.remarks }}</td>
-                    <td>{{ table.add_time }}</td>
-                    <td>{{ table.operator.username }}</td>
+                    <td id="shopname">{{ table.shopname }}</td>
+                    <td id="wang_wang_number">{{ table.wang_wang_number }}</td>
+                    <td id="online_order_number">{{ table.online_order_number }}</td>
+                    <td id="transaction_data">{{ table.transaction_data }}</td>
+                    <td id="payment_type">{{ table.payment_type }}</td>
+                    <td id="payment_amount">{{ table.payment_amount }}</td>
+                    <td id="payment_account">{{ table.payment_account.account_name }}</td>
+                    <td id="remarks">{{ table.remarks }}</td>
+                    <td id="add_time">{{ table.add_time }}</td>
+                    <td id="operator">{{ table.operator.username }}</td>
                 </tr>
             {% endfor %}
         </table>
@@ -75,7 +80,7 @@
     {#下载#}
     <script>
         var search_date = $('#search_date').val();
-        var payment_type = $("#payment_type" ).find("option:selected").text();
+        var payment_type = $("#payment_type").find("option:selected").text();
         var down_url = '/down_all_data/?check_data=' + search_date + '&payment_type=' + payment_type;
         var down_url2 = '/down_all_data2/?check_data=' + search_date + '&payment_type=' + payment_type;
         $('#down').attr('href', down_url);
@@ -84,14 +89,13 @@
         function cheage_down() {
             var search_date = $('#search_date').val();
             var payment_type = $('#payment_type').val();
-             console.log(payment_type)
             var down_url = '/down_all_data/?check_data=' + search_date + '&payment_type=' + payment_type;
             var down_url2 = '/down_all_data2/?check_data=' + search_date + '&payment_type=' + payment_type;
             $('#down').attr('href', down_url);
             $('#down2').attr('href', down_url2);
         }
     </script>
-{#    默认显示付款类型#}
+    {#默认显示付款类型#}
     <script>
         $("#payment_type").find("option").each(function () {
             var ff = '{{ payment_type }}';
@@ -99,5 +103,48 @@
                 $(this).attr("selected", true);
             }
         });
+    </script>
+    {#查询喝酒记录状态#}
+    <script>
+        $('#show_stats').click(function () {
+                $('tr#table_head').nextAll("tr").each(
+                    function () {
+                        var num = $(this).children('#num').text();
+                        var payment_type = $(this).children('#payment_type').text();
+                        var online_order_number = $(this).children('#online_order_number').text();
+                        var datas = {
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                            'online_order_number': online_order_number,
+                        };
+                        var this_ = $(this);
+                        if (online_order_number != '' ) {
+                            $.ajax({
+                                url: "/erp/search_by_online_order_number/",
+                                type: "POST",
+                                dataType: 'json',
+                                data: datas,
+                                async: true,
+                                success: function (msg) {
+                                    console.log(num);
+                                    if (msg == 1) {
+                                        $(this_).children('#stats').append('<i class="fa fa-warning" id="online_stats_unexist" data-container="body" data-toggle="popover" data-placement="right" data-content="线上订单号可能错误，请仔细核对" style="color: red;"></i>');
+                                    }
+                                    else if (msg == 2 && payment_type == '本金') {
+                                        $(this_).children('#stats').append('<i class="fa fa-warning" id="order_special_unexist" data-container="body" data-toggle="popover" data-placement="right"data-content="该订单可能为实包" style="color: blue;"></i>')
+                                    }
+                                    else {
+                                        $(this_).children('#stats').append('<i class="fa fa-circle" aria-hidden="true"  id="normals" data-container="body" data-toggle="popover" data-placement="right"data-content="该记录正常 " data-trigger="hover"   style="color: green;"></i>')
+                                    }
+                                }
+                            })
+                        }
+                    }
+                )
+        $(this).attr('disabled','true')
+        }
+        )
+    </script>
+    <script>
+        $('[data-toggle="popover"]').popover()
     </script>
 {% endblock %}

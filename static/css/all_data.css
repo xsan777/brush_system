@@ -4,3 +4,12 @@
     margin: 10px 0px;
     overflow-y: auto;
 }
+#online_stats_unexist{
+    color: red;
+}
+#order_special_unexist{
+    color: yellow;
+}
+#normals{
+    color: blue;
+}

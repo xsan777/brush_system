@@ -6,110 +6,15 @@
     <script src="/static/js/jquery-3.3.1.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/basc.css">
+    <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.min.css">
     {#    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">#}
     {% block head %}
 
     {% endblock %}
 </head>
 <body>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-    }
 
-    body {
-        background-color: #3d3d3d;
-    }
-
-    #left_nav {
-        float: left;
-        background-color: #3d3d3d;
-        width: 12%;
-        height: 100%;
-    }
-
-    #content {
-        float: left;
-        width: 88%;
-        height: 100%;
-        background-color: white;
-    }
-
-    #cont {
-        width: 1400px;
-        height: 770px;
-        margin: 20px 100px;
-    {#background-color: #1b6d85;#}
-    }
-
-    #nav {
-        background-color: #212121;
-        height: 50px;
-    }
-
-    #logo {
-        padding-top: 10px;
-        margin-left: 20px;
-        font-size: 1.5em;
-        color: #ffffff;
-    }
-
-    .menu {
-        padding-top: 15px;
-        text-align: left;
-
-        font-size: 1.3em;
-        color: white;
-    }
-
-    .menus {
-        padding-bottom: 5px;
-        text-align: center;
-        font-size: 1.3em;
-        color: white;
-        background-color: #2e3636;
-    }
-
-    .menus:hover {
-        background-color: #3c3d22;
-    }
-
-    a:hover {
-        text-decoration: none
-    }
-
-    hr#nav_hr {
-        width: 90%;
-        height: 1px;
-        background-color: #585858;
-        margin-bottom: -5px;
-        border: none;
-    }
-
-    hr {
-        width: 90%;
-        height: 1px;
-        background-color: #585858;
-        border: none;
-    }
-
-    #lights {
-        width: 25px;
-        height: 25px;
-    }
-
-    #remind {
-        padding-top: 5px;
-        height: 30px;
-    }
-
-    #admin_alert {
-        margin-top: 0;
-        font-size: 1.5rem;
-        font-family: 微软雅黑;
-    }
-</style>
 <div id="nav">
     <div id="logo">宝儿喝酒数据管理系统 <span class="col-lg-offset-9" style="font-size: 1.8rem">欢迎，<span class="dropdown">
         <a href="javascript:void(0); " id="nav_user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">{{ user }}</a>
@@ -160,7 +65,7 @@
     </div>
     <a href="javascript:void(0);" onclick="menu2()">
         <div class="menu">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;报表分析
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;账单查询
         </div>
         <hr id="nav_hr">
     </a>
@@ -264,7 +169,6 @@
 {#</script>#}
 
 <script>
-    console.log('{{ admin_flog }}');
     if ('{{ admin_flog }}' == 1) {
         {#$('#remind').append('<img src="/static/unmakesure.gif" alt="" id="lights">');#}
         {#$('#nav_remind').append('<img src="/static/unmakesure.gif" alt="" id="lights">');#}
