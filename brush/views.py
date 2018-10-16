@@ -1685,8 +1685,10 @@ def more_date(request):
     title = '喝酒数据查询'
     userss = user
     operators = userss
+    payment_types = 'alls'
     first_shop = Userinfo.objects.filter(username=user, deletes=False).get().shop.filter(deletes=False).first()
     all_user = Shops.objects.filter(shopname=first_shop, deletes=False).get().userinfo_set.filter(rouse='运营', deletes=False).all()
+    all_payment_type = Payment_type.objects.all()
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     account = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
@@ -1696,13 +1698,21 @@ def more_date(request):
     if request.method == 'POST':
         operators = request.POST.get('operator')
         shopss = request.POST.get('shopname')
+        payment_types = request.POST.get('payment_type')
         now_time = request.POST.get('add_time')
-        if operators == 'alls':
-            tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shopss, deletes='False').order_by('add_time')
+        if operators == 'alls' and payment_types != 'alls':
+            tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shopss, payment_type=payment_types,
+                                                       deletes='False').order_by('add_time')
+        elif operators != 'alls' and payment_types == 'alls':
+            tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shopss, operator__username=operators,
+                                                       deletes='False').order_by('add_time')
+        elif operators == 'alls' and payment_types == 'alls':
+            tables = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shopss, deletes=False).order_by('add_time')
         else:
             tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=operators, shopname=shopss,
-                                                       deletes='False').order_by('add_time')
-
+                                                       payment_type=payment_types, deletes='False').order_by('add_time')
+    table_len = len(tables)
+    # 提示运营有账户未确认
     accountss = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     reminds = ''
     unmakes = 0
@@ -1730,7 +1740,8 @@ def more_date(request):
     return render(request, 'more_data2.html',
                   {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
                    'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'reminds': reminds, 'makes': makes,
-                   'unmakes': unmakes, 'total_reminds': total_reminds, 'update_passwd': update_passwd})
+                   'unmakes': unmakes, 'total_reminds': total_reminds, 'update_passwd': update_passwd,'table_len':table_len,
+                   'all_payment_type': all_payment_type, 'payment_types': payment_types})
 
 
 # 更多页面加载操作人
@@ -2594,6 +2605,7 @@ def down_all_data2(request):
     now_time = datetime.datetime.now().month
     now_time2 = request.GET.get('check_data')
     payment_types = request.GET.get('payment_type')
+    time_start = time.time()
     if now_time2 and payment_types:
         now_time2 = t_mouth(now_time2)
         now_time = now_time2
@@ -2602,6 +2614,7 @@ def down_all_data2(request):
     else:
         tables = Brush_single_entry.objects.filter(add_time__month=now_time, payment_type=payment_types, deletes=False).all()
     sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "付款类型", "付款金额", "备注", "操作员"]]
+    time_end_1 = time.time()
     for i in tables:
         row1 = []
         row1.append(i.add_time)
@@ -2615,6 +2628,11 @@ def down_all_data2(request):
         row1.append(i.remarks)
         row1.append(i.operator.username)
         sheet1.append(row1)
+    time_end_2 = time.time()
+    time_use = time_end_1 - time_start
+    time_use_2 = time_end_2 - time_end_1
+    print('查询时间' + str(time_use))
+    print('数据处理时间' + str(time_use_2))
     file_names = str(now_time) + '月的喝酒数据'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=now_time, file_name=file_names)
 
@@ -2681,7 +2699,8 @@ def upload_excel(request):
                     unmakes += 1
                 if check_countss.makes == 'True':
                     makes += 1
-    return render(request, 'upload_excel.html', {'user': user, 'title': title, 'tables': tables, 'msg': msg, 'flog': flog,'reminds':reminds,'unmakes':unmakes,'makes':makes})
+    return render(request, 'upload_excel.html',
+                  {'user': user, 'title': title, 'tables': tables, 'msg': msg, 'flog': flog, 'reminds': reminds, 'unmakes': unmakes, 'makes': makes})
 
 
 # 根据上传的数据添加喝酒数据

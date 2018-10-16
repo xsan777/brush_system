@@ -1,4 +1,6 @@
 版本号  V 1.2.3 修改运营名下账户确认核对查询将‘ check_countss = Account_record.objects.filter(datess__glt=now_time, account_name__account_name=i.account_name, deletes=False).get()’改为‘ check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name, deletes=False).get()’。问题显像：10月16日查询10月12日的子账户记录时报错提示查询出4条记录。
+commit 5e64b1f84de651bd1e722d97e3a69b1caa83bd4e 
+
 
 
 版本号 V 1.2.2  修复Excel导入功能页面的日志无法显示批量导入错误信息；将excel导入功能对外开放

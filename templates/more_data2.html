@@ -22,13 +22,21 @@
         <div class="form-group">
             <label for="exampleInputName2">操作人:</label>
             <select name="operator" id="operator" class="form-control" onchange="change_url()">
+                <option value="alls">全部</option>
                 {% for user in all_user %}
                     <option value="{{ user.username }}">{{ user.username }}</option>
                 {% endfor %}
-                <option value="alls">全部</option>
             </select>
         </div>
-
+        <div class="form-group">
+            <label for="exampleInputName2">付款类型:</label>
+            <select name="payment_type" id="payment_type" class="form-control" onchange="change_url()">
+                <option value="alls">全部</option>
+                {% for payment_type in all_payment_type %}
+                    <option value="{{ payment_type.types }}">{{ payment_type.types }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <input type="submit" value="查找" class="btn btn-default">
         <a href="/download_brush/" id="downss"><input type="button" value="下载" class="btn btn-default"></a>
 
@@ -209,6 +217,7 @@
             </div>
         </div>
     </div>
+    <div class="col-lg-offset-9"><h3>  共<span id="total_rows">{{ table_len }}</span>条数据</h3></div>
 {% endblock %}
 
 {% block js %}
@@ -225,6 +234,15 @@
     <script>
         $("#shopname").find("option").each(function () {
             var ff = '{{ shop_select }}';
+            if ($(this).val() == ff) {
+                $(this).attr("selected", "selected");
+            }
+        });
+    </script>
+    {#    付款类型默认选中#}
+    <script>
+        $("#payment_type").find("option").each(function () {
+            var ff = '{{ payment_types }}';
             if ($(this).val() == ff) {
                 $(this).attr("selected", "selected");
             }
@@ -367,32 +385,6 @@
             var urls = '/download_brush/?operator=' + operator + '&shopname=' + shopss + '&add_time=' + dates;
             $('#downss').attr('href', urls)
         }
-    </script>
-
-    {#表格里根据旺旺号查询最近90天的喝酒时间#}
-    <script>
-        $('#delays').hide();
-        $('span#search_wangwang').hover(function () {
-                var wangwang_num = $(this).text();
-                $.ajax({
-                    url: "/erp/search_by_wangwang_num/",
-                    type: "GET",
-                    dataType: 'json',
-                    data: {'wangwang_num': wangwang_num},
-                    async: false,
-                    success: function (msg) {
-                        $('span#search_wangwang').attr('data-content', msg);
-                    },
-                    error: function () {
-                        $('span#search_wangwang').attr('data-content', '该旺旺号之前没有喝酒');
-                    }
-                });
-                $(this).popover('show');
-            }, function () {
-                $(this).popover('hide');
-                $('span#search_wangwang').attr('data-content', '');
-            }
-        );
     </script>
 
 {% endblock %}
