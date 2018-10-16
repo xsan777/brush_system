@@ -1,3 +1,10 @@
+版本号  V 1.2.3 修改运营名下账户确认核对查询将‘ check_countss = Account_record.objects.filter(datess__glt=now_time, account_name__account_name=i.account_name, deletes=False).get()’改为‘ check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name, deletes=False).get()’。问题显像：10月16日查询10月12日的子账户记录时报错提示查询出4条记录。
+
+
+版本号 V 1.2.2  修复Excel导入功能页面的日志无法显示批量导入错误信息；将excel导入功能对外开放
+commit 9fda56ff239ccf790ddaea87c44b9328fb7cdfd9 
+
+
 版本号 V 1.2.1 修复excel导入功能当订单号重复而付款类型不重复时，提示“该条记录已存在”问题；增加上传excel页面模态框交互功能；修改上传excel页面，将excel表格问题提示和批量导入数据问题提示改为二合一“日志记录”；更改了验证Excel文件格式的验证文件。
 commit f7cdbacd08f51d1de8e6c2efc8e9818ce4db368b
 

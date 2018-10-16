@@ -1093,7 +1093,7 @@ def countmanagement(request):
         if account_names == None:
             errs = '账户名不能为空'
         else:
-            exits = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=account_names, deletes=False).all()
+            exits = Account_record.objects.filter(datess__date=now_time, account_name__account_name=account_names, deletes=False).all()
             if len(exits) == 0:
                 operators = Userinfo.objects.get(username=user, deletes=False)
                 form_data = Forms(request.POST)
@@ -1174,9 +1174,9 @@ def countmanagement(request):
     unmakes = 0
     makes = 0
     for i in account:
-        check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).all()
+        check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name, deletes=False).all()
         if check_countss:
-            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).get()
+            check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name, deletes=False).get()
             if check_countss.makes == 'False':
                 reminds = '(有账户未确认)'
                 unmakes += 1
@@ -1539,9 +1539,9 @@ def brushmanagement(request):
     makes = 0
     if len(account) > 0:
         for i in account:
-            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).all()
+            check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name, deletes=False).all()
             if len(check_countss) > 0:
-                check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name, deletes=False).get()
+                check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name, deletes=False).get()
                 if check_countss.makes == 'False':
                     reminds = '(有账户未确认)'
                     unmakes += 1
@@ -2178,10 +2178,10 @@ def check_total_account(request):
     makes = 0
     account_unmakes = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     for i in account_unmakes:
-        check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name,
+        check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name,
                                                       deletes=False).all()
         if check_countss:
-            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name,
+            check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name,
                                                           deletes=False).get()
             if check_countss.makes == 'False':
                 reminds = '(有账户未确认)'
@@ -2284,10 +2284,10 @@ def search_total_count(request):
     makes = 0
     account_unmakes = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
     for i in account_unmakes:
-        check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name,
+        check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name,
                                                       deletes=False).all()
         if check_countss:
-            check_countss = Account_record.objects.filter(datess__gte=now_time, account_name__account_name=i.account_name,
+            check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name,
                                                           deletes=False).get()
             if check_countss.makes == 'False':
                 reminds = '(有账户未确认)'
@@ -2658,7 +2658,30 @@ def upload_excel(request):
             flog = 1
             # print(msg)
             # print(len(tables),tables[0])
-    return render(request, 'upload_excel.html', {'user': user, 'title': title, 'tables': tables, 'msg': msg, 'flog': flog})
+        # 总账户未确认提示运营
+        total_reminds = ''
+        user_total_account = Userinfo.objects.get(username=user, deletes=False)
+        account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+        now_time = time.strftime('%Y-%m-%d', time.localtime())
+        for m in account__:
+            account2 = Total_account_record.objects.filter(datess__date=now_time, account_name=m, deletes=False).all()
+            for i in account2:
+                if i.makes == 'False':
+                    total_reminds = '(总账户未确认)'
+        # 运营名下账户确认核对查询
+        reminds = ''
+        unmakes = 0
+        makes = 0
+        for i in account:
+            check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name, deletes=False).all()
+            if check_countss:
+                check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name, deletes=False).get()
+                if check_countss.makes == 'False':
+                    reminds = '(有账户未确认)'
+                    unmakes += 1
+                if check_countss.makes == 'True':
+                    makes += 1
+    return render(request, 'upload_excel.html', {'user': user, 'title': title, 'tables': tables, 'msg': msg, 'flog': flog,'reminds':reminds,'unmakes':unmakes,'makes':makes})
 
 
 # 根据上传的数据添加喝酒数据
@@ -2715,7 +2738,7 @@ def upload_data(request):
                         if len(online_order_numbers) != 18:
                             data_err = '线上订单号格式错误'
                         else:
-                            onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers,payment_type=payment_types,
+                            onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers, payment_type=payment_types,
                                                                       deletes=False).all()
                             if len(onlys) > 0:
                                 data_err = '该订单记录已存在'
