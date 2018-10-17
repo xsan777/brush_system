@@ -664,22 +664,26 @@ def brankmanagement(request):
         brank_operator_list = request.POST.getlist('checkitem')
         if total_account_of != None:
             if len(brank_operator_list) != 0:
-                Brank_account.objects.create(account_name=account_names, brank_name=brank_names, brank_number=brank_numbers,
-                                             brank_card_number=brank_card_numbers, deletes=False,
-                                             total_account_name=Total_brank_account.objects.get(total_account_name=total_account_of, deletes=False))
-                brank_card_id = Brank_account.objects.filter(account_name=account_names, deletes=False).get()
-                for users in brank_operator_list:
-                    brank_card_id.brank_operator.add(Userinfo.objects.get(username=users, deletes=False))
-                user_clean = brank_card_id.brank_operator.all()
-                brank_operator_lists = ''
-                for user_brank in user_clean:
-                    brank_operator_lists += str(user_brank.username)
-                    brank_operator_lists += '、'
-                operation_types = '创建银行账户'
-                after_operations = '{id：%d，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，所属总账户：%s，银行卡操作人：%s}' % (
-                    brank_card_id.id, account_names, brank_names, brank_numbers, brank_card_numbers, total_account_of, brank_operator_lists)
-                Log.objects.create(operator=Userinfo.objects.get(username=user, deletes=False), operation_type=operation_types,
-                                   after_operation=after_operations)
+                brank_card_exit = Brank_account.objects.filter(account_name=account_names, deletes=False).all()
+                if len(brank_card_exit) >0:
+                    msg = '该账户已存在，不能重复添加'
+                else:
+                    Brank_account.objects.create(account_name=account_names, brank_name=brank_names, brank_number=brank_numbers,
+                                                 brank_card_number=brank_card_numbers, deletes=False,
+                                                 total_account_name=Total_brank_account.objects.get(total_account_name=total_account_of, deletes=False))
+                    brank_card_id = Brank_account.objects.filter(account_name=account_names, deletes=False).get()
+                    for users in brank_operator_list:
+                        brank_card_id.brank_operator.add(Userinfo.objects.get(username=users, deletes=False))
+                    user_clean = brank_card_id.brank_operator.all()
+                    brank_operator_lists = ''
+                    for user_brank in user_clean:
+                        brank_operator_lists += str(user_brank.username)
+                        brank_operator_lists += '、'
+                    operation_types = '创建银行账户'
+                    after_operations = '{id：%d，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，所属总账户：%s，银行卡操作人：%s}' % (
+                        brank_card_id.id, account_names, brank_names, brank_numbers, brank_card_numbers, total_account_of, brank_operator_lists)
+                    Log.objects.create(operator=Userinfo.objects.get(username=user, deletes=False), operation_type=operation_types,
+                                       after_operation=after_operations)
             else:
                 msg = '必须选择银行卡使用人'
         else:

@@ -31,19 +31,6 @@ class Verification(object):
             return 1, special_order_stats
 
     # 验证该线上订单号是否为特殊单
-    # def special_order(self, order_online_num, ):
-    #     search_o_id = JstOrdersQuery.objects.using('erp_database').filter(so_id=order_online_num).all()
-    #     if len(search_o_id) > 0:
-    #         for i in search_o_id:
-    #             special_order_stats = JstOrdersQuerySpecialSingle.objects.using('erp_database').filter(o_id=i.o_id).all()
-    #             break
-    #         if len(special_order_stats) > 0:
-    #             return 0
-    #         else:
-    #             return 2
-    #     return 1
-    ###############
-    # 验证该线上订单号是否为特殊单
     def special_order(self, order_online_num,search_o_id ):
 
         special_order_stats = JstOrdersQuerySpecialSingle.objects.using('erp_database').filter(o_id=search_o_id).all()

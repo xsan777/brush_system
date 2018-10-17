@@ -33,13 +33,13 @@
         <input type="submit" value="查询" class="btn btn-default">
         <a href="" id="down"><input type="button" value="按日下载" class="btn btn-default"></a>
         <a href="" id="down2"><input type="button" value="按月下载" class="btn btn-default"></a>
-      <input type="button" value="显示订单状态" class="btn btn-default col-lg-offset-5" id="show_stats"  >
+        <input type="button" value="显示订单状态" class="btn btn-default col-lg-offset-5" id="show_stats">
         {% csrf_token %}
     </form>
     <br>
     {#    显示数据#}
     <div id="tabless">
-    <button  class="col-lg-offset-9"></button>
+        <button class="col-lg-offset-9"></button>
         <table class="table table-striped">
             <tr id="table_head">
                 <th>状态</th>
@@ -117,7 +117,7 @@
                             'online_order_number': online_order_number,
                         };
                         var this_ = $(this);
-                        if (online_order_number != '' ) {
+                        if (online_order_number != '') {
                             $.ajax({
                                 url: "/erp/search_by_online_order_number/",
                                 type: "POST",
@@ -125,14 +125,16 @@
                                 data: datas,
                                 async: true,
                                 success: function (msg) {
-                                    console.log(num);
                                     if (msg == 1) {
+                                        $('[data-toggle="popover"]').popover()
                                         $(this_).children('#stats').append('<i class="fa fa-warning" id="online_stats_unexist" data-container="body" data-toggle="popover" data-placement="right" data-content="线上订单号可能错误，请仔细核对" style="color: red;"></i>');
                                     }
                                     else if (msg == 2 && payment_type == '本金') {
+                                        $('[data-toggle="popover"]').popover()
                                         $(this_).children('#stats').append('<i class="fa fa-warning" id="order_special_unexist" data-container="body" data-toggle="popover" data-placement="right"data-content="该订单可能为实包" style="color: blue;"></i>')
                                     }
                                     else {
+                                        $('[data-toggle="popover"]').popover()
                                         $(this_).children('#stats').append('<i class="fa fa-circle" aria-hidden="true"  id="normals" data-container="body" data-toggle="popover" data-placement="right"data-content="该记录正常 " data-trigger="hover"   style="color: green;"></i>')
                                     }
                                 }
@@ -140,8 +142,8 @@
                         }
                     }
                 )
-        $(this).attr('disabled','true')
-        }
+                $(this).attr('disabled', 'true')
+            }
         )
     </script>
     <script>
