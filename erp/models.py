@@ -182,6 +182,8 @@ class JstOrdersQuerySpecialSingle(models.Model):
     question_type = models.CharField(max_length=100, blank=True, null=True)
     question_desc = models.CharField(max_length=100, blank=True, null=True)
     shop_name = models.CharField(max_length=10, blank=True, null=True)
+    so_id = models.CharField(max_length=18, blank=True, null=True)
+    shop_buyer_id = models.CharField(max_length=25, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -216,7 +218,7 @@ class JstRefundQuery(models.Model):
 
 class JstRefundQueryItems(models.Model):
     asi_id = models.CharField(primary_key=True, max_length=10)
-    name = models.CharField(max_length=60, blank=True, null=True)
+    name = models.CharField(max_length=80, blank=True, null=True)
     pic = models.CharField(max_length=150, blank=True, null=True)
     price = models.FloatField(blank=True, null=True)
     properties_value = models.CharField(max_length=40, blank=True, null=True)
@@ -239,6 +241,8 @@ class LogisticQuery(models.Model):
     send_date = models.DateTimeField(blank=True, null=True)
     shop_id = models.CharField(max_length=8, blank=True, null=True)
     so_id = models.CharField(max_length=18, blank=True, null=True)
+    freight = models.CharField(max_length=8, blank=True, null=True)
+    weight = models.CharField(max_length=8, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -307,10 +311,10 @@ class PurchaseinQuery(models.Model):
 
 class PurchaseinQueryItems(models.Model):
     cost_amount = models.FloatField(blank=True, null=True)
-    cost_price = models.FloatField(blank=True, null=True)
+    cost_price = models.CharField(max_length=12, blank=True, null=True)
     io_id = models.CharField(max_length=10, blank=True, null=True)
     ioi_id = models.CharField(primary_key=True, max_length=10)
-    name = models.CharField(max_length=80, blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
     qty = models.IntegerField(blank=True, null=True)
     sku_id = models.CharField(max_length=30, blank=True, null=True)
 
@@ -382,22 +386,41 @@ class ShopsQuery(models.Model):
         db_table = 'shops.query'
 
 
+class ShopsQueryCopy(models.Model):
+    created = models.DateTimeField(blank=True, null=True)
+    nick = models.CharField(max_length=20, blank=True, null=True)
+    session_expired = models.DateTimeField(blank=True, null=True)
+    shop_id = models.CharField(primary_key=True, max_length=8)
+    shop_name = models.CharField(max_length=10, blank=True, null=True)
+    shop_site = models.CharField(max_length=10, blank=True, null=True)
+    shop_url = models.CharField(max_length=50, blank=True, null=True)
+    short_name = models.CharField(max_length=20, blank=True, null=True)
+    operator = models.CharField(max_length=20, blank=True, null=True)
+    brand = models.CharField(max_length=20, blank=True, null=True)
+    abbreviation = models.CharField(max_length=10, blank=True, null=True)
+    sn = models.CharField(db_column='SN', unique=True, max_length=2, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'shops.query_copy'
+
+
 class SkuQuery(models.Model):
     brand = models.CharField(max_length=10, blank=True, null=True)
     c_id = models.CharField(max_length=10, blank=True, null=True)
     category = models.CharField(max_length=10, blank=True, null=True)
     color = models.CharField(max_length=10, blank=True, null=True)
-    cost_price = models.FloatField(blank=True, null=True)
+    cost_price = models.CharField(max_length=12, blank=True, null=True)
     enabled = models.IntegerField(blank=True, null=True)
     i_id = models.CharField(max_length=10, blank=True, null=True)
-    market_price = models.FloatField(blank=True, null=True)
+    market_price = models.CharField(max_length=12, blank=True, null=True)
     modified = models.DateTimeField(blank=True, null=True)
     name = models.CharField(max_length=80, blank=True, null=True)
     pic = models.CharField(max_length=150, blank=True, null=True)
     pic_big = models.CharField(max_length=150, blank=True, null=True)
     properties_name = models.CharField(max_length=40, blank=True, null=True)
     properties_value = models.CharField(max_length=40, blank=True, null=True)
-    sale_price = models.FloatField(blank=True, null=True)
+    sale_price = models.CharField(max_length=12, blank=True, null=True)
     short_name = models.CharField(max_length=20, blank=True, null=True)
     sku_code = models.CharField(max_length=20, blank=True, null=True)
     sku_id = models.CharField(primary_key=True, max_length=30)
@@ -407,7 +430,7 @@ class SkuQuery(models.Model):
     supplier_name = models.CharField(max_length=30, blank=True, null=True)
     supplier_sku_id = models.CharField(max_length=10, blank=True, null=True)
     vc_name = models.CharField(max_length=20, blank=True, null=True)
-    weight = models.FloatField(blank=True, null=True)
+    weight = models.CharField(max_length=8, blank=True, null=True)
 
     class Meta:
         managed = False

@@ -31,10 +31,16 @@ class Verification(object):
             return 1, special_order_stats
 
     # 验证该线上订单号是否为特殊单
-    def special_order(self, order_online_num,search_o_id ):
-
+    def special_order(self, search_o_id):
         special_order_stats = JstOrdersQuerySpecialSingle.objects.using('erp_database').filter(o_id=search_o_id).all()
+        if len(special_order_stats) > 0:
+            return 0
+        else:
+            return 2
 
+    # 因特殊单数据库新增了线上订单号和旺旺号字段，所以重写了验证该线上订单号是否为特殊单函数，由于之前的数据仍然没有这两个字段的内容，所以先执行这个函数，如果没有查到则执行原先的先从erp总表查o_id再通过o_id去特殊单表里查询
+    def special_order_2(self, online_order_number):
+        special_order_stats = JstOrdersQuerySpecialSingle.objects.using('erp_database').filter().all()
         if len(special_order_stats) > 0:
             return 0
         else:
@@ -47,7 +53,7 @@ def search_by_online_order_number(request):
     verification = Verification()
     online_order_number_exit, search_o_id = verification.order_online(online_order_number)[0], verification.order_online(online_order_number)[1]
     if online_order_number_exit == 0:
-        online_order_number_exit = verification.special_order(online_order_number,search_o_id)
+        online_order_number_exit = verification.special_order(online_order_number, search_o_id)
     msg = json.dumps(online_order_number_exit)
     return HttpResponse(msg)
 
