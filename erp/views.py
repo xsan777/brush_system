@@ -40,20 +40,31 @@ class Verification(object):
 
     # 因特殊单数据库新增了线上订单号和旺旺号字段，所以重写了验证该线上订单号是否为特殊单函数，由于之前的数据仍然没有这两个字段的内容，所以先执行这个函数，如果没有查到则执行原先的先从erp总表查o_id再通过o_id去特殊单表里查询
     def special_order_2(self, online_order_number):
-        special_order_stats = JstOrdersQuerySpecialSingle.objects.using('erp_database').filter().all()
+        special_order_stats = JstOrdersQuerySpecialSingle.objects.using('erp_database').filter(so_id=online_order_number).all()
         if len(special_order_stats) > 0:
+            #该订单号是刷单的
             return 0
         else:
-            return 2
+            #该订单号可能为之前的数据没有特殊单表里没有对应的订单号
+            online_order_number_exit, search_o_id = self.order_online(online_order_number)[0], self.order_online(online_order_number)[1]
+            if online_order_number_exit == 0:
+                #该订单号存在
+                online_order_number_exit = self.special_order(search_o_id)
+                return online_order_number_exit
+            else:
+                #该订单号不存在
+                return online_order_number_exit
 
 
 # 查询线上订单号的状态：online_order_number_exit = 0 代表该线上订单号不存在；online_order_number_exit = 1代表可能为实包
 def search_by_online_order_number(request):
     online_order_number = request.POST.get('online_order_number')
     verification = Verification()
-    online_order_number_exit, search_o_id = verification.order_online(online_order_number)[0], verification.order_online(online_order_number)[1]
-    if online_order_number_exit == 0:
-        online_order_number_exit = verification.special_order(online_order_number, search_o_id)
+    #老的查询订单号方法
+    # online_order_number_exit, search_o_id = verification.order_online(online_order_number)[0], verification.order_online(online_order_number)[1]
+    # if online_order_number_exit == 0:
+    #     online_order_number_exit = verification.special_order(online_order_number, search_o_id)
+    online_order_number_exit=verification.special_order_2(online_order_number)
     msg = json.dumps(online_order_number_exit)
     return HttpResponse(msg)
 
