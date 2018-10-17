@@ -4,3 +4,13 @@
     margin: 10px 0px;
     overflow-y:auto;
 }
+#search_data{
+    width: 75%;
+    float: left;
+}
+#search_online_num{
+    float: left;
+}
+.search_{
+    margin-top: 10px;
+}

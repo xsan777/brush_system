@@ -59,6 +59,7 @@ urlpatterns = [
     path('make_total_account/',views.make_total_account),
     path('search_count/',views.search_count),
     path('search_total_count/',views.search_total_count),
+    path('search_online_order_num_brush_data/',views.search_online_order_num_brush_data),
     path('shop_bill/',views.shop_bill),
     path('account_bill/',views.account_bill),
     path('total_account_bill/',views.total_account_bill),

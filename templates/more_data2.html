@@ -5,44 +5,51 @@
 {% endblock %}
 {% block content %}
     {#数据筛选框#}
-    <form class="form-inline" id="search_data" method="post">
-        <div class="form-group">
-            <label for="exampleInputName2">日期:</label>
-            <input type="date" class="form-control" value="{{ now_time }}" name="add_time" id="se_date" onchange="change_url()">
-        </div>
-        <div class="form-group">
-            <label for="exampleInputName2">店铺:</label>
-            <select name="shopname" id="shopname" class="form-control" onchange="change_operator()">
-                {#<option value="alls">全部</option>#}
-                {% for shopss in shops %}
-                    <option value="{{ shopss }}">{{ shopss }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="exampleInputName2">操作人:</label>
-            <select name="operator" id="operator" class="form-control" onchange="change_url()">
-                <option value="alls">全部</option>
-                {% for user in all_user %}
-                    <option value="{{ user.username }}">{{ user.username }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="exampleInputName2">付款类型:</label>
-            <select name="payment_type" id="payment_type" class="form-control" onchange="change_url()">
-                <option value="alls">全部</option>
-                {% for payment_type in all_payment_type %}
-                    <option value="{{ payment_type.types }}">{{ payment_type.types }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <input type="submit" value="查找" class="btn btn-default">
-        <a href="/download_brush/" id="downss"><input type="button" value="下载" class="btn btn-default"></a>
+    <div class="search_">
+        <form class="form-inline" id="search_data" method="post">
+            <div class="form-group">
+                <label for="exampleInputName2">日期:</label>
+                <input type="date" class="form-control" value="{{ now_time }}" name="add_time" id="se_date" onchange="change_url()">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputName2">店铺:</label>
+                <select name="shopname" id="shopname" class="form-control" onchange="change_operator()">
+                    {#<option value="alls">全部</option>#}
+                    {% for shopss in shops %}
+                        <option value="{{ shopss }}">{{ shopss }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputName2">操作人:</label>
+                <select name="operator" id="operator" class="form-control" onchange="change_url()">
+                    <option value="alls">全部</option>
+                    {% for user in all_user %}
+                        <option value="{{ user.username }}">{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputName2">付款类型:</label>
+                <select name="payment_type" id="payment_type" class="form-control" onchange="change_url()">
+                    <option value="alls">全部</option>
+                    {% for payment_type in all_payment_type %}
+                        <option value="{{ payment_type.types }}">{{ payment_type.types }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" value="查找" class="btn btn-default">
+            <a href="/download_brush/" id="downss"><input type="button" value="下载" class="btn btn-default"></a>
 
-        {% csrf_token %}
-    </form>
-
+            {% csrf_token %}
+        </form>
+        <form action="/search_online_order_num_brush_data/" class="form-inline" id="search_online_num" method="post">
+            <input type="text" class="form-control" id="exampleInputName2" placeholder="线上订单号 " name="online_num">
+            <input type="submit" value="查找" class="btn btn-default">
+            {% csrf_token %}
+        </form>
+    </div>
+    <br><br>
     <hr>
     {#显示数据#}
     <div id="tabless">
@@ -217,7 +224,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-offset-9"><h3>  共<span id="total_rows">{{ table_len }}</span>条数据</h3></div>
+    <div class="col-lg-offset-9"><h3> 共<span id="total_rows">{{ table_len }}</span>条数据</h3></div>
 {% endblock %}
 
 {% block js %}

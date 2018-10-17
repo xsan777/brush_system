@@ -665,12 +665,13 @@ def brankmanagement(request):
         if total_account_of != None:
             if len(brank_operator_list) != 0:
                 brank_card_exit = Brank_account.objects.filter(account_name=account_names, deletes=False).all()
-                if len(brank_card_exit) >0:
+                if len(brank_card_exit) > 0:
                     msg = '该账户已存在，不能重复添加'
                 else:
                     Brank_account.objects.create(account_name=account_names, brank_name=brank_names, brank_number=brank_numbers,
                                                  brank_card_number=brank_card_numbers, deletes=False,
-                                                 total_account_name=Total_brank_account.objects.get(total_account_name=total_account_of, deletes=False))
+                                                 total_account_name=Total_brank_account.objects.get(total_account_name=total_account_of,
+                                                                                                    deletes=False))
                     brank_card_id = Brank_account.objects.filter(account_name=account_names, deletes=False).get()
                     for users in brank_operator_list:
                         brank_card_id.brank_operator.add(Userinfo.objects.get(username=users, deletes=False))
@@ -1744,7 +1745,7 @@ def more_date(request):
     return render(request, 'more_data2.html',
                   {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
                    'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'reminds': reminds, 'makes': makes,
-                   'unmakes': unmakes, 'total_reminds': total_reminds, 'update_passwd': update_passwd,'table_len':table_len,
+                   'unmakes': unmakes, 'total_reminds': total_reminds, 'update_passwd': update_passwd, 'table_len': table_len,
                    'all_payment_type': all_payment_type, 'payment_types': payment_types})
 
 
@@ -1759,6 +1760,60 @@ def chose_operator(request):
     operators = [i for i in operators]
     msg = json.dumps({'operators': operators})
     return HttpResponse(msg)
+
+
+# 在更多页面根据线上订单号查询喝酒数据
+def search_online_order_num_brush_data(request):
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    user = request.session.get('username')
+    if user == None:
+        return redirect(to=login)
+    title = '喝酒数据查询'
+    userss = user
+    operators = userss
+    payment_types = 'alls'
+    first_shop = Userinfo.objects.filter(username=user, deletes=False).get().shop.filter(deletes=False).first()
+    all_user = Shops.objects.filter(shopname=first_shop, deletes=False).get().userinfo_set.filter(rouse='运营', deletes=False).all()
+    all_payment_type = Payment_type.objects.all()
+    now_time = time.strftime('%Y-%m-%d', time.localtime())
+    account = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
+    shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
+    shopss = 'alls'
+    online_order_nums = request.POST.get('online_num')
+    tables =Brush_single_entry.objects.filter(online_order_number=online_order_nums,deletes=False).all()
+    table_len = len(tables)
+    # 提示运营有账户未确认
+    accountss = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
+    reminds = ''
+    unmakes = 0
+    makes = 0
+    for i in accountss:
+        check_countss = Account_record.objects.filter(datess__date=now_time, account_name=i.id, deletes=False).all()
+        if check_countss:
+            check_countss = Account_record.objects.filter(datess__date=now_time, account_name=i.id, deletes=False).get()
+            if check_countss.makes == 'False':
+                reminds = '(有账户未确认)'
+                unmakes += 1
+            if check_countss.makes == 'True':
+                makes += 1
+    # 总账户未确认提示运营
+    total_reminds = ''
+    user_total_account = Userinfo.objects.get(username=user, deletes=False)
+    account__ = user_total_account.total_brank_account.filter(deletes=False).all()
+    now_time3 = time.strftime('%Y-%m-%d', time.localtime())
+    for m in account__:
+        account2 = Total_account_record.objects.filter(datess__date=now_time3, account_name=m, deletes=False).all()
+        for i in account2:
+            if i.makes == 'False':
+                total_reminds = '(总账户未确认)'
+    update_passwd = Updata_passwd()
+    return render(request, 'more_data2.html',
+                  {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
+                   'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'reminds': reminds, 'makes': makes,
+                   'unmakes': unmakes, 'total_reminds': total_reminds, 'update_passwd': update_passwd, 'table_len': table_len,
+                   'all_payment_type': all_payment_type, 'payment_types': payment_types})
 
 
 # 子账户核对
@@ -2705,7 +2760,8 @@ def upload_excel(request):
             if check_countss.makes == 'True':
                 makes += 1
     return render(request, 'upload_excel.html',
-                  {'user': user, 'title': title, 'tables': tables, 'msg': msg, 'flog': flog, 'reminds': reminds, 'unmakes': unmakes, 'makes': makes,'total_reminds':total_reminds})
+                  {'user': user, 'title': title, 'tables': tables, 'msg': msg, 'flog': flog, 'reminds': reminds, 'unmakes': unmakes, 'makes': makes,
+                   'total_reminds': total_reminds})
 
 
 # 根据上传的数据添加喝酒数据
