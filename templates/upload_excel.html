@@ -157,6 +157,7 @@
             var success_num = 0;
             var error_num = 0;
             var uplodes_errs = '';
+            $('#upload_data').attr('disabled', 'true');
             $('tr.rowss').each(
                 function () {
                     var row_num = $(this).children('td#row_num').text();
@@ -238,6 +239,8 @@
             model_messages_2(msg_, uplodes_errs, '请修改后再导入');
             var log_head = '批量导入数据';
             add_log(log_head, log_err);
+             $('#upload_data').removeAttr("disabled")   ;
+             console.log('remove');
             {#alert('本次上传成功' + success_num + '条数据，失败' + error_num + '条')#}
         }
     </script>
