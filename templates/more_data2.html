@@ -107,7 +107,7 @@
                     <th>付款金额</th>
                     <th>付款账户</th>
                     <th>备注</th>
-                    <th>创建(修改)时间</th>
+                    <th>创建时间</th>
                     <th>操作人</th>
                 </tr>
                 {% for table in tables %}
@@ -174,19 +174,9 @@
                             <label for="inputEmail3" class="col-sm-3 control-label">付款类型</label>
                             <div class="col-sm-9">
                                 <select name="payment_type" id="update_payment_type" class="form-control">
-                                    <option value="本金">本金</option>
-                                    <option value="佣金">佣金</option>
-                                    <option value="刮刮卡">刮刮卡</option>
-                                    <option value="优惠反差">优惠反差</option>
-                                    <option value="买家秀">买家秀</option>
-                                    <option value="问大家">问大家</option>
-                                    <option value="快递费">快递费</option>
-                                    <option value="手续费">手续费</option>
-                                    <option value="删评价">删评价</option>
-                                    <option value="收藏、加购">收藏、加购</option>
-                                    <option value="直通车点击">直通车点击</option>
-                                    <option value="多转追回">多转追回</option>
-                                    <option value="其他">其他</option>
+                                    {% for pay_type in payment_type_all %}
+                                        <option value="{{ pay_type.types }}">{{ pay_type.types }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>

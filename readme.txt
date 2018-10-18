@@ -1,3 +1,11 @@
+版本号 V 1.2.10 将原先的付款类型由静态改为了动态（通过数据库查询）；修复了上传Excel页面由于修改了模板样式后导致的黄色提示条位置上移的问题；
+
+
+版本号 V 1.2.9 在喝酒数据查询页面增加根据订单号查系统内喝酒记录；
+commit f7af093b4ad91d98cd6b0af57111d727ca95a780 
+
+
+
 版本号 V 1.2.8 完成了新的验证订单号状态的函数（special_order_2（））
 commit 488f7aa1e96c523f2e82bf400109241a59220b50 
 
@@ -23,6 +31,7 @@ commit 2e7221b1926892b9ab047f52f27ad065acb5847d
 
 版本号  V 1.2.3 修改运营名下账户确认核对查询将‘ check_countss = Account_record.objects.filter(datess__glt=now_time, account_name__account_name=i.account_name, deletes=False).get()’改为‘ check_countss = Account_record.objects.filter(datess__date=now_time, account_name__account_name=i.account_name, deletes=False).get()’。问题显像：10月16日查询10月12日的子账户记录时报错提示查询出4条记录。
 commit 5e64b1f84de651bd1e722d97e3a69b1caa83bd4e 
+
 
 
 

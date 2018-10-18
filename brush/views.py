@@ -1483,6 +1483,7 @@ def brushmanagement(request):
     tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=user, deletes='False')[::-1]
     add_brush_form = Add_brush_data()
     edit_brush_form = Edit_brush_data()
+    payment_type_all = Payment_type.objects.all()
     errs = ''
     if request.method == 'POST':
         shopnames = request.POST.get('shopname')
@@ -1566,7 +1567,7 @@ def brushmanagement(request):
     return render(request, 'brush2.html',
                   {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'add_brush_form': add_brush_form,
                    'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,
-                   'total_reminds': total_reminds, 'update_passwd': update_passwd})
+                   'total_reminds': total_reminds, 'update_passwd': update_passwd, 'payment_type_all': payment_type_all})
 
 
 # 修改喝酒数据
@@ -1700,6 +1701,7 @@ def more_date(request):
     shopss = 'alls'
     tables = Brush_single_entry.objects.filter(add_time__date=now_time, operator__username=userss, shopname=first_shop, deletes='False').order_by(
         'add_time')
+    payment_type_all = Payment_type.objects.all()
     if request.method == 'POST':
         operators = request.POST.get('operator')
         shopss = request.POST.get('shopname')
@@ -1746,7 +1748,7 @@ def more_date(request):
                   {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
                    'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'reminds': reminds, 'makes': makes,
                    'unmakes': unmakes, 'total_reminds': total_reminds, 'update_passwd': update_passwd, 'table_len': table_len,
-                   'all_payment_type': all_payment_type, 'payment_types': payment_types})
+                   'all_payment_type': all_payment_type, 'payment_types': payment_types, 'payment_type_all': payment_type_all})
 
 
 # 更多页面加载操作人
@@ -1782,7 +1784,7 @@ def search_online_order_num_brush_data(request):
     shops = Userinfo.objects.get(username=user, deletes=False).shop.filter(deletes=False).all()
     shopss = 'alls'
     online_order_nums = request.POST.get('online_num')
-    tables =Brush_single_entry.objects.filter(online_order_number=online_order_nums,deletes=False).all()
+    tables = Brush_single_entry.objects.filter(online_order_number=online_order_nums, deletes=False).all()
     table_len = len(tables)
     # 提示运营有账户未确认
     accountss = Userinfo.objects.get(username=user, deletes=False).brank_account_set.filter(deletes=False).all()
@@ -1840,6 +1842,7 @@ def check_account(request):
     for i in accounts:
         account = i.id
         break
+    payment_type_all = Payment_type.objects.all()
     if request.method == 'POST':
         now_time = request.POST.get('check_data')
         account = request.POST.get('payment_account')
@@ -1931,7 +1934,7 @@ def check_account(request):
                    'actual_cost': actual_cost, 'user': user, 'edit_brush_form': edit_brush_form, 'shops': shops, 'user': user,
                    'payment_account': account, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes, 'errs': errs,
                    'total_reminds': total_reminds, 'update_passwd': update_passwd, 'actual_err': actual_err, 'makes_stats': makes_stats,
-                   'account_select': account_select, 'pay_money_all': pay_money_all,
+                   'account_select': account_select, 'pay_money_all': pay_money_all, 'payment_type_all': payment_type_all,
                    'weixin_withdraw_moneys': weixin_withdraw_moneys})
 
 
