@@ -97,7 +97,7 @@ class Add_brank_account(forms.Form):
 class Edit_brank_account(forms.Form):
     account_name = forms.CharField(label='账户名',
                                    widget=forms.TextInput(
-                                       attrs={'placeholder': '账户名', 'class': 'form-control', 'id': 'update_account_name', 'disabled': 'True'}))
+                                       attrs={'placeholder': '账户名', 'class': 'form-control', 'id': 'update_account_name', }))
     brank_name = forms.CharField(label='银行名',
                                  widget=forms.TextInput(attrs={'placeholder': '银行名', 'class': 'form-control', 'id': 'update_brank_name', }))
     brank_number = forms.CharField(label='开户行号',

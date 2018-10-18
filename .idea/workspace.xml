@@ -4,7 +4,7 @@
     <list default="true" id="406d6af2-ec06-4ccb-b031-9531d5d81333" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/brush/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/brush/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/brush/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/brush/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/total_brankmanagement.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/total_brankmanagement.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/brankmanagement.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/brankmanagement.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,17 +24,47 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/brush/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="93">
-              <caret line="607" column="122" selection-start-line="607" selection-start-column="122" selection-end-line="607" selection-end-column="122" />
+            <state relative-caret-position="389">
+              <caret line="855" column="76" selection-start-line="855" selection-start-column="76" selection-end-line="855" selection-end-column="76" />
               <folding>
                 <element signature="e#0#59#0" expanded="true" />
+                <element signature="e#363#838#0" />
+                <element signature="e#889#1160#0" />
+                <element signature="e#1203#1349#0" />
+                <element signature="e#1396#1526#0" />
+                <element signature="e#1558#2346#0" />
                 <element signature="e#2388#3621#0" />
+                <element signature="e#3657#8538#0" />
+                <element signature="e#8589#8832#0" />
+                <element signature="e#8875#9253#0" />
+                <element signature="e#9293#13751#0" />
+                <element signature="e#13792#14468#0" />
+                <element signature="e#14511#17173#0" />
+                <element signature="e#17212#18181#0" />
+                <element signature="e#18232#18472#0" />
                 <element signature="e#18511#20340#0" />
                 <element signature="e#19831#20585#0" />
+                <element signature="e#20637#24750#0" />
                 <element signature="e#24807#25322#0" />
+                <element signature="e#25368#27352#0" />
+                <element signature="e#27397#28909#0" />
+                <element signature="e#33474#34749#0" />
+                <element signature="e#34798#35314#0" />
                 <element signature="e#130773#134771#0" />
                 <element signature="e#145630#148847#0" />
                 <element signature="e#148896#154063#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="brankmanagement.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/brankmanagement.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="282" column="46" lean-forward="true" selection-start-line="282" selection-start-column="46" selection-end-line="282" selection-end-column="46" />
+              <folding>
+                <element signature="e#3680#4959#0#HTML" />
               </folding>
             </state>
           </provider>
@@ -57,8 +87,16 @@
       <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/brush/forms.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
-              <caret line="26" column="28" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="28" />
+            <state relative-caret-position="361">
+              <caret line="97" column="16" selection-start-line="97" selection-start-column="4" selection-end-line="97" selection-end-column="16" />
+              <folding>
+                <element signature="e#2143#2957#0" />
+                <element signature="e#3002#3709#0" />
+                <element signature="e#3756#3942#0" />
+                <element signature="e#3987#4143#0" />
+                <element signature="e#4192#4346#0" />
+                <element signature="e#4417#5299#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -135,8 +173,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>旺旺号</find>
-      <find>店铺账单</find>
       <find>check_a</find>
       <find>pay_money_all</find>
       <find>总账户核对</find>
@@ -165,6 +201,8 @@
       <find>子账户核对</find>
       <find>总账单</find>
       <find>修改</find>
+      <find>修改账户</find>
+      <find>子账户</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -179,7 +217,6 @@
         <option value="$PROJECT_DIR$/templates/erp_templates/test_search.html" />
         <option value="$PROJECT_DIR$/templates/check_total_account.html" />
         <option value="$PROJECT_DIR$/static/css/user.css" />
-        <option value="$PROJECT_DIR$/templates/brankmanagement.html" />
         <option value="$PROJECT_DIR$/static/css/total_brankmanagement.css" />
         <option value="F:/index3.html" />
         <option value="$PROJECT_DIR$/templates/check_total_account2.html" />
@@ -221,8 +258,9 @@
         <option value="$PROJECT_DIR$/templates/all_data.html" />
         <option value="$PROJECT_DIR$/brush_system/settings.py" />
         <option value="$PROJECT_DIR$/templates/shops.html" />
-        <option value="$PROJECT_DIR$/brush/forms.py" />
         <option value="$PROJECT_DIR$/templates/total_brankmanagement.html" />
+        <option value="$PROJECT_DIR$/templates/brankmanagement.html" />
+        <option value="$PROJECT_DIR$/brush/forms.py" />
         <option value="$PROJECT_DIR$/brush/views.py" />
       </list>
     </option>
@@ -419,7 +457,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="64" />
+      <option name="time" value="65" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -435,13 +473,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="5" column="1" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/brankmanagement.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="58" selection-start-line="58" selection-end-line="62" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -782,13 +813,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/brush/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="26" column="28" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/brush/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="630">
@@ -796,16 +820,59 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/brankmanagement.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="282" column="46" lean-forward="true" selection-start-line="282" selection-start-column="46" selection-end-line="282" selection-end-column="46" />
+          <folding>
+            <element signature="e#3680#4959#0#HTML" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/brush/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="97" column="16" selection-start-line="97" selection-start-column="4" selection-end-line="97" selection-end-column="16" />
+          <folding>
+            <element signature="e#2143#2957#0" />
+            <element signature="e#3002#3709#0" />
+            <element signature="e#3756#3942#0" />
+            <element signature="e#3987#4143#0" />
+            <element signature="e#4192#4346#0" />
+            <element signature="e#4417#5299#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/brush/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="93">
-          <caret line="607" column="122" selection-start-line="607" selection-start-column="122" selection-end-line="607" selection-end-column="122" />
+        <state relative-caret-position="389">
+          <caret line="855" column="76" selection-start-line="855" selection-start-column="76" selection-end-line="855" selection-end-column="76" />
           <folding>
             <element signature="e#0#59#0" expanded="true" />
+            <element signature="e#363#838#0" />
+            <element signature="e#889#1160#0" />
+            <element signature="e#1203#1349#0" />
+            <element signature="e#1396#1526#0" />
+            <element signature="e#1558#2346#0" />
             <element signature="e#2388#3621#0" />
+            <element signature="e#3657#8538#0" />
+            <element signature="e#8589#8832#0" />
+            <element signature="e#8875#9253#0" />
+            <element signature="e#9293#13751#0" />
+            <element signature="e#13792#14468#0" />
+            <element signature="e#14511#17173#0" />
+            <element signature="e#17212#18181#0" />
+            <element signature="e#18232#18472#0" />
             <element signature="e#18511#20340#0" />
             <element signature="e#19831#20585#0" />
+            <element signature="e#20637#24750#0" />
             <element signature="e#24807#25322#0" />
+            <element signature="e#25368#27352#0" />
+            <element signature="e#27397#28909#0" />
+            <element signature="e#33474#34749#0" />
+            <element signature="e#34798#35314#0" />
             <element signature="e#130773#134771#0" />
             <element signature="e#145630#148847#0" />
             <element signature="e#148896#154063#0" />

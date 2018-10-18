@@ -805,7 +805,7 @@ def edit_brank(request):
     msgss = ''
     if request.method == 'POST':
         ids = request.POST.get('id')
-
+        account_names = request.POST.get('account_name')
         brank_names = request.POST.get('brank_name')
         brank_numbers = request.POST.get('brank_number')
         brank_card_numbers = request.POST.get('brank_card_number')
@@ -814,33 +814,41 @@ def edit_brank(request):
         if len(brank_operator_list) != 0:
             if len(total_account_names) != 0:
                 brank_card_id = Brank_account.objects.get(id=ids)
-                account_names = brank_card_id.account_name
-                before_operation_lists = ''
-                for before_operations in brank_card_id.brank_operator.all():
-                    before_operation_lists += str(before_operations.username)
-                    before_operation_lists += '、'
-                before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，所属账户：%s，银行卡操作人：%s}' % (
-                    ids, brank_card_id.account_name, brank_card_id.brank_name, brank_card_id.brank_number, brank_card_id.brank_card_number,
-                    brank_card_id.total_account_name.total_account_name, before_operation_lists)
-                Brank_account.objects.filter(id=ids).update(brank_name=brank_names, brank_number=brank_numbers,
-                                                            brank_card_number=brank_card_numbers, deletes=False,
-                                                            total_account_name=Total_brank_account.objects.get(total_account_name=total_account_names,
-                                                                                                               deletes=False))
-                brank_card_id2 = Brank_account.objects.filter(account_name=brank_card_id.account_name, deletes=False).get()
-                brank_card_id2.brank_operator.clear()
-                for users in brank_operator_list:
-                    brank_card_id2.brank_operator.add(Userinfo.objects.get(username=users, deletes=False))
-                user_clean = brank_card_id2.brank_operator.all()
-                brank_operator_lists = ''
-                for user_brank in user_clean:
-                    brank_operator_lists += str(user_brank.username)
-                    brank_operator_lists += '、'
-                operation_types = '修改银行账户'
-                operators = Userinfo.objects.get(username=user, deletes=False)
-                after_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，所属账户：%s，银行卡操作人：%s}' % (
-                    ids, account_names, brank_names, brank_numbers, brank_card_numbers, total_account_names, brank_operator_lists)
-                Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations,
-                                   before_operation=before_operations)
+                account_exit = Brank_account.objects.filter(account_name=account_names,deletes=False).all()
+                if len(account_exit) >0:
+                    for account in account_exit:
+                        account_id = account.id
+                        break
+                    if account_id != ids:
+                        msgss = '该账户已存在'
+                if msgss == '':
+                    account_names = brank_card_id.account_name
+                    before_operation_lists = ''
+                    for before_operations in brank_card_id.brank_operator.all():
+                        before_operation_lists += str(before_operations.username)
+                        before_operation_lists += '、'
+                    before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，所属账户：%s，银行卡操作人：%s}' % (
+                        ids, brank_card_id.account_name, brank_card_id.brank_name, brank_card_id.brank_number, brank_card_id.brank_card_number,
+                        brank_card_id.total_account_name.total_account_name, before_operation_lists)
+                    Brank_account.objects.filter(id=ids).update(brank_name=brank_names, brank_number=brank_numbers,
+                                                                brank_card_number=brank_card_numbers, deletes=False,
+                                                                total_account_name=Total_brank_account.objects.get(total_account_name=total_account_names,
+                                                                                                                   deletes=False))
+                    brank_card_id2 = Brank_account.objects.filter(account_name=brank_card_id.account_name, deletes=False).get()
+                    brank_card_id2.brank_operator.clear()
+                    for users in brank_operator_list:
+                        brank_card_id2.brank_operator.add(Userinfo.objects.get(username=users, deletes=False))
+                    user_clean = brank_card_id2.brank_operator.all()
+                    brank_operator_lists = ''
+                    for user_brank in user_clean:
+                        brank_operator_lists += str(user_brank.username)
+                        brank_operator_lists += '、'
+                    operation_types = '修改银行账户'
+                    operators = Userinfo.objects.get(username=user, deletes=False)
+                    after_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，所属账户：%s，银行卡操作人：%s}' % (
+                        ids, account_names, brank_names, brank_numbers, brank_card_numbers, total_account_names, brank_operator_lists)
+                    Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations,
+                                       before_operation=before_operations)
             else:
                 msgss = '必须选择所属总账户'
         else:

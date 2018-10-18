@@ -281,7 +281,7 @@
                 async: false,
                 success: function (arr) {
                     var errrrr = '必须选择银行卡使用人';
-                    if (arr['err'] == errrrr) {
+                    if (arr['err'] != '') {
                         alert(arr['err']);
                         window.location.replace('/brankmanagement/');
                     }
