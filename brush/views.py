@@ -2387,16 +2387,62 @@ def all_data(request):
     title = '总账单'
     now_time = time.strftime('%Y-%m-%d', time.localtime())
     payment_types = '本金'
+    total_account_all = Total_brank_account.objects.filter(deletes=False).all()
+    total_account = total_account_all.first()
+    total_account = total_account.total_account_name
+    pay_types = Payment_type.objects.all()
     if request.method == 'POST':
         now_time = request.POST.get('search_date')
+        total_account = request.POST.get('total_account')
         payment_types = request.POST.get('payment_type')
-    if payment_types == '全部':
+    shops = Shops.objects.filter(own_total_brank__total_account_name=total_account, deletes=False).all()
+    if payment_types == '全部' and total_account == 'all':
         tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes=False).all()
-    else:
+    elif payment_types != '全部' and total_account_all == 'all':
         tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_type=payment_types, deletes=False).all()
+    elif payment_types == '全部' and total_account_all != 'all':
+        tables = []
+        for shop in shops:
+            row_dict = {}
+            tabless = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shop.shopname, deletes=False).all()
+            for table in tabless:
+                row_dict['shopname'] = table.shopname
+                row_dict['wang_wang_number'] = table.wang_wang_number
+                row_dict['online_order_number'] = table.online_order_number
+                row_dict['transaction_data'] = table.transaction_data
+                row_dict['payment_type'] = table.payment_type
+                row_dict['payment_amount'] = table.payment_amount
+                row_dict['payment_account'] = table.payment_account
+                row_dict['remarks'] = table.remarks
+                row_dict['add_time'] = table.add_time
+                row_dict['operator'] = table.operator
+                tables.append(row_dict)
+    else:
+        tables = []
+        for shop in shops:
+            tabless = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shop.shopname, payment_type=payment_types,
+                                                        deletes=False).all()
+            for table in tabless:
+                row_dict = {}
+                row_dict['id'] = table.id
+                row_dict['shopname'] = table.shopname
+                row_dict['wang_wang_number'] = table.wang_wang_number
+                row_dict['online_order_number'] = table.online_order_number
+                row_dict['transaction_data'] = table.transaction_data
+                row_dict['payment_type'] = table.payment_type
+                row_dict['payment_amount'] = table.payment_amount
+                row_dict['payment_account'] = table.payment_account
+                row_dict['remarks'] = table.remarks
+                row_dict['add_time'] = table.add_time
+                row_dict['operator'] = table.operator
+                tables.append(row_dict)
     payment = 0.0
-    for table in tables:
-        payment += float(table.payment_amount)
+    try:
+        for table_ in tables:
+            payment += float(table_.payment_amount)
+    except AttributeError:
+        for table_ in tables:
+            payment += float(table_['payment_amount'])
     payment = '%.2f' % payment
     # 财务账户提示账户未确认
     now_time_cheack = time.strftime('%Y-%m-%d', time.localtime())
@@ -2408,7 +2454,7 @@ def all_data(request):
         admin_flog = 0
     return render(request, 'all_data.html',
                   {'title': title, 'user': user, 'now_time': now_time, 'payment_type': payment_types, 'tables': tables,
-                   'admin_flog': admin_flog, 'pay_money': payment})
+                   'admin_flog': admin_flog, 'pay_money': payment, 'total_account_all': total_account_all, 'pay_types': pay_types})
 
 
 # 下载喝酒数据
@@ -2693,8 +2739,8 @@ def down_all_data2(request):
     time_end_2 = time.time()
     time_use = time_end_1 - time_start
     time_use_2 = time_end_2 - time_end_1
-    print('查询时间' + str(time_use))
-    print('数据处理时间' + str(time_use_2))
+    # print('查询时间' + str(time_use))
+    # print('数据处理时间' + str(time_use_2))
     file_names = str(now_time) + '月的喝酒数据'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=now_time, file_name=file_names)
 
@@ -2864,7 +2910,6 @@ from django.http import StreamingHttpResponse
 
 def template_file_download(request):
     from django.utils.encoding import escape_uri_path
-    # do something...
     template_file_database = 'excel/模板_.xlsx'
     template_file_path = os.path.join(MEDIA_ROOT, str(template_file_database).replace('/', os.sep))
 
@@ -2974,8 +3019,6 @@ def brushmanagement_2(request):
                 pass
             else:
                 line['online_stats'] = order_stats
-                print(order_stats)
-                print(type(order_stats))
                 order_unexit_num += order_stats - 1
         else:
             line['online_stats'] = online_stats

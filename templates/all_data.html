@@ -12,28 +12,27 @@
             <input type="date" class="form-control" value="{{ now_time }}" name="search_date" id="search_date" onchange="cheage_down()">
         </div>
         <div class="form-group">
+            <label for="exampleInputName2">总账户:</label>
+            <select name="total_account" id="total_account" class="form-control" onchange="cheage_down()">
+                {% for total_account in total_account_all %}
+                    <option value="{{ total_account.total_account_name }}">{{ total_account.total_account_name }}</option>
+                {% endfor %}
+                <option value="all">全部</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="exampleInputName2">付款类型:</label>
             <select name="payment_type" id="payment_type" class="form-control" onchange="cheage_down()">
-                <option value="本金">本金</option>
-                <option value="佣金">佣金</option>
-                <option value="买家秀">买家秀</option>
-                <option value="问大家">问大家</option>
-                <option value="优惠反差">优惠反差</option>
-                <option value="快递费">快递费</option>
-                <option value="手续费">手续费</option>
-                <option value="删评价">删评价</option>
-                <option value="收藏">收藏、加购</option>
-                <option value="刮刮卡">刮刮卡</option>
-                <option value="直通车点击">直通车点击</option>
-                <option value="返款">返款</option>
-                <option value="其他">其他</option>
+                {% for pay_type in pay_types %}
+                    <option value="{{ pay_type.types }}">{{ pay_type.types }}</option>
+                {% endfor %}
                 <option value="全部">全部</option>
             </select>
         </div>
         <input type="submit" value="查询" class="btn btn-default">
         <a href="" id="down"><input type="button" value="按日下载" class="btn btn-default"></a>
         <a href="" id="down2"><input type="button" value="按月下载" class="btn btn-default"></a>
-        <input type="button" value="显示订单状态" class="btn btn-default col-lg-offset-5" id="show_stats">
+        <input type="button" value="订单状态" class="btn btn-default col-lg-offset-2" id="show_stats">
         {% csrf_token %}
     </form>
     <br>
