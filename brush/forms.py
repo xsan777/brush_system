@@ -25,7 +25,7 @@ class Total_brank_account_form(forms.Form):
 # 修改总账户
 class Edit_total_brank_account_form(forms.Form):
     total_brank_account_name = forms.CharField(label='总账户名', widget=forms.TextInput(
-        attrs={'placeholder': '总账户名', 'class': 'form-control', 'id': 'edit_total_brank_account_name', 'disabled': 'True'}))
+        attrs={'placeholder': '总账户名', 'class': 'form-control', 'id': 'edit_total_brank_account_name',}))
     brank_name = forms.CharField(label='银行名', widget=forms.TextInput(
         attrs={'placeholder': '银行名', 'class': 'form-control', 'id': 'edit_brank_name'}))
     brank_number = forms.CharField(label='开户行号', widget=forms.TextInput(

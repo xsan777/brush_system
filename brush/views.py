@@ -598,24 +598,35 @@ def edit_total_brank(request):
     if rouse == '运营':
         return render(request, 'login.html', {'err_msg': '当前账户权限不足，请使用其他账号'})
     ids = request.GET.get('id')
+    msg = ''
     if request.method == 'POST':
         total_account_names = request.POST.get('total_brank_account_name')
         total_brank_names = request.POST.get('brank_name')
         total_brank_numbers = request.POST.get('brank_number')
         total_brank_card_numbers = request.POST.get('brank_card_number')
         ids = request.POST.get('id')
-        last_data = Total_brank_account.objects.get(id=ids)
-        before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，}' % (
-            ids, last_data.total_account_name, last_data.total_brank_name, last_data.total_brank_number, last_data.total_brank_card_number,)
-        Total_brank_account.objects.filter(id=ids).update(total_brank_name=total_brank_names, total_brank_number=total_brank_numbers,
-                                                          total_brank_card_number=total_brank_card_numbers)
-        operation_types = '修改总账户'
-        operators = Userinfo.objects.get(username=user, deletes=False)
-        after_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s}' % (
-            ids, total_account_names, total_brank_names, total_brank_numbers, total_brank_card_numbers,)
-        Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations,
-                           before_operation=before_operations)
-        return redirect(to=total_brank_management)
+        total_acount_exit = Total_brank_account.objects.filter(total_account_name=total_account_names,deletes=False).all()
+        if len(total_acount_exit) > 0 :
+            for total_account in total_acount_exit:
+                total_account_id = total_account.id
+                break
+            if total_account_id != ids:
+                msg = '该总账户已存在'
+        if msg == '':
+            last_data = Total_brank_account.objects.get(id=ids)
+            before_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s，}' % (
+                ids, last_data.total_account_name, last_data.total_brank_name, last_data.total_brank_number, last_data.total_brank_card_number,)
+            Total_brank_account.objects.filter(id=ids).update(total_account_name=total_account_names,total_brank_name=total_brank_names,
+                                                              total_brank_number=total_brank_numbers, total_brank_card_number=total_brank_card_numbers,)
+            operation_types = '修改总账户'
+            operators = Userinfo.objects.get(username=user, deletes=False)
+            after_operations = '{id：%s，账户名：%s，银行名：%s，开户行号：%s，银行卡号：%s}' % (
+                ids, total_account_names, total_brank_names, total_brank_numbers, total_brank_card_numbers,)
+            Log.objects.create(operator=operators, operation_type=operation_types, after_operation=after_operations,
+                               before_operation=before_operations)
+        msg = json.dumps(msg)
+        return HttpResponse(msg)
+        # return redirect(to=total_brank_management)
     current_data = Total_brank_account.objects.get(id=ids)
     msg = {'total_brank_name': current_data.total_brank_name, 'total_account_name': current_data.total_account_name,
            'total_brank_num': current_data.total_brank_number, 'total_brank_card_num': current_data.total_brank_card_number, 'ids': ids}
