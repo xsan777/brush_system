@@ -54,7 +54,7 @@ class Add_user(forms.Form):
 # 修改用户信息
 class Edit_user(forms.Form):
     username = forms.CharField(label='用户名', widget=forms.TextInput(
-        attrs={'placeholder': '用户名', 'class': 'form-control', 'id': 'eidt_username', 'onchange': 'edit_verification_username()', 'disabled': 'True'}))
+        attrs={'placeholder': '用户名', 'class': 'form-control', 'id': 'eidt_username', 'onchange': 'edit_verification_username()',}))
     passwd = forms.CharField(label='密码', widget=forms.PasswordInput(attrs={'placeholder': '密码', 'class': 'form-control', 'id': 'eidt_passwd', }))
     passwd2 = forms.CharField(label='确认密码',
                               widget=forms.PasswordInput(attrs={'placeholder': '确认密码', 'class': 'form-control', 'id': 'eidt_passwd2', }))
