@@ -448,17 +448,32 @@ def edit_shop(request):
     if rouse == '运营':
         return render(request, 'login.html', {'err_msg': '当前账户权限不足，请使用其他账号'})
     ids = request.GET.get('id')
+    msg = ''
     if request.method == 'POST':
         ids = request.POST.get('id')
+        shop_name = request.POST.get('shop_name')
         total_account_names = request.POST.get('edit_total_account_name')
         before_shop = Shops.objects.get(id=ids)
-        Shops.objects.filter(id=ids).update(own_total_brank=Total_brank_account.objects.get(total_account_name=total_account_names, deletes=False))
-        operators = Userinfo.objects.get(username=user, deletes=False)
-        operation_types = '修改店铺信息'
-        before_operations = '{id：%s，店铺名：%s，总账户名：%s}' % (ids, before_shop.shopname, before_shop.own_total_brank.total_account_name)
-        after_operations = '{id：%s，店铺名：%s，总账户名：%s}' % (ids, before_shop.shopname, total_account_names)
-        Log.objects.create(operator=operators, operation_type=operation_types, before_operation=before_operations, after_operation=after_operations)
-        return redirect(to=shopmanagement)
+        shopname_exit = Shops.objects.filter(shopname=shop_name,deletes=False).all()
+        if len(shopname_exit) >0:
+            for shopname in shopname_exit:
+                shop_id = str(shopname.id)
+                break
+            if shop_id != ids:
+                msg = '该店铺已存在'
+        if msg == '':
+            Shops.objects.filter(id=ids).update(shopname=shop_name,own_total_brank=Total_brank_account.objects.get(total_account_name=total_account_names, deletes=False))
+            operators = Userinfo.objects.get(username=user, deletes=False)
+            operation_types = '修改店铺信息'
+            before_operations = '{id：%s，店铺名：%s，总账户名：%s}' % (ids, before_shop.shopname, before_shop.own_total_brank.total_account_name)
+            after_operations = '{id：%s，店铺名：%s，总账户名：%s}' % (ids, shop_name, total_account_names)
+            Log.objects.create(operator=operators, operation_type=operation_types, before_operation=before_operations, after_operation=after_operations)
+
+            return redirect(to=shopmanagement)
+        else:
+            msg = json.dumps(msg)
+            return HttpResponse(msg)
+        # return redirect(to=shopmanagement)
     before_shop = Shops.objects.get(id=ids)
     msg = json.dumps({'ids': ids, 'shopname': before_shop.shopname})
     return HttpResponse(msg)

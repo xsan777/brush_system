@@ -77,7 +77,7 @@ class Search_shop(forms.Form):
 # 修改店铺名
 class Edit_shop_form(forms.Form):
     shop_name = forms.CharField(label='店铺名', widget=forms.TextInput(
-        attrs={'placeholder': '店铺名', 'class': 'form-control', 'id': 'edit_shop_name', 'disabled': 'True'}))
+        attrs={'placeholder': '店铺名', 'class': 'form-control', 'id': 'edit_shop_name', }))
 
 
 # 添加银行账户

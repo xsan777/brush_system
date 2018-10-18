@@ -74,7 +74,7 @@
                 </div>
                 {#修改表单#}
                 <div class="modal-body">
-                    <form class="form-horizontal" method="post" action="/edit_shop/">
+                    <form class="form-horizontal" method="post" action="/edit_shop/" id="edit_data">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="shopname" class="col-sm-2 control-label"><span style="color: red">*</span>&nbsp;&nbsp;&nbsp; 店铺名</label>
@@ -101,7 +101,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-default" id="edit_shop">修改</button>
+                                <button type="button" class="btn btn-default" id="edit_shop" onclick="make_edit()">修改</button>
                             </div>
                         </div>
                     </form>
@@ -177,6 +177,25 @@
                     $('#edit_model').modal('show');
                 }
             })
+        }
+    </script>
+    {# 确定修改 #}
+    <script>
+        function make_edit() {
+            $.ajax({
+                url: "/edit_shop/",
+                type: "POST",
+                dataType: 'json',
+                data: $('#edit_data').serialize(),
+                async: false,
+                success: function (arg) {
+                    if (arg != '') {
+                        {#window.location.replace('/shopmanagement/');#}
+                        alert(arg)
+                    }
+                }
+            });
+            window.location.replace('/shopmanagement/');
         }
     </script>
     {#删除店铺#}
