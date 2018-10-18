@@ -2170,8 +2170,8 @@ def total_account_bill(request):
         table = Brush_single_entry.objects.filter(add_time__date=now_time, payment_account__account_name=account['account_name'], deletes=False).all()
         table_list.append(table)
     # 财务账户提示账户未确认
-    now_time = time.strftime('%Y-%m-%d', time.localtime())
-    now_time2 = get_nday_list2(2, now_time)
+    now_time_cheak = time.strftime('%Y-%m-%d', time.localtime())
+    now_time2 = get_nday_list2(2, now_time_cheak)
     all_account_makes = Total_account_record.objects.filter(datess__date=now_time2, makes=False, deletes=False).all()
     if len(all_account_makes) == 0:
         admin_flog = 1

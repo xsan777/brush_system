@@ -103,6 +103,15 @@
             }
         });
     </script>
+    {#默认显示总账户#}
+    <script>
+        $("#total_account").find("option").each(function () {
+            var ff = '{{ total_account }}';
+            if ($(this).val() == ff) {
+                $(this).attr("selected", true);
+            }
+        });
+    </script>
     {#查询喝酒记录状态#}
     <script>
         $('#show_stats').click(function () {
