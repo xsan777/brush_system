@@ -60,7 +60,11 @@ def excel_validator(file, range_validator={}, length_validator={}, rename={}):
         response['error'] += "<h3>文件读取失败！</h3>"
         return {}, response
     # 空值替换
-    df.loc[:, rename_dict.keys()] = df.loc[:, rename_dict.keys()].applymap(lambda s:s.replace("nan", naShow))
+    def drop_nan(s):
+        if s=="nan":
+            s = s.replace("nan", naShow)
+        return s
+    df.loc[:, rename_dict.keys()] = df.loc[:, rename_dict.keys()].applymap(drop_nan)
     # 验证标题
     for title in rename_dict.keys():
         if title not in df.columns.tolist():
@@ -89,7 +93,11 @@ def excel_validator(file, range_validator={}, length_validator={}, rename={}):
     response["del_col"] = list(set(response["del_col"]))
     df.drop(response["del_col"], inplace=True)
     # 空值再替换
-    df.loc[:, rename_dict.keys()] = df.loc[:, rename_dict.keys()].applymap(lambda s:s.replace(naShow, ""))
+    def replace_nan(s):
+        if s==naShow:
+            s = s.replace(naShow, "")
+        return s
+    df.loc[:, rename_dict.keys()] = df.loc[:, rename_dict.keys()].applymap(replace_nan)
     # 字段截取
     df = df.loc[:, rename_dict.keys()]
     titleTips = "<p>经验证共取得合法数据共 {} 行".format(len(df))

@@ -174,7 +174,7 @@
                             <label for="inputEmail3" class="col-sm-3 control-label">付款类型</label>
                             <div class="col-sm-9">
                                 <select name="payment_type" id="update_payment_type" class="form-control">
-                                    {% for pay_type in payment_type_all %}
+                                    {% for pay_type in all_payment_type %}
                                         <option value="{{ pay_type.types }}">{{ pay_type.types }}</option>
                                     {% endfor %}
                                 </select>

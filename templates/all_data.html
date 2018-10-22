@@ -35,7 +35,6 @@
         <input type="button" value="订单状态" class="btn btn-default col-lg-offset-2" id="show_stats">
         {% csrf_token %}
     </form>
-    <br>
     {#    显示数据#}
     <div id="tabless">
         <button class="col-lg-offset-9"></button>
@@ -76,6 +75,11 @@
     </h3>
 {% endblock %}
 {% block js %}
+    {# 查看滚轴高度 #}
+    <script>
+    var wh = $('#tabless').height();
+    console.log(wh)
+    </script>
     {#下载#}
     <script>
         var search_date = $('#search_date').val();

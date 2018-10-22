@@ -25,7 +25,7 @@ class Total_brank_account_form(forms.Form):
 # 修改总账户
 class Edit_total_brank_account_form(forms.Form):
     total_brank_account_name = forms.CharField(label='总账户名', widget=forms.TextInput(
-        attrs={'placeholder': '总账户名', 'class': 'form-control', 'id': 'edit_total_brank_account_name',}))
+        attrs={'placeholder': '总账户名', 'class': 'form-control', 'id': 'edit_total_brank_account_name', 'disabled': 'True'}))
     brank_name = forms.CharField(label='银行名', widget=forms.TextInput(
         attrs={'placeholder': '银行名', 'class': 'form-control', 'id': 'edit_brank_name'}))
     brank_number = forms.CharField(label='开户行号', widget=forms.TextInput(
@@ -54,7 +54,7 @@ class Add_user(forms.Form):
 # 修改用户信息
 class Edit_user(forms.Form):
     username = forms.CharField(label='用户名', widget=forms.TextInput(
-        attrs={'placeholder': '用户名', 'class': 'form-control', 'id': 'eidt_username', 'onchange': 'edit_verification_username()',}))
+        attrs={'placeholder': '用户名', 'class': 'form-control', 'id': 'eidt_username', 'onchange': 'edit_verification_username()', 'disabled': 'True'}))
     passwd = forms.CharField(label='密码', widget=forms.PasswordInput(attrs={'placeholder': '密码', 'class': 'form-control', 'id': 'eidt_passwd', }))
     passwd2 = forms.CharField(label='确认密码',
                               widget=forms.PasswordInput(attrs={'placeholder': '确认密码', 'class': 'form-control', 'id': 'eidt_passwd2', }))
@@ -77,7 +77,7 @@ class Search_shop(forms.Form):
 # 修改店铺名
 class Edit_shop_form(forms.Form):
     shop_name = forms.CharField(label='店铺名', widget=forms.TextInput(
-        attrs={'placeholder': '店铺名', 'class': 'form-control', 'id': 'edit_shop_name', }))
+        attrs={'placeholder': '店铺名', 'class': 'form-control', 'id': 'edit_shop_name', 'disabled': 'True'}))
 
 
 # 添加银行账户
@@ -97,7 +97,7 @@ class Add_brank_account(forms.Form):
 class Edit_brank_account(forms.Form):
     account_name = forms.CharField(label='账户名',
                                    widget=forms.TextInput(
-                                       attrs={'placeholder': '账户名', 'class': 'form-control', 'id': 'update_account_name', }))
+                                       attrs={'placeholder': '账户名', 'class': 'form-control', 'id': 'update_account_name', 'disabled': 'True'}))
     brank_name = forms.CharField(label='银行名',
                                  widget=forms.TextInput(attrs={'placeholder': '银行名', 'class': 'form-control', 'id': 'update_brank_name', }))
     brank_number = forms.CharField(label='开户行号',
