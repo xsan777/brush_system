@@ -1141,29 +1141,53 @@ def countmanagement(request):
         count = Account_record.objects.filter(datess__date=get_nday_list2(2, now_time), deletes=False).all()
     else:
         count = Account_record.objects.filter(datess__date=now_time, operator__username=user, deletes=False).all()
-    last_date = get_nday_list2(2, now_time)
+    last_date_2 = get_nday_list2(2, now_time)
+    last_date = get_nday_list2(3, now_time)
     count_list = []
-    for i in count:
-        count_row = {}
-        last_end_money = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values('end_money')
-        if len(last_end_money) > 0:
-            last_end_money = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
-                'end_money').get()
-            count_row['last_end_money'] = last_end_money['end_money']
-        else:
-            count_row['last_end_money'] = '没有前一天的结余金额'
-        count_row['id'] = i.id
-        count_row['datess'] = i.datess
-        count_row['account_name'] = i.account_name
-        count_row['start_money'] = i.start_money
-        count_row['end_money'] = i.end_money
-        count_row['weixin_withdraw_money'] = i.weixin_withdraw_money
-        count_row['start_money_img'] = i.start_money_img
-        count_row['end_money_img'] = i.end_money_img
-        count_row['weixin_img'] = i.weixin_img
-        count_row['operator'] = i.operator
-        count_row['makes'] = i.makes
-        count_list.append(count_row)
+    if rouse == '运营':
+        for i in count:
+            count_row = {}
+            last_end_money = Account_record.objects.filter(datess__date=last_date_2, account_name=i.account_name, deletes=False).values('end_money')
+            if len(last_end_money) > 0:
+                last_end_money = Account_record.objects.filter(datess__date=last_date_2, account_name=i.account_name, deletes=False).values(
+                    'end_money').get()
+                count_row['last_end_money'] = last_end_money['end_money']
+            else:
+                count_row['last_end_money'] = '没有前一天的结余金额'
+            count_row['id'] = i.id
+            count_row['datess'] = i.datess
+            count_row['account_name'] = i.account_name
+            count_row['start_money'] = i.start_money
+            count_row['end_money'] = i.end_money
+            count_row['weixin_withdraw_money'] = i.weixin_withdraw_money
+            count_row['start_money_img'] = i.start_money_img
+            count_row['end_money_img'] = i.end_money_img
+            count_row['weixin_img'] = i.weixin_img
+            count_row['operator'] = i.operator
+            count_row['makes'] = i.makes
+            count_list.append(count_row)
+    else:
+        for i in count:
+            count_row = {}
+            last_end_money = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values('end_money')
+            if len(last_end_money) > 0:
+                last_end_money = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
+                    'end_money').get()
+                count_row['last_end_money'] = last_end_money['end_money']
+            else:
+                count_row['last_end_money'] = '没有前一天的结余金额'
+            count_row['id'] = i.id
+            count_row['datess'] = i.datess
+            count_row['account_name'] = i.account_name
+            count_row['start_money'] = i.start_money
+            count_row['end_money'] = i.end_money
+            count_row['weixin_withdraw_money'] = i.weixin_withdraw_money
+            count_row['start_money_img'] = i.start_money_img
+            count_row['end_money_img'] = i.end_money_img
+            count_row['weixin_img'] = i.weixin_img
+            count_row['operator'] = i.operator
+            count_row['makes'] = i.makes
+            count_list.append(count_row)
     # 总账户未确认提示运营
     total_reminds = ''
     user_total_account = Userinfo.objects.get(username=user, deletes=False)
