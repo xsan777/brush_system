@@ -6,7 +6,7 @@
 {% block content %}
     {#数据筛选框#}
     <div class="search_">
-        <form class="form-inline" id="search_data" method="post">
+        <form class="form-inline" id="search_data" method="post" action="/more_date/">
             <div class="form-group">
                 <label for="exampleInputName2">日期:</label>
                 <input type="date" class="form-control" value="{{ now_time }}" name="add_time" id="se_date" onchange="change_url()">
@@ -86,11 +86,13 @@
                         <td>{{ table.remarks }}</td>
                         <td>{{ table.add_time }}</td>
                         <td>{{ table.operator.username }}</td>
+                        {% if table.operator.username == userss %}
                         <td><a class="glyphicon glyphicon-pencil" href="javascript:void(0);" onclick="edit_data({{ table.id }},this)" title="编辑"
                                id="bsd"></a>
                             <a class="glyphicon glyphicon-remove" href="javascript:void(0);" onclick="delete_data({{ table.id }},this)" title="删除"
                                id="dele"></a>
                         </td>
+                    {% endif %}
                     </tr>
                 {% endfor %}
             </table>
