@@ -1513,10 +1513,11 @@ def brushmanagement(request):
                 if len(online_order_numbers) != 18:
                     errs = '线上订单号格式错误'
                 else:
-                    onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers,
-                                                              payment_type=payment_types, deletes=False).all()
-                    if len(onlys) > 0:
-                        errs = '该订单记录已存在'
+                    if payment_types == '本金' or payment_types == '佣金':
+                        onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers,
+                                                                  payment_type=payment_types, deletes=False).all()
+                        if len(onlys) > 0:
+                            errs = '该订单记录已存在'
         if errs == '':
             add_times = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
             Brush_single_entry.objects.create(shopname=shopnames, qq_or_weixin=qq_or_weixins, wang_wang_number=wang_wang_numbers,
@@ -2454,7 +2455,8 @@ def all_data(request):
         admin_flog = 0
     return render(request, 'all_data.html',
                   {'title': title, 'user': user, 'now_time': now_time, 'payment_type': payment_types, 'tables': tables,
-                   'admin_flog': admin_flog, 'pay_money': payment, 'total_account_all': total_account_all, 'pay_types': pay_types})
+                   'total_account': total_account, 'admin_flog': admin_flog, 'pay_money': payment, 'total_account_all': total_account_all,
+                   'pay_types': pay_types})
 
 
 # 下载喝酒数据
@@ -2620,8 +2622,7 @@ def down_total_account_brush(request):
     file_names = str(now_time) + '  ' + first_account_post + '的喝酒数据'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=first_account_post, file_name=file_names)
 
-shops = ['芮丽娅旗舰店','美映铺子旗舰店','无名指旗舰店']
-payment_types = ['本金','佣金','刮刮卡']
+
 # 按月下载总账户喝酒数据
 def down_total_account_brush2(request):
     user = request.session.get('username')
@@ -2868,10 +2869,11 @@ def upload_data(request):
                         if len(online_order_numbers) != 18:
                             data_err = '线上订单号格式错误'
                         else:
-                            onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers, payment_type=payment_types,
-                                                                      deletes=False).all()
-                            if len(onlys) > 0:
-                                data_err = '该订单记录已存在'
+                            if payment_types == '本金' or payment_types == '佣金':
+                                onlys = Brush_single_entry.objects.filter(online_order_number=online_order_numbers, payment_type=payment_types,
+                                                                          deletes=False).all()
+                                if len(onlys) > 0:
+                                    data_err = '该订单记录已存在'
                     if data_err == '':
                         operators = Userinfo.objects.get(username=user, deletes=False)
                         add_times = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
@@ -3059,6 +3061,6 @@ def brushmanagement_2(request):
             if i.makes == 'False':
                 total_reminds = '(总账户未确认)'
     return render(request, 'erp_templates/新建文件夹/brush2.html',
-                  {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables_list, 'add_brush_form': add_brush_form,
-                   'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs, 'reminds': reminds, 'makes': makes, 'unmakes': unmakes,
-                   'total_reminds': total_reminds, })
+                  {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables_list,
+                   'add_brush_form': add_brush_form, 'edit_brush_form': edit_brush_form, 'user': user, 'errs': errs, 'reminds': reminds,
+                   'makes': makes, 'unmakes': unmakes, 'total_reminds': total_reminds, })
