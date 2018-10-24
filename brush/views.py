@@ -1631,8 +1631,8 @@ def edit(request):
                     for i in onlys:
                         exit_ = str(i.id)
                         break
-                    print(exit_, ids)
-                    print(type(exit_), type(ids))
+                    # print(exit_, ids)
+                    # print(type(exit_), type(ids))
                     if exit_ != ids:
                         errs = '该订单记录已存在'
         if errs == '':
@@ -1773,7 +1773,7 @@ def more_date(request):
                   {'title': title, 'account': account, 'shops': shops, 'now_time': now_time, 'tables': tables, 'all_user': all_user,
                    'operators': operators, 'userss': userss, 'shop_select': shopss, 'user': user, 'reminds': reminds, 'makes': makes,
                    'unmakes': unmakes, 'total_reminds': total_reminds, 'update_passwd': update_passwd, 'table_len': table_len,
-                   'all_payment_type': all_payment_type, 'payment_types': payment_types, 'payment_type_all': payment_type_all})
+                   'all_payment_type': all_payment_type, 'payment_types': payment_types, 'payment_type_all': payment_type_all, })
 
 
 # 更多页面加载操作人
@@ -2010,16 +2010,6 @@ def search_count(request):
             count_row['last_end_money'] = last_end_money['end_money']
         else:
             count_row['last_end_money'] = '没有前一天的结余金额'
-        # 显示前一日结余资金截图
-        # last_date_end_img = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
-        #     'end_money_img')
-        #
-        # if len(last_date_end_img) > 0:
-        #     last_date_end_img = Account_record.objects.filter(datess__date=last_date, account_name=i.account_name, deletes=False).values(
-        #         'end_money_img').get()
-        #     count_row['last_date_end_img'] = last_date_end_img['end_money_img']
-        # else:
-        #     count_row['last_date_end_img'] = '前一日无截图'
         count_row['id'] = i.id
         count_row['datess'] = i.datess
         count_row['account_name'] = i.account_name

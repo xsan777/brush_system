@@ -51,6 +51,7 @@
     </div>
     <br><br>
     <hr>
+
     {#显示数据#}
     <div id="tabless">
         {% if operators == userss %}
@@ -87,12 +88,12 @@
                         <td>{{ table.add_time }}</td>
                         <td>{{ table.operator.username }}</td>
                         {% if table.operator.username == userss %}
-                        <td><a class="glyphicon glyphicon-pencil" href="javascript:void(0);" onclick="edit_data({{ table.id }},this)" title="编辑"
-                               id="bsd"></a>
-                            <a class="glyphicon glyphicon-remove" href="javascript:void(0);" onclick="delete_data({{ table.id }},this)" title="删除"
-                               id="dele"></a>
-                        </td>
-                    {% endif %}
+                            <td><a class="glyphicon glyphicon-pencil" href="javascript:void(0);" onclick="edit_data({{ table.id }},this)" title="编辑"
+                                   id="bsd"></a>
+                                <a class="glyphicon glyphicon-remove" href="javascript:void(0);" onclick="delete_data({{ table.id }},this)" title="删除"
+                                   id="dele"></a>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </table>
@@ -151,6 +152,12 @@
                                         <option value="{{ shopss }}">{{ shopss }}</option>
                                     {% endfor %}
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-3 control-label">QQ或微信号</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="update_qq_or_weixin" placeholder="QQ或微信号" name="qq_or_weixin">
                             </div>
                         </div>
                         <div class="form-group">
@@ -292,6 +299,7 @@
                             $(this).attr("selected", "selected");
                         }
                     });
+                    $('#update_qq_or_weixin').attr('value',arg['qq_or_weixin']);
                     $('#update_wang_wang_number').attr('value', arg['wang_wang_number']);
                     $('#update_online_order_number').attr('value', arg['online_order_number']);
                     $('#update_transaction_data').attr('value', arg['transaction_data']);
@@ -349,6 +357,9 @@
                     }
 
                 })
+            }
+            else {
+                alert("存在空值，请仔细检查")
             }
         }
     </script>

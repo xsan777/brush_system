@@ -33,10 +33,12 @@ class Shops(models.Model):
         return self.shopname
 
 
-# 公司微信号
-class Company_weixin(models.Model):
-    weixin = models.CharField(verbose_name='微信号', max_length=32)
-    deletes = models.CharField(max_length=5)
+# 开启补录功能
+class Supplemental_data(models.Model):
+    total_name = models.ForeignKey(Total_brank_account, on_delete=models.CASCADE)
+    start_time = models.DateTimeField(verbose_name='开启时间', max_length=16)
+    end_time = models.DateTimeField(verbose_name='关闭时间', max_length=16)
+
 
 
 # 用户表
