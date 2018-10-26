@@ -74,4 +74,6 @@ urlpatterns = [
     path('Upload_excel/',views.upload_excel),
     path('upload_data/',views.upload_data),
     path('template_file_download/',views.template_file_download),
+    path('supplemental_upload_excel/',views.supplemental_upload_excel),
+    path('supplemental_upload_data/',views.supplemental_upload_data),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
