@@ -138,7 +138,7 @@
                                 async: true,
                                 success: function (msg) {
                                     if (msg == 1) {
-                                        $('[data-toggle="popover"]').popover()
+                                        $('[data-toggle="popover"]').popover();
                                         $(this_).children('#stats').append('<i class="fa fa-warning" id="online_stats_unexist" data-container="body" data-toggle="popover" data-placement="right" data-content="线上订单号可能错误，请仔细核对" style="color: red;"></i>');
                                     }
                                     else if (msg == 2 && payment_type == '本金') {

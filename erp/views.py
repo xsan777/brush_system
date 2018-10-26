@@ -34,7 +34,11 @@ class Verification(object):
     def special_order(self, search_o_id):
         special_order_stats = JstOrdersQuerySpecialSingle.objects.using('erp_database').filter(o_id=search_o_id).all()
         if len(special_order_stats) > 0:
-            return 0
+            for i in special_order_stats:
+                if i.type == 1:
+                    return 0
+                else:
+                    return 2
         else:
             return 2
 
@@ -43,7 +47,11 @@ class Verification(object):
         special_order_stats = JstOrdersQuerySpecialSingle.objects.using('erp_database').filter(so_id=online_order_number).all()
         if len(special_order_stats) > 0:
             #该订单号是刷单的
-            return 0
+            for i in special_order_stats:
+                if i.type == 1:
+                    return 0
+                else:
+                    return 2
         else:
             #该订单号可能为之前的数据没有特殊单表里没有对应的订单号
             online_order_number_exit, search_o_id = self.order_online(online_order_number)[0], self.order_online(online_order_number)[1]

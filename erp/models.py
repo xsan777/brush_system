@@ -184,6 +184,7 @@ class JstOrdersQuerySpecialSingle(models.Model):
     shop_name = models.CharField(max_length=10, blank=True, null=True)
     so_id = models.CharField(max_length=18, blank=True, null=True)
     shop_buyer_id = models.CharField(max_length=25, blank=True, null=True)
+    type = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -218,13 +219,13 @@ class JstRefundQuery(models.Model):
 
 class JstRefundQueryItems(models.Model):
     asi_id = models.CharField(primary_key=True, max_length=10)
-    name = models.CharField(max_length=80, blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
     pic = models.CharField(max_length=150, blank=True, null=True)
     price = models.FloatField(blank=True, null=True)
     properties_value = models.CharField(max_length=40, blank=True, null=True)
     qty = models.IntegerField(blank=True, null=True)
     r_qty = models.IntegerField(blank=True, null=True)
-    sku_id = models.CharField(max_length=20, blank=True, null=True)
+    sku_id = models.CharField(max_length=30, blank=True, null=True)
     type = models.CharField(max_length=4, blank=True, null=True)
     o_id = models.CharField(max_length=10, blank=True, null=True)
 
@@ -281,7 +282,7 @@ class PurchaseQuery(models.Model):
 
 class PurchaseQueryItems(models.Model):
     i_id = models.CharField(max_length=10, blank=True, null=True)
-    name = models.CharField(max_length=80, blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
     po_id = models.CharField(max_length=10, blank=True, null=True)
     poi_id = models.CharField(primary_key=True, max_length=10)
     price = models.FloatField(blank=True, null=True)
@@ -314,7 +315,7 @@ class PurchaseinQueryItems(models.Model):
     cost_price = models.CharField(max_length=12, blank=True, null=True)
     io_id = models.CharField(max_length=10, blank=True, null=True)
     ioi_id = models.CharField(primary_key=True, max_length=10)
-    name = models.CharField(max_length=255, blank=True, null=True)
+    name = models.CharField(max_length=80, blank=True, null=True)
     qty = models.IntegerField(blank=True, null=True)
     sku_id = models.CharField(max_length=30, blank=True, null=True)
 
@@ -351,7 +352,7 @@ class PurchaseoutQuery(models.Model):
 class PurchaseoutQueryItems(models.Model):
     ioi_id = models.CharField(primary_key=True, max_length=10)
     sku_id = models.CharField(max_length=20, blank=True, null=True)
-    name = models.CharField(max_length=20, blank=True, null=True)
+    name = models.CharField(max_length=80, blank=True, null=True)
     properties_value = models.CharField(max_length=10, blank=True, null=True)
     qty = models.IntegerField(blank=True, null=True)
     cost_price = models.FloatField(blank=True, null=True)
