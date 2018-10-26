@@ -2664,12 +2664,13 @@ def down_total_account_brush2(request):
         now_time = now_time_post
     first_accounts = first_account.brank_account_set.filter(deletes=False).values('account_name')
     mouth_ = t_mouth_2(now_time)
-    print(mouth_)
+    excel_mouth = t_mouth(now_time)
     day_ = 1
     sheet1 = [["喝酒时间", "店铺名", "QQ或微信号", "旺旺号", "线上订单号", "成交日期", "收入金额", "付款金额", "账户结余", "付款类型", "付款账户", "备注", "操作员"], ]
     while day_ < 32:
         now_time = mouth_ + str(day_)
-        print(now_time)
+        before_time = get_nday_list2(2, now_time)
+        print(now_time, before_time)
         # 开始创建下载的excel
         account_start_money = Total_account_record.objects.filter(datess__date=now_time,
                                                                   account_name__total_account_name=first_account.total_account_name,
@@ -2677,12 +2678,24 @@ def down_total_account_brush2(request):
         day_ += 1
         print(day_)
         if len(account_start_money) > 0:
-            account_start_money = Total_account_record.objects.filter(datess__date=now_time,
-                                                                      account_name__total_account_name=first_account.total_account_name,
-                                                                      deletes=False).values('start_money').get()
-            account_start_money = float(account_start_money['start_money'])
-            print(123)
-            sheet1.append(["", "", "", "", "", "", account_start_money, "", account_start_money, "", ""])
+            account_start_money_ = Total_account_record.objects.filter(datess__date=now_time,
+                                                                       account_name__total_account_name=first_account.total_account_name,
+                                                                       deletes=False).values('start_money', 'end_money').get()
+            account_start_money = float(account_start_money_['start_money'])
+            last_end_money = Total_account_record.objects.filter(datess__date=before_time,
+                                                                 account_name__total_account_name=first_account.total_account_name,
+                                                                 deletes=False).all()
+            if len(last_end_money) > 0:
+                for i in last_end_money:
+                    last_end_money = i.end_money
+            else:
+                last_end_money = 0.00
+            account_end_money = float(last_end_money)
+            if day_ > 2:
+                account_receive_money = account_start_money - account_end_money
+                sheet1.append(["", "", "", "", "", "", account_receive_money, "", account_start_money, "", ""])
+            else:
+                sheet1.append(["", "", "", "", "", "", account_start_money, "", account_start_money, "", ""])
             for account in first_accounts:
                 table = Brush_single_entry.objects.filter(add_time__date=now_time, payment_account__account_name=account['account_name'],
                                                           deletes=False).all()
@@ -2704,10 +2717,11 @@ def down_total_account_brush2(request):
                     row1.append(i.remarks)
                     row1.append(i.operator.username)
                     sheet1.append(row1)
+
         else:
             continue
 
-    file_names = str(now_time) + '  ' + first_account_post + '的喝酒数据'
+    file_names = str(excel_mouth) + '月  ' + first_account_post + '的喝酒数据'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=first_account_post, file_name=file_names)
 
 

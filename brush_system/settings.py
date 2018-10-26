@@ -80,9 +80,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'brush_wine',
-        'USER': 'panjin',
-        'PASSWORD': 'panjin456',
-        'HOST': '59.110.241.144',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
         'PORT': 3306,
     },
     # 'default': {
@@ -100,9 +100,9 @@ DATABASES = {
         # 'PASSWORD': '123456',
         # 'HOST': '127.0.0.1',
         'NAME': 'baoersqlerp',
-        'USER': 'panjin',
-        'PASSWORD': 'panjin456',
-        'HOST': '59.110.241.144',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
         'PORT': 3306,
     }
 
