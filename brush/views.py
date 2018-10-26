@@ -2421,9 +2421,9 @@ def all_data(request):
     shops = Shops.objects.filter(own_total_brank__total_account_name=total_account, deletes=False).all()
     if payment_types == '全部' and total_account == 'all':
         tables = Brush_single_entry.objects.filter(add_time__date=now_time, deletes=False).all()
-    elif payment_types != '全部' and total_account_all == 'all':
+    elif payment_types != '全部' and total_account == 'all':
         tables = Brush_single_entry.objects.filter(add_time__date=now_time, payment_type=payment_types, deletes=False).all()
-    elif payment_types == '全部' and total_account_all != 'all':
+    elif payment_types == '全部' and total_account != 'all':
         tables = []
         for shop in shops:
             tabless = Brush_single_entry.objects.filter(add_time__date=now_time, shopname=shop.shopname, deletes=False).all()
@@ -2682,9 +2682,6 @@ def down_total_account_brush2(request):
                                                                       deletes=False).values('start_money').get()
             account_start_money = float(account_start_money['start_money'])
             print(123)
-        # else:
-        #     # continue
-        #     account_start_money = 0.0
             sheet1.append(["", "", "", "", "", "", account_start_money, "", account_start_money, "", ""])
             for account in first_accounts:
                 table = Brush_single_entry.objects.filter(add_time__date=now_time, payment_account__account_name=account['account_name'],
@@ -2743,7 +2740,7 @@ def down_all_data(request):
         row1.append(i.operator.username)
         row1.append(i.payment_account.account_name)
         sheet1.append(row1)
-    file_names = str(now_time) + '  ' + '的喝酒数据'
+    file_names = str(now_time) + '  ' + '的喝酒明细'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=now_time, file_name=file_names)
 
 
@@ -2783,7 +2780,7 @@ def down_all_data2(request):
     time_use_2 = time_end_2 - time_end_1
     # print('查询时间' + str(time_use))
     # print('数据处理时间' + str(time_use_2))
-    file_names = str(now_time) + '月的喝酒数据'
+    file_names = str(now_time) + '月的喝酒明细'
     return excel.make_response_from_array(sheet1, "xlsx", status=200, sheet_name=now_time, file_name=file_names)
 
 
